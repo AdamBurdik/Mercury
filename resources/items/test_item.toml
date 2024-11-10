@@ -1,0 +1,13 @@
+# Item configuration file for "test_item"
+
+id = "test_item"
+name = "<dark_red><!italic><bold>Test Item"
+description = "<!italic><red>Item used for testing purposes"
+base_material = "diamond_sword"
+rarity = "unique"
+
+[attributes]
+damage = 10
+movement_speed = {value = 0.1, operation="MULTIPLY_BASE"}
+max_health = {value = -0.2, operation="MULTIPLY_BASE"}
+attack_speed = {value = 0.2, operation="MULTIPLY_BASE"}

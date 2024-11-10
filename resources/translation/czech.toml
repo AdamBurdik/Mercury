@@ -1,0 +1,23 @@
+[translation]
+name = "Czech"
+id = "cz"
+
+[item.rarity]
+common = "Běžné"
+uncommon = "Neobvyklé"
+rare = "Vzácné"
+epic = "Epické"
+legendary = "Legendární"
+mythical = "Mythické"
+unique = "Unikátní"
+
+[item.attribute]
+damage = "Poškození"
+attack_speed = "Rychlost Útoku"
+movement_speed = "Rychlost Pohybu"
+max_health = "Maximální Zdraví"
+
+[command.translation]
+no_argument_specified = "Prosím specifikuj argument pro překlad!"
+successfully_set = "Jazyk byl úspěšně nastaven na češtinu!"
+

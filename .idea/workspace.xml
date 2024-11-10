@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="31d0efbb-5cb9-449b-8fb8-75f9b306c238" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/items/test_item.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/server.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/translation/czech.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/translation/english.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/Server.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/camera/Camera.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/camera/interpolation/IInterpolation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/camera/interpolation/Interpolation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/camera/interpolation/QuadraticBezierCurve.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/command/ClassCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/command/GamemodeCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/command/InventoryCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/command/ItemCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/command/TestCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/command/TranslationCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/common/ColorPallet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/common/SerializableEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/flag/ServerFlag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/ProfileSelectionInventory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/core/GameInventory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/core/InventoryManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/core/component/InventoryComponent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/core/component/ItemComponent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/core/context/CloseContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/core/context/InventoryConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/core/context/ItemClickContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/core/context/OpenContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/inventory/core/data/InventoryData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/item/core/GameItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/item/core/ItemManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/item/core/attribute/ItemAttribute.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/item/core/attribute/ItemAttributeValue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/item/core/attribute/ItemAttributes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/item/core/rarity/ItemRarity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/listener/player/AsyncPlayerConfigurationListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/listener/player/PlayerChangeHeldSlotListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/listener/player/PlayerMoveListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/listener/player/PlayerSpawnListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/mob/core/GameMob.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/mob/core/MobManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/mob/core/attribute/MobAttribute.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/mob/core/attribute/MobAttributes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/mob/core/behaviour/MobBehaviour.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/mob/core/goal/FollowEntityGoal.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/mob/zombie/FriendlyZombie.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/mob/zombie/RogueZombie.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/player/GamePlayer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/player/data/PlayerData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/player/data/PlayerDataManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/player/provider/GamePlayerProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/player/state/PlayerState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/translation/Translation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/translation/TranslationManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/util/CameraMathUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/util/FileUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/util/TomlUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DarkyenusTimeTracker">
+    <option name="totalTimeSeconds" value="77408" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Mercury" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="AnnotationType" />
+        <option value="shader-template" />
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2oJGFmQ2gD3n0md4PzIwtTv5X9l" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showScratchesAndConsoles" value="false" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Start Server.executor": "Coverage",
+    "Gradle.Build Mercury.executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.Mercury [:me.adamix.mercury.Server.main()].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Adam/Java/minestom/Mercury/resources/translation",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.44042057",
+    "settings.editor.selected.configurable": "debugger.dataViews"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Adam\Java\minestom\Mercury\resources\translation" />
+      <recent name="C:\Users\Adam\Java\minestom\Mercury\src\main\java\me\adamix\mercury\player\attribute" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Adam\Java\minestom\Mercury\configuration" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="me.adamix.mercury.mob.zombie" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Start Server" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="me.adamix.mercury.Server" />
+      <module name="Mercury.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="31d0efbb-5cb9-449b-8fb8-75f9b306c238" name="Changes" comment="" />
+      <created>1730580163692</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1730580163692</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="GradleRunConfiguration">
+        <watch expression="config" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Mercury$Start_Server.ic" NAME="Start Server Coverage Results" MODIFIED="1731106851650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+  </component>
+</project>

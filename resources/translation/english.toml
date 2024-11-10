@@ -1,0 +1,23 @@
+[translation]
+name = "English"
+id = "en"
+
+[item.rarity]
+common = "Common"
+uncommon = "Uncommon"
+rare = "Rare"
+epic = "Epic"
+legendary = "Legendary"
+mythical = "Mythical"
+unique = "Unique"
+
+[item.attribute]
+damage = "Damage"
+attack_speed = "Attack Speed"
+movement_speed = "Movement Speed"
+max_health = "Max Health"
+
+[command.translation]
+no_argument_specified = "Please specify an argument for translation!"
+successfully_set = "Language has been successfully set to English"
+

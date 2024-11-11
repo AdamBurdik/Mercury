@@ -2,15 +2,10 @@ package me.adamix.mercury;
 
 import lombok.Getter;
 import me.adamix.mercury.command.*;
-import me.adamix.mercury.translation.TranslationManager;
 import me.adamix.mercury.flag.ServerFlag;
 import me.adamix.mercury.inventory.ProfileSelectionInventory;
 import me.adamix.mercury.inventory.core.InventoryManager;
-import me.adamix.mercury.item.core.GameItem;
 import me.adamix.mercury.item.core.ItemManager;
-import me.adamix.mercury.item.core.attribute.ItemAttribute;
-import me.adamix.mercury.item.core.attribute.ItemAttributes;
-import me.adamix.mercury.item.core.rarity.ItemRarity;
 import me.adamix.mercury.listener.player.AsyncPlayerConfigurationListener;
 import me.adamix.mercury.listener.player.PlayerChangeHeldSlotListener;
 import me.adamix.mercury.listener.player.PlayerMoveListener;
@@ -18,6 +13,8 @@ import me.adamix.mercury.listener.player.PlayerSpawnListener;
 import me.adamix.mercury.mob.core.MobManager;
 import me.adamix.mercury.player.data.PlayerDataManager;
 import me.adamix.mercury.player.provider.GamePlayerProvider;
+import me.adamix.mercury.terminal.MinestomTerminal;
+import me.adamix.mercury.translation.TranslationManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -26,7 +23,6 @@ import net.minestom.server.adventure.audience.Audiences;
 import net.minestom.server.command.CommandManager;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
-import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.server.ServerTickMonitorEvent;
 import net.minestom.server.extras.MojangAuth;
@@ -34,10 +30,10 @@ import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.anvil.AnvilLoader;
-import net.minestom.server.item.Material;
 import net.minestom.server.monitoring.TickMonitor;
 import net.minestom.server.timer.TaskSchedule;
 import net.minestom.server.utils.MathUtils;
+import org.jline.nativ.JLineLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tomlj.Toml;
@@ -161,6 +157,7 @@ public class Server {
 		commandManager.register(new ClassCommand());
 		commandManager.register(new TranslationCommand());
 		commandManager.register(new TestCommand());
+		commandManager.register(new ColorTestCommand());
 
 		// Set player provider to custom one
 		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());
@@ -168,6 +165,7 @@ public class Server {
 
 	private static void start() {
 		minecraftServer.start("0.0.0.0", 25565);
+		MinestomTerminal.start();
 	}
 
 	public static void main(String[] args) {

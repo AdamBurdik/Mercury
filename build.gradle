@@ -1,4 +1,5 @@
 plugins {
+    id 'com.gradleup.shadow' version "8.3.0"
     id 'java'
 }
 
@@ -19,6 +20,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
     implementation 'org.tomlj:tomlj:1.1.1'
     implementation "net.kyori:adventure-text-minimessage:4.17.0"
+    implementation 'org.jline:jline:3.27.1'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.34'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
@@ -27,6 +29,22 @@ dependencies {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks {
+    jar {
+        manifest {
+            attributes["Main-Class"] = "me.adamix.mercury.Server" // Change this to your main class
+        }
+    }
+
+    build {
+        dependsOn(shadowJar)
+    }
+    shadowJar {
+        mergeServiceFiles()
+        archiveClassifier.set("") // Prevent the -all suffix on the shadowjar file.
     }
 }
 

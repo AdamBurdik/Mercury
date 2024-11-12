@@ -3,24 +3,24 @@ package me.adamix.mercury.item.core;
 import lombok.Getter;
 import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.common.SerializableEntity;
-import me.adamix.mercury.translation.Translation;
-import me.adamix.mercury.translation.TranslationManager;
 import me.adamix.mercury.item.core.attribute.ItemAttribute;
 import me.adamix.mercury.item.core.attribute.ItemAttributeValue;
 import me.adamix.mercury.item.core.attribute.ItemAttributes;
 import me.adamix.mercury.item.core.rarity.ItemRarity;
+import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.placeholder.PlaceholderManager;
 import me.adamix.mercury.player.GamePlayer;
+import me.adamix.mercury.translation.Translation;
+import me.adamix.mercury.translation.TranslationManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.tomlj.TomlParseResult;
 
 import java.util.*;
 
@@ -60,7 +60,7 @@ public class GameItem implements SerializableEntity {
 	 * @return ItemStack
 	 */
 	public ItemStack toItemStack(GamePlayer player) {
-		MiniMessage mm = MiniMessage.miniMessage();
+		PlaceholderManager placeholder = Managers.getPlaceholderManager();
 		Translation translation = TranslationManager.getTranslation(player);
 
 		// Create lore
@@ -68,7 +68,7 @@ public class GameItem implements SerializableEntity {
 
 		// Add description if present to lore
 		if (this.description != null) {
-			lore.add(mm.deserialize(this.description));
+			lore.add(placeholder.parse(this.description, player));
 			lore.add(Component.empty());
 		}
 
@@ -105,7 +105,7 @@ public class GameItem implements SerializableEntity {
 		// Create and apply all values to item stack
 		return ItemStack.of(this.baseMaterial)
 				.withCustomName(
-					mm.deserialize(this.name)
+						placeholder.parse(this.name, player)
 				)
 				.withLore(
 						lore

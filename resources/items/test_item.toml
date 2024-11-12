@@ -1,8 +1,8 @@
 # Item configuration file for "test_item"
 
 id = "test_item"
-name = "<dark_red><!italic><bold>Test Item"
-description = "<!italic><red>Item used for testing purposes"
+name = "<dark_red><!italic><bold><translation:item.name.test_item>"
+description = "<!italic><red><translation:item.description.test_item>"
 base_material = "diamond_sword"
 rarity = "unique"
 

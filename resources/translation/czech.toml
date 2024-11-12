@@ -17,6 +17,13 @@ attack_speed = "Rychlost Útoku"
 movement_speed = "Rychlost Pohybu"
 max_health = "Maximální Zdraví"
 
+[item.name]
+test_item = "Testovací Item"
+
+[item.description]
+test_item = "Item, který je používán pro testování"
+
+
 [command.translation]
 no_argument_specified = "Prosím specifikuj argument pro překlad!"
 successfully_set = "Jazyk byl úspěšně nastaven na češtinu!"

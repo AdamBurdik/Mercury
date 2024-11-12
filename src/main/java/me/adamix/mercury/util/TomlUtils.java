@@ -1,6 +1,5 @@
 package me.adamix.mercury.util;
 
-import me.adamix.mercury.item.core.attribute.ItemAttribute;
 import me.adamix.mercury.item.core.attribute.ItemAttributeValue;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import org.jetbrains.annotations.Nullable;

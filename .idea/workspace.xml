@@ -5,9 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="31d0efbb-5cb9-449b-8fb8-75f9b306c238" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/terminal/MinestomTerminal.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/command/TranslationTestCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/placeholder/PlaceholderManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/items/test_item.toml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/items/test_item.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/translation/czech.toml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/translation/czech.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/translation/english.toml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/translation/english.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/command/ItemCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/command/ItemCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/item/core/GameItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/item/core/GameItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/player/GamePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/adamix/mercury/player/GamePlayer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +22,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="79545" />
+    <option name="totalTimeSeconds" value="87341" />
     <option name="gitIntegration" value="true" />
   </component>
   <component name="ExternalProjectsData">
@@ -26,12 +33,26 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Mercury" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Mercury" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Mercury" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -78,23 +99,25 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Start Server.executor&quot;: &quot;Coverage&quot;,
-    &quot;Gradle.Build Mercury.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Mercury [:me.adamix.mercury.Server.main()].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Adam/Java/minestom/Mercury/resources/translation&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.44042057&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;debugger.dataViews&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Start Server.executor": "Coverage",
+    "Gradle.Build Mercury.executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.Mercury [:me.adamix.mercury.Server.main()].executor": "Run",
+    "Gradle.Mercury [build].executor": "Run",
+    "Gradle.Mercury [jar].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Adam/Java/minestom/Mercury/resources/translation",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.44042057",
+    "settings.editor.selected.configurable": "debugger.dataViews"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Adam\Java\minestom\Mercury\resources\translation" />
@@ -107,7 +130,7 @@
       <recent name="me.adamix.mercury.mob.zombie" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Start Server">
     <configuration name="Start Server" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="me.adamix.mercury.Server" />
       <module name="Mercury.main" />
@@ -115,6 +138,56 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Mercury [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="Mercury [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.Mercury [build]" />
+        <item itemvalue="Gradle.Mercury [jar]" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

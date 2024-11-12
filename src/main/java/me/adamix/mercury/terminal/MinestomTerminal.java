@@ -3,7 +3,6 @@ package me.adamix.mercury.terminal;
 import me.adamix.mercury.command.ConsoleSender;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandManager;
-import net.minestom.server.command.builder.CommandResult;
 import org.jetbrains.annotations.ApiStatus;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;

@@ -2,6 +2,7 @@ package me.adamix.mercury;
 
 import lombok.Getter;
 import me.adamix.mercury.command.*;
+import me.adamix.mercury.command.server.StopCommand;
 import me.adamix.mercury.configuration.Configuration;
 import me.adamix.mercury.flag.ServerFlag;
 import me.adamix.mercury.inventory.ProfileSelectionInventory;
@@ -151,6 +152,7 @@ public class Server {
 		commandManager.register(new TestCommand());
 		commandManager.register(new ColorTestCommand());
 		commandManager.register(new TranslationTestCommand());
+		commandManager.register(new StopCommand());
 
 		// Set player provider to custom one
 		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());

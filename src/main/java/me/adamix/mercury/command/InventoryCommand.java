@@ -1,6 +1,6 @@
 package me.adamix.mercury.command;
 
-import me.adamix.mercury.Server;
+import me.adamix.mercury.managers.Managers;
 import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.command.builder.Command;
 
@@ -13,7 +13,7 @@ public class InventoryCommand extends Command {
 				return;
 			}
 
-			Server.getInventoryManager().open("profile_selection", player);
+			Managers.getInventoryManager().open("profile_selection", player);
 
 		});
 	}

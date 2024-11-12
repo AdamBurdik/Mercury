@@ -10,7 +10,6 @@ import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
-import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.event.trait.InventoryEvent;
@@ -33,7 +32,7 @@ public class InventoryManager {
 	private final Map<String, GameInventory> registeredInventoryMap = new HashMap<>();
 	private final Map<UUID, InventoryData> playerInventoryData = new HashMap<>();
 
-	public InventoryManager(GlobalEventHandler globalEventHandler) {
+	public InventoryManager() {
 		EventNode<InventoryEvent> node = EventNode.type("click", EventFilter.INVENTORY)
 				.addListener(InventoryPreClickEvent.class, event -> {
 					GameInventory inventory = getGameInventory(event.getInventory());
@@ -96,7 +95,7 @@ public class InventoryManager {
 						open(event.getInventory().getTag(tag), player);
 					}
 				});
-		globalEventHandler.addChild(node);
+		MinecraftServer.getGlobalEventHandler().addChild(node);
 	}
 
 	public @Nullable GameInventory getGameInventory(@Nullable Inventory inventory) {

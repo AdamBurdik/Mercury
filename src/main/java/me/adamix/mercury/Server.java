@@ -2,6 +2,7 @@ package me.adamix.mercury;
 
 import lombok.Getter;
 import me.adamix.mercury.command.*;
+import me.adamix.mercury.configuration.Configuration;
 import me.adamix.mercury.flag.ServerFlag;
 import me.adamix.mercury.inventory.ProfileSelectionInventory;
 import me.adamix.mercury.inventory.core.InventoryManager;
@@ -10,8 +11,7 @@ import me.adamix.mercury.listener.player.AsyncPlayerConfigurationListener;
 import me.adamix.mercury.listener.player.PlayerChangeHeldSlotListener;
 import me.adamix.mercury.listener.player.PlayerMoveListener;
 import me.adamix.mercury.listener.player.PlayerSpawnListener;
-import me.adamix.mercury.mob.core.MobManager;
-import me.adamix.mercury.player.data.PlayerDataManager;
+import me.adamix.mercury.managers.Managers;
 import me.adamix.mercury.player.provider.GamePlayerProvider;
 import me.adamix.mercury.terminal.MinestomTerminal;
 import me.adamix.mercury.translation.TranslationManager;
@@ -33,12 +33,12 @@ import net.minestom.server.instance.anvil.AnvilLoader;
 import net.minestom.server.monitoring.TickMonitor;
 import net.minestom.server.timer.TaskSchedule;
 import net.minestom.server.utils.MathUtils;
-import org.jline.nativ.JLineLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tomlj.Toml;
 import org.tomlj.TomlParseResult;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,17 +54,7 @@ public class Server {
 	@Getter
 	private static InstanceContainer mainInstance;
 	@Getter
-	private static MobManager mobManager;
-	@Getter
-	private static ItemManager itemManager;
-	@Getter
-	private static PlayerDataManager playerDataManager;
-	@Getter
-	private static InventoryManager inventoryManager;
-	@Getter
-	private static TranslationManager translationManager;
-	@Getter
-	private static TomlParseResult config;
+	private static Configuration config;
 
 	private static TomlParseResult loadConfig() throws IOException {
 		Path source = Paths.get(ServerFlag.CONFIG_PATH);
@@ -77,11 +67,14 @@ public class Server {
 	private static void init() {
 
 		minecraftServer = MinecraftServer.init();
-		try {
-			config = loadConfig();
-		} catch (IOException e) {
-			LOGGER.error(e.toString());
+		File configFile = new File(ServerFlag.CONFIG_PATH);
+		if (!configFile.exists()) {
+			LOGGER.error("No server.toml file found at {}!", configFile.getAbsolutePath());
+			return;
 		}
+
+		config = new Configuration(configFile);
+
 		boolean mojangAuth = Boolean.TRUE.equals(config.getBoolean("mojangAuth"));
 		if (mojangAuth) {
 			LOGGER.info("Using mojang authentication.");
@@ -96,20 +89,19 @@ public class Server {
 		GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
 
 		// Initialize managers
-		mobManager = new MobManager();
-		itemManager = new ItemManager();
-		playerDataManager = new PlayerDataManager();
-		inventoryManager = new InventoryManager(globalEventHandler);
-		translationManager = new TranslationManager();
+		Managers.init();
 
 		// Load translations
+		TranslationManager translationManager = Managers.getTranslationManager();
 		translationManager.loadTranslation("english.toml");
 		translationManager.loadTranslation("czech.toml");
 
 		// Register default inventories
+		InventoryManager inventoryManager = Managers.getInventoryManager();
 		inventoryManager.register("profile_selection", new ProfileSelectionInventory());
 
 		// Register all items in /resource/item directory
+		ItemManager itemManager = Managers.getItemManager();
 		itemManager.registerAllItems();
 
 		// Register event listeners
@@ -158,6 +150,7 @@ public class Server {
 		commandManager.register(new TranslationCommand());
 		commandManager.register(new TestCommand());
 		commandManager.register(new ColorTestCommand());
+		commandManager.register(new TranslationTestCommand());
 
 		// Set player provider to custom one
 		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());

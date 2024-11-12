@@ -1,6 +1,6 @@
 package me.adamix.mercury.command;
 
-import me.adamix.mercury.Server;
+import me.adamix.mercury.managers.Managers;
 import me.adamix.mercury.mob.core.GameMob;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -34,7 +34,7 @@ public class EntityCommand extends Command {
 
 			switch (action.toLowerCase()) {
 				case "spawn":
-					for (String id : Server.getMobManager().getEntityIdCollection()) {
+					for (String id : Managers.getMobManager().getEntityIdCollection()) {
 						suggestion.addEntry(new SuggestionEntry(id));
 					}
 			}
@@ -65,7 +65,7 @@ public class EntityCommand extends Command {
 			switch (action.toLowerCase()) {
 				case "spawn":
 
-					GameMob entity = Server.getMobManager().get(second);
+					GameMob entity = Managers.getMobManager().get(second);
 					if (entity == null) {
 						sender.sendMessage(
 								Component.text("Please specify valid entity id!")

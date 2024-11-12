@@ -1,7 +1,7 @@
 package me.adamix.mercury.listener.player;
 
-import me.adamix.mercury.Server;
 import me.adamix.mercury.item.core.GameItem;
+import me.adamix.mercury.managers.Managers;
 import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerChangeHeldSlotEvent;
@@ -22,7 +22,7 @@ public class PlayerChangeHeldSlotListener implements EventListener<PlayerChangeH
 		}
 
 		String id = itemStack.getTag(tag);
-		GameItem item = Server.getItemManager().get(id);
+		GameItem item = Managers.getItemManager().get(id);
 		if (item == null) {
 			return Result.SUCCESS;
 		}

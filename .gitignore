@@ -13,6 +13,7 @@ build/
 .idea/misc.xml
 .idea/gradle.xml
 .idea/
+/.idea
 
 *.iws
 *.iml

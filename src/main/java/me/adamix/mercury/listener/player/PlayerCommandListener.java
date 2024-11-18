@@ -20,7 +20,7 @@ public class PlayerCommandListener implements EventListener<PlayerCommandEvent> 
 			Translation translation = Server.getTranslationManager().getTranslation(player.getTranslationId());
 			player.sendMessage(
 					translation.getComponent("command.invalid")
-							.color(ColorPallet.NEGATIVE_RED.getColor())
+							.color(ColorPallet.ERROR.getColor())
 			);
 
 			return Result.INVALID;

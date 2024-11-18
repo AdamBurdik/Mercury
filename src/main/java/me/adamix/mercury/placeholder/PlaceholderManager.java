@@ -1,6 +1,6 @@
 package me.adamix.mercury.placeholder;
 
-import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.translation.Translation;
 import net.kyori.adventure.text.Component;
@@ -37,7 +37,7 @@ public class PlaceholderManager {
 		 	Tag.Argument argument = args.pop();
 			String key = argument.lowerValue();
 
-			Translation translation = Managers.getTranslationManager().getTranslation(player.getTranslationId());
+			Translation translation = Server.getTranslationManager().getTranslation(player.getTranslationId());
 			return translation.get(key);
 		});
 	}

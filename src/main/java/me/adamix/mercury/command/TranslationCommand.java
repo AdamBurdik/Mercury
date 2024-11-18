@@ -1,7 +1,7 @@
 package me.adamix.mercury.command;
 
+import me.adamix.mercury.Server;
 import me.adamix.mercury.common.ColorPallet;
-import me.adamix.mercury.managers.Managers;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.translation.Translation;
 import me.adamix.mercury.translation.TranslationManager;
@@ -32,7 +32,7 @@ public class TranslationCommand extends Command {
 
 		var stringArgument = ArgumentType.String("code");
 		stringArgument.setSuggestionCallback(((sender, context, suggestion) -> {
-			for (String id : Managers.getTranslationManager().getTranslationMap().keySet()) {
+			for (String id : Server.getTranslationManager().getTranslationMap().keySet()) {
 				suggestion.addEntry(new SuggestionEntry(id));
 			}
 		}));

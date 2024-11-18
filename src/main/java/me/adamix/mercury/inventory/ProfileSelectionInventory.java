@@ -4,7 +4,7 @@ import me.adamix.mercury.inventory.core.GameInventory;
 import me.adamix.mercury.inventory.core.context.CloseContext;
 import me.adamix.mercury.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.inventory.core.context.OpenContext;
-import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.player.data.PlayerData;
 import net.kyori.adventure.text.Component;
@@ -29,7 +29,7 @@ public class ProfileSelectionInventory extends GameInventory {
 	public void onOpen(OpenContext ctx) {
 		GamePlayer player = ctx.getPlayer();
 
-		List<PlayerData> playerDataList = Managers.getPlayerDataManager().getPlayerDataList(player.getUuid());
+		List<PlayerData> playerDataList = Server.getPlayerDataManager().getPlayerDataList(player.getUuid());
 		int i = 0;
 		for (PlayerData playerData : playerDataList) {
 			ItemStack itemStack = ItemStack.of(Material.GRASS_BLOCK)

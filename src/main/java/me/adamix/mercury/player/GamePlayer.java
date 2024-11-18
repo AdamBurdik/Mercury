@@ -2,7 +2,7 @@ package me.adamix.mercury.player;
 
 import lombok.Getter;
 import me.adamix.mercury.Server;
-import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.player.data.PlayerData;
 import me.adamix.mercury.player.data.PlayerDataManager;
 import me.adamix.mercury.player.state.PlayerState;
@@ -35,7 +35,7 @@ public class GamePlayer extends Player {
 	 * @param profileUniqueId unique ID of player profile
 	 */
 	public void loadPlayerData(UUID profileUniqueId) {
-		this.playerData = Managers.getPlayerDataManager().getPlayerData(profileUniqueId);
+		this.playerData = Server.getPlayerDataManager().getPlayerData(profileUniqueId);
 	}
 
 	/**

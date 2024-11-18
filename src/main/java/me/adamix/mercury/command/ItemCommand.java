@@ -1,7 +1,7 @@
 package me.adamix.mercury.command;
 
 import me.adamix.mercury.item.core.GameItem;
-import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.player.GamePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -35,7 +35,7 @@ public class ItemCommand extends Command {
 
 			switch (action.toLowerCase()) {
 				case "give":
-					for (String id : Managers.getItemManager().getItemIdCollection()) {
+					for (String id : Server.getItemManager().getItemIdCollection()) {
 						suggestion.addEntry(new SuggestionEntry(id));
 					}
 			}
@@ -53,7 +53,7 @@ public class ItemCommand extends Command {
 				case "list":
 					sender.sendMessage(
 							Component.text(
-									Managers.getItemManager().getItemIdCollection().toString()
+									Server.getItemManager().getItemIdCollection().toString()
 							).color(TextColor.color(128, 186, 255))
 					);
 					break;
@@ -72,7 +72,7 @@ public class ItemCommand extends Command {
 			switch (action.toLowerCase()) {
 				case "give":
 
-					GameItem item = Managers.getItemManager().get(second);
+					GameItem item = Server.getItemManager().get(second);
 					if (item == null) {
 						sender.sendMessage(
 								Component.text("Please specify valid item id!")

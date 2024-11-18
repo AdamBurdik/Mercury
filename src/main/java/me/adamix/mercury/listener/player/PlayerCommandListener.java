@@ -1,7 +1,7 @@
 package me.adamix.mercury.listener.player;
 
 import me.adamix.mercury.common.ColorPallet;
-import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.translation.Translation;
 import net.minestom.server.MinecraftServer;
@@ -17,7 +17,7 @@ public class PlayerCommandListener implements EventListener<PlayerCommandEvent> 
 		if (!MinecraftServer.getCommandManager().commandExists(split[0])) {
 			GamePlayer player = GamePlayer.of(event);
 
-			Translation translation = Managers.getTranslationManager().getTranslation(player.getTranslationId());
+			Translation translation = Server.getTranslationManager().getTranslation(player.getTranslationId());
 			player.sendMessage(
 					translation.getComponent("command.invalid")
 							.color(ColorPallet.NEGATIVE_RED.getColor())

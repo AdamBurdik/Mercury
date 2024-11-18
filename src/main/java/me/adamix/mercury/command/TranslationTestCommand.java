@@ -1,6 +1,6 @@
 package me.adamix.mercury.command;
 
-import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -17,7 +17,7 @@ public class TranslationTestCommand extends Command {
 			if (sender instanceof GamePlayer player) {
 
 				sender.sendMessage(
-						Managers.getPlaceholderManager()
+						Server.getPlaceholderManager()
 								.parse(key, player)
 				);
 

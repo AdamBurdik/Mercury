@@ -10,8 +10,11 @@ import me.adamix.mercury.inventory.ProfileSelectionInventory;
 import me.adamix.mercury.inventory.core.InventoryManager;
 import me.adamix.mercury.item.core.ItemManager;
 import me.adamix.mercury.listener.player.*;
-import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.Server;
+import me.adamix.mercury.mob.core.MobManager;
+import me.adamix.mercury.placeholder.PlaceholderManager;
 import me.adamix.mercury.player.GamePlayer;
+import me.adamix.mercury.player.data.PlayerDataManager;
 import me.adamix.mercury.player.provider.GamePlayerProvider;
 import me.adamix.mercury.terminal.MinestomTerminal;
 import me.adamix.mercury.translation.Translation;
@@ -53,10 +56,14 @@ public class Server {
 	public static final Pos LIMBO_LOCATION = new Pos(0.5f, 0, 0.5f);
 	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 	private static MinecraftServer minecraftServer;
-	@Getter
-	private static InstanceContainer mainInstance;
-	@Getter
-	private static Configuration config;
+	@Getter private static InstanceContainer mainInstance;
+	@Getter private static Configuration config;
+	@Getter private static MobManager mobManager;
+	@Getter private static ItemManager itemManager;
+	@Getter private static PlayerDataManager playerDataManager;
+	@Getter private static InventoryManager inventoryManager;
+	@Getter private static TranslationManager translationManager;
+	@Getter private static PlaceholderManager placeholderManager;
 
 	private static TomlParseResult loadConfig() throws IOException {
 		Path source = Paths.get(ServerFlag.CONFIG_PATH);
@@ -91,19 +98,21 @@ public class Server {
 		GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
 
 		// Initialize managers
-		Managers.init();
+		mobManager = new MobManager();
+		itemManager = new ItemManager();
+		playerDataManager = new PlayerDataManager();
+		inventoryManager = new InventoryManager();
+		translationManager = new TranslationManager();
+		placeholderManager = new PlaceholderManager();
 
 		// Load translations
-		TranslationManager translationManager = Managers.getTranslationManager();
 		translationManager.loadTranslation("english.toml");
 		translationManager.loadTranslation("czech.toml");
 
 		// Register default inventories
-		InventoryManager inventoryManager = Managers.getInventoryManager();
 		inventoryManager.register("profile_selection", new ProfileSelectionInventory());
 
 		// Register all items in /resource/item directory
-		ItemManager itemManager = Managers.getItemManager();
 		itemManager.registerAllItems();
 
 		// Register event listeners
@@ -168,7 +177,7 @@ public class Server {
 	public static void stop() {
 		for (@NotNull Player onlinePlayer : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
 			GamePlayer player = GamePlayer.of(onlinePlayer);
-			Translation translation = Managers.getTranslationManager().getTranslation(player.getTranslationId());
+			Translation translation = translationManager.getTranslation(player.getTranslationId());
 
 			player.kick(
 					translation.getComponent("server.stopped")

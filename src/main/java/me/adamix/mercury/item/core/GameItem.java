@@ -7,7 +7,7 @@ import me.adamix.mercury.item.core.attribute.ItemAttribute;
 import me.adamix.mercury.item.core.attribute.ItemAttributeValue;
 import me.adamix.mercury.item.core.attribute.ItemAttributes;
 import me.adamix.mercury.item.core.rarity.ItemRarity;
-import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.placeholder.PlaceholderManager;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.translation.Translation;
@@ -60,7 +60,7 @@ public class GameItem implements SerializableEntity {
 	 * @return ItemStack
 	 */
 	public ItemStack toItemStack(GamePlayer player) {
-		PlaceholderManager placeholder = Managers.getPlaceholderManager();
+		PlaceholderManager placeholder = Server.getPlaceholderManager();
 		Translation translation = TranslationManager.getTranslation(player);
 
 		// Create lore

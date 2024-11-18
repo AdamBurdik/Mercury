@@ -1,6 +1,6 @@
 package me.adamix.mercury.listener.player;
 
-import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.player.GamePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -30,7 +30,7 @@ public class PlayerSpawnListener implements EventListener<PlayerSpawnEvent> {
 		gamePlayer.sendMessage(message);
 		gamePlayer.addEffect(new Potion(PotionEffect.BLINDNESS, Byte.MAX_VALUE, Potion.INFINITE_DURATION));
 
-		Managers.getInventoryManager().open("profile_selection", gamePlayer);
+		Server.getInventoryManager().open("profile_selection", gamePlayer);
 
 		return Result.SUCCESS;
 	}

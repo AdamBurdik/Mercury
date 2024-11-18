@@ -37,11 +37,6 @@ public class ConsoleSender implements CommandSender {
 		LOGGER.info(ComponentUtils.componentToAnsi(message));
 	}
 
-	//	@Override
-//	public void sendMessage(@NotNull Identity source, @NotNull Component message, @NotNull MessageType type) {
-//		LOGGER.info(message);
-//	}
-
 	@NotNull
 	@Override
 	public Set<Permission> getAllPermissions() {

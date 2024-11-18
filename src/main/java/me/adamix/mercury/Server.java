@@ -12,6 +12,7 @@ import me.adamix.mercury.item.core.ItemManager;
 import me.adamix.mercury.listener.player.*;
 import me.adamix.mercury.Server;
 import me.adamix.mercury.mob.core.MobManager;
+import me.adamix.mercury.monitor.TickMonitorManager;
 import me.adamix.mercury.placeholder.PlaceholderManager;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.player.data.PlayerDataManager;
@@ -64,6 +65,7 @@ public class Server {
 	@Getter private static InventoryManager inventoryManager;
 	@Getter private static TranslationManager translationManager;
 	@Getter private static PlaceholderManager placeholderManager;
+	@Getter private static TickMonitorManager tickMonitorManager;
 
 	private static TomlParseResult loadConfig() throws IOException {
 		Path source = Paths.get(ServerFlag.CONFIG_PATH);
@@ -104,6 +106,10 @@ public class Server {
 		inventoryManager = new InventoryManager();
 		translationManager = new TranslationManager();
 		placeholderManager = new PlaceholderManager();
+		tickMonitorManager = new TickMonitorManager();
+
+		// Start tick monitor
+		tickMonitorManager.start();
 
 		// Load translations
 		translationManager.loadTranslation("english.toml");
@@ -121,30 +127,6 @@ public class Server {
 		globalEventHandler.addListener(new PlayerMoveListener());
 		globalEventHandler.addListener(new PlayerChangeHeldSlotListener());
 		globalEventHandler.addListener(new PlayerCommandListener());
-
-		// Taken from https://github.com/AtlasEngineCa/WorldSeedEntityEngine/blob/master/src/test/java/Main.java#L132
-		AtomicReference<TickMonitor> lastTick = new AtomicReference<>();
-		globalEventHandler.addListener(ServerTickMonitorEvent.class, event -> lastTick.set(event.getTickMonitor()));
-
-		MinecraftServer.getSchedulerManager().scheduleTask(() -> {
-			Collection<Player> players = MinecraftServer.getConnectionManager().getOnlinePlayers();
-			if (players.isEmpty()) return;
-
-			final Runtime runtime = Runtime.getRuntime();
-			final TickMonitor tickMonitor = lastTick.get();
-			final long ramUsage = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
-
-			final Component header = Component.newline()
-					.append(Component.text("RAM USAGE: " + ramUsage + " MB", NamedTextColor.GRAY).append(Component.newline())
-							.append(Component.text("TICK TIME: " + MathUtils.round(tickMonitor.getTickTime(), 2) + "ms", NamedTextColor.GRAY))).append(Component.newline());
-
-			final Component footer = Component.newline()
-					.append(Component.text("          Mercury          ")
-							.color(TextColor.color(57, 200, 73))
-							.append(Component.newline()));
-
-			Audiences.players().sendPlayerListHeaderAndFooter(header, footer);
-		}, TaskSchedule.tick(10), TaskSchedule.tick(10));
 
 		// Configure default instance
 		InstanceManager instanceManager = MinecraftServer.getInstanceManager();
@@ -164,6 +146,7 @@ public class Server {
 		commandManager.register(new ColorTestCommand());
 		commandManager.register(new TranslationTestCommand());
 		commandManager.register(new StopCommand());
+		commandManager.register(new PerformanceCommand());
 
 		// Set player provider to custom one
 		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());
@@ -175,6 +158,9 @@ public class Server {
 	}
 
 	public static void stop() {
+		// Stop and save necessary stuff
+		tickMonitorManager.stop();
+
 		for (@NotNull Player onlinePlayer : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
 			GamePlayer player = GamePlayer.of(onlinePlayer);
 			Translation translation = translationManager.getTranslation(player.getTranslationId());

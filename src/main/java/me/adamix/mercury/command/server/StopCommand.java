@@ -1,5 +1,6 @@
 package me.adamix.mercury.command.server;
 
+import me.adamix.mercury.Server;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 
@@ -8,7 +9,7 @@ public class StopCommand extends Command {
 		super("stop");
 
 		setDefaultExecutor((sender, ctx) -> {
-			MinecraftServer.stopCleanly();
+			Server.stop();
 		});
 	}
 }

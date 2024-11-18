@@ -3,6 +3,7 @@ package me.adamix.mercury;
 import lombok.Getter;
 import me.adamix.mercury.command.*;
 import me.adamix.mercury.command.server.StopCommand;
+import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.configuration.Configuration;
 import me.adamix.mercury.flag.ServerFlag;
 import me.adamix.mercury.inventory.ProfileSelectionInventory;
@@ -13,8 +14,10 @@ import me.adamix.mercury.listener.player.PlayerChangeHeldSlotListener;
 import me.adamix.mercury.listener.player.PlayerMoveListener;
 import me.adamix.mercury.listener.player.PlayerSpawnListener;
 import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.player.provider.GamePlayerProvider;
 import me.adamix.mercury.terminal.MinestomTerminal;
+import me.adamix.mercury.translation.Translation;
 import me.adamix.mercury.translation.TranslationManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -34,6 +37,7 @@ import net.minestom.server.instance.anvil.AnvilLoader;
 import net.minestom.server.monitoring.TickMonitor;
 import net.minestom.server.timer.TaskSchedule;
 import net.minestom.server.utils.MathUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tomlj.Toml;
@@ -161,6 +165,20 @@ public class Server {
 	private static void start() {
 		minecraftServer.start("0.0.0.0", 25565);
 		MinestomTerminal.start();
+	}
+
+	public static void stop() {
+		for (@NotNull Player onlinePlayer : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
+			GamePlayer player = GamePlayer.of(onlinePlayer);
+			Translation translation = Managers.getTranslationManager().getTranslation(player.getTranslationId());
+
+			player.kick(
+					translation.getComponent("server.stopped")
+							.color(ColorPallet.NEGATIVE_RED.getColor())
+			);
+		}
+
+		MinecraftServer.stopCleanly();
 	}
 
 	public static void main(String[] args) {

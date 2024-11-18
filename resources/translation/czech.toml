@@ -1,5 +1,5 @@
 [translation]
-name = "Czech"
+name = "Čeština"
 id = "cz"
 
 [item.rarity]
@@ -13,20 +13,19 @@ unique = "Unikátní"
 
 [item.attribute]
 damage = "Poškození"
-attack_speed = "Rychlost Útoku"
-movement_speed = "Rychlost Pohybu"
-max_health = "Maximální Zdraví"
+attack_speed = "Rychlost útoku"
+movement_speed = "Rychlost pohybu"
+max_health = "Maximální zdraví"
 
 [item.name]
-test_item = "Testovací Item"
+test_item = "Testovací předmět"
 
 [item.description]
-test_item = "Item, který je používán pro testování"
+test_item = "Předmět, který je používán pro testování"
 
 [command]
 invalid = "Tento příkaz neexistuje!"
 
 [command.translation]
-no_argument_specified = "Prosím specifikuj argument pro překlad!"
+no_argument_specified = "Prosím, specifikuj argument pro překlad!"
 successfully_set = "Jazyk byl úspěšně nastaven na češtinu!"
-

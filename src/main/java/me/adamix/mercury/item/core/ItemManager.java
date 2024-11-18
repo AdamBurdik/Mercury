@@ -6,6 +6,7 @@ import me.adamix.mercury.item.core.rarity.ItemRarity;
 import me.adamix.mercury.util.FileUtils;
 import me.adamix.mercury.util.TomlUtils;
 import net.minestom.server.item.Material;
+import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ import java.util.*;
 
 public class ItemManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemManager.class);
-	private final Map<String, GameItem> gameItemMap = new HashMap<>();
+	private final Map<NamespaceID, GameItem> gameItemMap = new HashMap<>();
 
 	public void registerAllItems() {
 		File itemDirectory = new File("resources/items/");
@@ -49,15 +50,17 @@ public class ItemManager {
 				return;
 			}
 
-			String id = result.getString("id");
-			if (id == null) {
+			String stringId = result.getString("id");
+			if (stringId == null) {
 				LOGGER.error("Unable to find id property in {} configuration!", file.getName());
 				return;
 			}
 
+			NamespaceID namespaceID = NamespaceID.from(stringId);
+
 			String name = result.getString("name");
 			if (name == null) {
-				LOGGER.error("Unable to find name property in {} ({}) configuration!", id, file.getName());
+				LOGGER.error("Unable to find name property in {} ({}) configuration!", namespaceID, file.getName());
 				return;
 			}
 
@@ -65,26 +68,26 @@ public class ItemManager {
 
 			String baseMaterial = result.getString("base_material");
 			if (baseMaterial == null) {
-				LOGGER.error("Unable to find base_material property in {} ({}) configuration!", id, file.getName());
+				LOGGER.error("Unable to find base_material property in {} ({}) configuration!", namespaceID, file.getName());
 				return;
 			}
 
 			Material material = Material.fromNamespaceId(baseMaterial);
 			if (material == null) {
-				LOGGER.error("Unknown material {} in {} ({}) configuration! Please specify valid material. e.g. 'minecraft:diamond_sword'", baseMaterial, id, file.getName());
+				LOGGER.error("Unknown material {} in {} ({}) configuration! Please specify valid material. e.g. 'minecraft:diamond_sword'", baseMaterial, namespaceID, file.getName());
 				return;
 			}
 
 			String rarity = result.getString("rarity");
 			if (rarity == null) {
-				LOGGER.error("Unable to find rarity property in {} ({}) configuration!", id, file.getName());
+				LOGGER.error("Unable to find rarity property in {} ({}) configuration!", namespaceID, file.getName());
 				return;
 			}
 			ItemRarity itemRarity;
 			try {
 				itemRarity = ItemRarity.valueOf(rarity.toUpperCase());
 			} catch (IllegalArgumentException e) {
-				LOGGER.error("Unknown rarity {} in {} ({}) configuration! Please specify valid rarity. e.g. 'common'", baseMaterial, id, file.getName());
+				LOGGER.error("Unknown rarity {} in {} ({}) configuration! Please specify valid rarity. e.g. 'common'", baseMaterial, namespaceID, file.getName());
 				return;
 			}
 
@@ -99,9 +102,9 @@ public class ItemManager {
 			}
 
 
-			LOGGER.info("Registering item {} ({})", id, file.getName());
+			LOGGER.info("Registering item {} ({})", namespaceID, file.getName());
 			GameItem item = new GameItem(
-					id,
+					namespaceID,
 					material,
 					name,
 					description,
@@ -121,10 +124,18 @@ public class ItemManager {
 	}
 
 	public @Nullable GameItem get(String id) {
-		return gameItemMap.get(id);
+		return this.get(NamespaceID.from(id));
 	}
 
-	public @NotNull Set<String> getItemIdCollection() {
+	public @Nullable GameItem get(NamespaceID namespaceID) {
+		return gameItemMap.get(namespaceID);
+	}
+
+	public boolean contains(NamespaceID namespaceID) {
+		return gameItemMap.containsKey(namespaceID);
+	}
+
+	public @NotNull Set<NamespaceID> getItemIdCollection() {
 		return gameItemMap.keySet();
 	}
 

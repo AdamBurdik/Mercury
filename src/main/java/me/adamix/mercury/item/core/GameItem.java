@@ -19,6 +19,7 @@ import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.tag.Tag;
+import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,7 @@ import java.util.*;
 
 @Getter
 public class GameItem implements SerializableEntity {
-	private final @NotNull String id;
+	private final @NotNull NamespaceID id;
 	private final @NotNull Material baseMaterial;
 	private final @NotNull String name;
 	private final @Nullable String description;
@@ -35,7 +36,7 @@ public class GameItem implements SerializableEntity {
 	private static final Tag<String> tag = Tag.String("id");
 
 	public GameItem(
-			@NotNull String id,
+			@NotNull NamespaceID id,
 			@NotNull Material baseMaterial,
 			@NotNull String name,
 			@Nullable String description,
@@ -48,10 +49,6 @@ public class GameItem implements SerializableEntity {
 		this.description = description;
 		this.attributes = attributes;
 		this.rarity = rarity;
-	}
-
-	public void give(GamePlayer player) {
-		player.getInventory().addItemStack(this.toItemStack(player));
 	}
 
 	/**

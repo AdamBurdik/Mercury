@@ -2,9 +2,9 @@ package me.adamix.mercury.player;
 
 import lombok.Getter;
 import me.adamix.mercury.Server;
-import me.adamix.mercury.Server;
 import me.adamix.mercury.player.data.PlayerData;
 import me.adamix.mercury.player.data.PlayerDataManager;
+import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import me.adamix.mercury.player.state.PlayerState;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
@@ -161,4 +161,16 @@ public class GamePlayer extends Player {
 		}
 		return this.playerData.getTranslationId();
 	}
+
+	/**
+	 * Retrieves custom player inventory
+	 * @return game player inventory
+	 */
+	public @Nullable GamePlayerInventory getGameInventory() {
+		if (this.playerData == null) {
+			return null;
+		}
+		return this.playerData.getPlayerInventory();
+	}
+
 }

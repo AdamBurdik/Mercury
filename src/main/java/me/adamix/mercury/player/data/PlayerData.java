@@ -2,6 +2,7 @@ package me.adamix.mercury.player.data;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -13,15 +14,12 @@ import java.util.UUID;
 @Getter
 public class PlayerData {
 	private final @NotNull UUID profileUniqueId;
-	@Setter
-	private @NotNull String translationId;
+	@Setter private @NotNull String translationId;
 	private int health;
-	@Setter
-	private int maxHealth;
-	@Setter
-	private float movementSpeed;
-	@Setter
-	private float attackSpeed;
+	@Setter private int maxHealth;
+	@Setter private float movementSpeed;
+	@Setter private float attackSpeed;
+	private GamePlayerInventory playerInventory;
 
 	/**
 	 * Constructs a new PlayerData instance all the required fields
@@ -36,13 +34,15 @@ public class PlayerData {
 			int health,
 			int maxHeath,
 			float movementSpeed,
-			float attackSpeed
+			float attackSpeed,
+			GamePlayerInventory playerInventory
 	) {
 		this.profileUniqueId = profileUniqueId;
 		this.health = health;
 		this.maxHealth = maxHeath;
 		this.movementSpeed = movementSpeed;
 		this.attackSpeed = attackSpeed;
+		this.playerInventory = playerInventory;
 	}
 
 	/**

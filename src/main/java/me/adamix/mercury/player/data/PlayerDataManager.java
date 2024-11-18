@@ -1,5 +1,6 @@
 package me.adamix.mercury.player.data;
 
+import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import net.minestom.server.entity.attribute.Attribute;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +29,8 @@ public class PlayerDataManager {
 				health,
 				health,
 				(float) Attribute.GENERIC_MOVEMENT_SPEED.defaultValue(),
-				(float) Attribute.GENERIC_ATTACK_SPEED.defaultValue()
+				(float) Attribute.GENERIC_ATTACK_SPEED.defaultValue(),
+				new GamePlayerInventory()
 		);
 	}
 
@@ -62,7 +64,8 @@ public class PlayerDataManager {
 							health,
 							health,
 							(float) Attribute.GENERIC_MOVEMENT_SPEED.defaultValue(),
-							(float) Attribute.GENERIC_ATTACK_SPEED.defaultValue()
+							(float) Attribute.GENERIC_ATTACK_SPEED.defaultValue(),
+							new GamePlayerInventory()
 					)
 			);
 		}

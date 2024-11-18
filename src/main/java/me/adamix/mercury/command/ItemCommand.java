@@ -2,12 +2,15 @@ package me.adamix.mercury.command;
 
 import me.adamix.mercury.item.core.GameItem;
 import me.adamix.mercury.Server;
+import me.adamix.mercury.item.core.ItemManager;
 import me.adamix.mercury.player.GamePlayer;
+import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;
+import net.minestom.server.utils.NamespaceID;
 
 public class ItemCommand extends Command {
 	public ItemCommand() {
@@ -35,8 +38,8 @@ public class ItemCommand extends Command {
 
 			switch (action.toLowerCase()) {
 				case "give":
-					for (String id : Server.getItemManager().getItemIdCollection()) {
-						suggestion.addEntry(new SuggestionEntry(id));
+					for (NamespaceID namespaceID : Server.getItemManager().getItemIdCollection()) {
+						suggestion.addEntry(new SuggestionEntry(namespaceID.asString()));
 					}
 			}
 		});
@@ -72,8 +75,10 @@ public class ItemCommand extends Command {
 			switch (action.toLowerCase()) {
 				case "give":
 
-					GameItem item = Server.getItemManager().get(second);
-					if (item == null) {
+					ItemManager itemManager = Server.getItemManager();
+					NamespaceID namespaceID = NamespaceID.from(second);
+
+					if (!itemManager.contains(namespaceID)) {
 						sender.sendMessage(
 								Component.text("Please specify valid item id!")
 										.color(TextColor.color(255, 0, 0))
@@ -81,7 +86,9 @@ public class ItemCommand extends Command {
 						return;
 					}
 
-					item.give(player);
+					GamePlayerInventory inventory = player.getGameInventory();
+					inventory.addItem(namespaceID);
+					inventory.updatePlayerInventory(player, false);
 			}
 
 		}, actionArgument, secondArgument);

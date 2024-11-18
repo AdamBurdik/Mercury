@@ -1,11 +1,9 @@
-package me.adamix.mercury.command;
+package me.adamix.mercury.command.server;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
 import me.adamix.mercury.Server;
 import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.monitor.TickMonitorManager;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
 import net.minestom.server.command.builder.Command;
 
 public class PerformanceCommand extends Command {

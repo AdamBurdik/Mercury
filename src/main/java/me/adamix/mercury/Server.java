@@ -2,6 +2,11 @@ package me.adamix.mercury;
 
 import lombok.Getter;
 import me.adamix.mercury.command.*;
+import me.adamix.mercury.command.debug.ColorTestCommand;
+import me.adamix.mercury.command.debug.InventoryTestCommand;
+import me.adamix.mercury.command.debug.TestCommand;
+import me.adamix.mercury.command.debug.TranslationTestCommand;
+import me.adamix.mercury.command.server.PerformanceCommand;
 import me.adamix.mercury.command.server.StopCommand;
 import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.configuration.Configuration;
@@ -10,7 +15,6 @@ import me.adamix.mercury.inventory.ProfileSelectionInventory;
 import me.adamix.mercury.inventory.core.InventoryManager;
 import me.adamix.mercury.item.core.ItemManager;
 import me.adamix.mercury.listener.player.*;
-import me.adamix.mercury.Server;
 import me.adamix.mercury.mob.core.MobManager;
 import me.adamix.mercury.monitor.TickMonitorManager;
 import me.adamix.mercury.placeholder.PlaceholderManager;
@@ -20,24 +24,16 @@ import me.adamix.mercury.player.provider.GamePlayerProvider;
 import me.adamix.mercury.terminal.MinestomTerminal;
 import me.adamix.mercury.translation.Translation;
 import me.adamix.mercury.translation.TranslationManager;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.adventure.audience.Audiences;
 import net.minestom.server.command.CommandManager;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
-import net.minestom.server.event.server.ServerTickMonitorEvent;
 import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.anvil.AnvilLoader;
-import net.minestom.server.monitoring.TickMonitor;
-import net.minestom.server.timer.TaskSchedule;
-import net.minestom.server.utils.MathUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Server {
 
@@ -147,6 +141,7 @@ public class Server {
 		commandManager.register(new TranslationTestCommand());
 		commandManager.register(new StopCommand());
 		commandManager.register(new PerformanceCommand());
+		commandManager.register(new InventoryTestCommand());
 
 		// Set player provider to custom one
 		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());

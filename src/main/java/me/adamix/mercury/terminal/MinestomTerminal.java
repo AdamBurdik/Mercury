@@ -1,9 +1,8 @@
 package me.adamix.mercury.terminal;
 
 import me.adamix.mercury.Server;
-import me.adamix.mercury.command.ConsoleSender;
+import me.adamix.mercury.command.sender.ConsoleSender;
 import me.adamix.mercury.common.ColorPallet;
-import me.adamix.mercury.Server;
 import me.adamix.mercury.translation.Translation;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandManager;

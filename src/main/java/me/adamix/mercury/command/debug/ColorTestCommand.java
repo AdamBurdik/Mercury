@@ -1,4 +1,4 @@
-package me.adamix.mercury.command;
+package me.adamix.mercury.command.debug;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;

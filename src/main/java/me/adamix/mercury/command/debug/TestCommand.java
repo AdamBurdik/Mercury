@@ -1,4 +1,4 @@
-package me.adamix.mercury.command;
+package me.adamix.mercury.command.debug;
 
 import me.adamix.mercury.camera.Camera;
 import me.adamix.mercury.camera.interpolation.QuadraticBezierCurve;

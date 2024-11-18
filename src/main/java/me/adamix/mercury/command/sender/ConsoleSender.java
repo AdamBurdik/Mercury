@@ -1,4 +1,4 @@
-package me.adamix.mercury.command;
+package me.adamix.mercury.command.sender;
 
 import me.adamix.mercury.util.ComponentUtils;
 import net.kyori.adventure.identity.Identity;

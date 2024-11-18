@@ -55,6 +55,8 @@ public class TranslationCommand extends Command {
 							.color(ColorPallet.SUCCESS.getColor())
 			);
 
+			player.getGameInventory().updatePlayerInventory(player, true);
+
 		}, stringArgument);
 	}
 }

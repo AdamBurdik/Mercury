@@ -22,7 +22,7 @@ public class TranslationCommand extends Command {
 
 			Translation translation = TranslationManager.getTranslation(player);
 
-			String text = translation.get("command.language.no_argument_specified");
+			String text = translation.get("command.translation.no_argument_specified");
 
 			sender.sendMessage(
 					Component.text(text)

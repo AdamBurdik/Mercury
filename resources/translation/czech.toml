@@ -23,6 +23,8 @@ test_item = "Testovací Item"
 [item.description]
 test_item = "Item, který je používán pro testování"
 
+[command]
+invalid = "Tento příkaz neexistuje!"
 
 [command.translation]
 no_argument_specified = "Prosím specifikuj argument pro překlad!"

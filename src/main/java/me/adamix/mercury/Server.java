@@ -9,10 +9,7 @@ import me.adamix.mercury.flag.ServerFlag;
 import me.adamix.mercury.inventory.ProfileSelectionInventory;
 import me.adamix.mercury.inventory.core.InventoryManager;
 import me.adamix.mercury.item.core.ItemManager;
-import me.adamix.mercury.listener.player.AsyncPlayerConfigurationListener;
-import me.adamix.mercury.listener.player.PlayerChangeHeldSlotListener;
-import me.adamix.mercury.listener.player.PlayerMoveListener;
-import me.adamix.mercury.listener.player.PlayerSpawnListener;
+import me.adamix.mercury.listener.player.*;
 import me.adamix.mercury.managers.Managers;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.player.provider.GamePlayerProvider;
@@ -114,6 +111,7 @@ public class Server {
 		globalEventHandler.addListener(new PlayerSpawnListener());
 		globalEventHandler.addListener(new PlayerMoveListener());
 		globalEventHandler.addListener(new PlayerChangeHeldSlotListener());
+		globalEventHandler.addListener(new PlayerCommandListener());
 
 		// Taken from https://github.com/AtlasEngineCa/WorldSeedEntityEngine/blob/master/src/test/java/Main.java#L132
 		AtomicReference<TickMonitor> lastTick = new AtomicReference<>();

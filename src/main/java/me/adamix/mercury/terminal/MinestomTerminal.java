@@ -1,6 +1,10 @@
 package me.adamix.mercury.terminal;
 
+import me.adamix.mercury.Server;
 import me.adamix.mercury.command.ConsoleSender;
+import me.adamix.mercury.common.ColorPallet;
+import me.adamix.mercury.managers.Managers;
+import me.adamix.mercury.translation.Translation;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandManager;
 import org.jetbrains.annotations.ApiStatus;
@@ -44,6 +48,18 @@ public class MinestomTerminal {
 				String command;
 				try {
 					command = reader.readLine(PROMPT);
+					if (!COMMAND_MANAGER.commandExists(command)) {
+						String translationId =  Server.getConfig().getString("console_translation_id");
+						Translation translation = Managers.getTranslationManager().getTranslation(translationId);
+
+						consoleSender.sendMessage(
+								translation.getComponent("command.invalid")
+										.color(ColorPallet.RED.getColor())
+						);
+
+						continue;
+					}
+
 					COMMAND_MANAGER.execute(consoleSender, command);
 				} catch (UserInterruptException e) {
 					System.exit(0);

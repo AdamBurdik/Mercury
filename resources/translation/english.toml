@@ -23,6 +23,9 @@ test_item = "Test Item"
 [item.description]
 test_item = "Item used for testing purposes"
 
+[command]
+invalid = "This command is invalid!"
+
 [command.translation]
 no_argument_specified = "Please specify an argument for translation!"
 successfully_set = "Language has been successfully set to English"

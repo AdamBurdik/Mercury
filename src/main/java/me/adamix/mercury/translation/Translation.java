@@ -1,5 +1,6 @@
 package me.adamix.mercury.translation;
 
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,5 +30,9 @@ public class Translation {
 			return translationCode + ":" + dottedKey;
 		}
 		return translationMap.get(dottedKey);
+	}
+
+	public @NotNull Component getComponent(String dottedKey) {
+		return Component.text(this.get(dottedKey));
 	}
 }

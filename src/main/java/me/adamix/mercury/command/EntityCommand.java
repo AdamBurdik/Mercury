@@ -1,6 +1,7 @@
 package me.adamix.mercury.command;
 
 import me.adamix.mercury.Server;
+import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.mob.core.GameMob;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -16,7 +17,7 @@ public class EntityCommand extends Command {
 		setDefaultExecutor((sender, ctx) -> {
 			sender.sendMessage(
 					Component.text("Please specify action!")
-							.color(TextColor.color(255, 0, 0))
+							.color(ColorPallet.ERROR.getColor())
 			);
 		});
 
@@ -47,7 +48,7 @@ public class EntityCommand extends Command {
 
 					sender.sendMessage(
 							Component.text("Please specify entity id!")
-									.color(TextColor.color(255, 0, 0))
+									.color(ColorPallet.ERROR.getColor())
 					);
 					break;
 			}
@@ -69,7 +70,7 @@ public class EntityCommand extends Command {
 					if (entity == null) {
 						sender.sendMessage(
 								Component.text("Please specify valid entity id!")
-										.color(TextColor.color(255, 0, 0))
+										.color(ColorPallet.ERROR.getColor())
 						);
 						return;
 					}

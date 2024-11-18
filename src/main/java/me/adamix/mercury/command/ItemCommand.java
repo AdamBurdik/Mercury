@@ -1,5 +1,6 @@
 package me.adamix.mercury.command;
 
+import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.item.core.GameItem;
 import me.adamix.mercury.Server;
 import me.adamix.mercury.item.core.ItemManager;
@@ -20,7 +21,7 @@ public class ItemCommand extends Command {
 		setDefaultExecutor((sender, ctx) -> {
 			sender.sendMessage(
 					Component.text("Please specify action!")
-							.color(TextColor.color(255, 0, 0))
+							.color(ColorPallet.ERROR.getColor())
 			);
 		});
 
@@ -50,14 +51,14 @@ public class ItemCommand extends Command {
 				case "give":
 					sender.sendMessage(
 							Component.text("Please specify item id!")
-									.color(TextColor.color(255, 0, 0))
+									.color(ColorPallet.ERROR.getColor())
 					);
 					break;
 				case "list":
 					sender.sendMessage(
 							Component.text(
 									Server.getItemManager().getItemIdCollection().toString()
-							).color(TextColor.color(128, 186, 255))
+							).color(ColorPallet.BLUE.getColor())
 					);
 					break;
 			}
@@ -81,7 +82,7 @@ public class ItemCommand extends Command {
 					if (!itemManager.contains(namespaceID)) {
 						sender.sendMessage(
 								Component.text("Please specify valid item id!")
-										.color(TextColor.color(255, 0, 0))
+										.color(ColorPallet.ERROR.getColor())
 						);
 						return;
 					}

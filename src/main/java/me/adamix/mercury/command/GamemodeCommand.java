@@ -1,5 +1,6 @@
 package me.adamix.mercury.command;
 
+import me.adamix.mercury.common.ColorPallet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.command.builder.Command;
@@ -15,7 +16,7 @@ public class GamemodeCommand extends Command {
 		setDefaultExecutor((sender, ctx) -> {
 			sender.sendMessage(
 					Component.text("Please specify gamemode")
-							.color(TextColor.color(255, 0, 0))
+							.color(ColorPallet.ERROR.getColor())
 			);
 		});
 

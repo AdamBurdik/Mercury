@@ -29,12 +29,12 @@ public class ConsoleSender implements CommandSender {
 
 	@Override
 	public void sendMessage(@NotNull String message) {
-		LOGGER.info("Output: {}", message);
+		LOGGER.info(message);
 	}
 
 	@Override
 	public void sendMessage(@NotNull Component message) {
-		LOGGER.info("Output: {}", ComponentUtils.componentToAnsi(message));
+		LOGGER.info(ComponentUtils.componentToAnsi(message));
 	}
 
 	//	@Override
@@ -46,11 +46,6 @@ public class ConsoleSender implements CommandSender {
 	@Override
 	public Set<Permission> getAllPermissions() {
 		return permissions;
-	}
-
-	@Override
-	public boolean isConsole() {
-		return true;
 	}
 
 	@Override

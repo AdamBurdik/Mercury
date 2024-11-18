@@ -1,4 +1,4 @@
-package me.adamix.mercury.util;
+package me.adamix.mercury.utils;
 
 import lombok.NonNull;
 

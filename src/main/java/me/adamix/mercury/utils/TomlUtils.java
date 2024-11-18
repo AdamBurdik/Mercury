@@ -1,4 +1,4 @@
-package me.adamix.mercury.util;
+package me.adamix.mercury.utils;
 
 import me.adamix.mercury.item.core.attribute.ItemAttributeValue;
 import net.minestom.server.entity.attribute.AttributeOperation;

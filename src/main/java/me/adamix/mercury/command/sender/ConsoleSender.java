@@ -1,6 +1,6 @@
 package me.adamix.mercury.command.sender;
 
-import me.adamix.mercury.util.ComponentUtils;
+import me.adamix.mercury.utils.ComponentUtils;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.pointer.Pointers;
 import net.kyori.adventure.text.Component;

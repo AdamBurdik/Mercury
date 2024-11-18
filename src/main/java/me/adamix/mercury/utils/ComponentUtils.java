@@ -1,4 +1,4 @@
-package me.adamix.mercury.util;
+package me.adamix.mercury.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

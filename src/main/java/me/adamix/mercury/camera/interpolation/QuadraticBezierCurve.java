@@ -1,7 +1,7 @@
 package me.adamix.mercury.camera.interpolation;
 
 import lombok.Getter;
-import me.adamix.mercury.util.CameraMathUtils;
+import me.adamix.mercury.utils.CameraMathUtils;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 

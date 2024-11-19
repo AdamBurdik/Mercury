@@ -21,6 +21,7 @@ dependencies {
     implementation 'org.tomlj:tomlj:1.1.1'
     implementation "net.kyori:adventure-text-minimessage:4.17.0"
     implementation 'org.jline:jline:3.27.1'
+    implementation 'dev.hollowcube:schem:1.2.0'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.34'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'

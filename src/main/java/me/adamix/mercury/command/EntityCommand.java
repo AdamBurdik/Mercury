@@ -6,14 +6,11 @@ import me.adamix.mercury.mob.core.GameMob;
 import me.adamix.mercury.mob.core.MobManager;
 import me.adamix.mercury.player.GamePlayer;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;
-import net.minestom.server.entity.Player;
 import net.minestom.server.utils.NamespaceID;
 
-import java.util.List;
 
 public class EntityCommand extends Command {
 	public EntityCommand()  {
@@ -81,9 +78,8 @@ public class EntityCommand extends Command {
 						);
 						return;
 					}
-					GameMob mob = mobManager.get(namespaceID);
-					mob.spawn(player.getPosition(), player.getInstance(), List.of(player));
-
+					GameMob mob = mobManager.spawn(namespaceID, player.getInstance(), player.getPosition());
+					player.show(mob);
 			}
 
 		}, actionArgument, secondArgument);

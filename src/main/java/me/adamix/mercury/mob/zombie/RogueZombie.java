@@ -23,7 +23,6 @@ public class RogueZombie extends GameMob {
 				new MobAttributes()
 						.set(MobAttribute.MOVEMENT_SPEED, 0.21f),
 				new Behaviour()
-
 		);
 	}
 

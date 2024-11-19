@@ -108,8 +108,8 @@ public class Server {
 		itemManager.registerAllItems();
 
 		// Register default entities
-		mobManager.register(NamespaceID.from("mercury", "rogue_zombie"), new RogueZombie());
-		mobManager.register(NamespaceID.from("mercury", "friendly_zombie"), new FriendlyZombie());
+		mobManager.register(NamespaceID.from("mercury", "rogue_zombie"), RogueZombie.class);
+		mobManager.register(NamespaceID.from("mercury", "friendly_zombie"), FriendlyZombie.class);
 
 		// Register event listeners
 		globalEventHandler.addListener(new AsyncPlayerConfigurationListener());

@@ -2,6 +2,7 @@ package me.adamix.mercury.player;
 
 import lombok.Getter;
 import me.adamix.mercury.Server;
+import me.adamix.mercury.mob.core.GameMob;
 import me.adamix.mercury.player.data.PlayerData;
 import me.adamix.mercury.player.data.PlayerDataManager;
 import me.adamix.mercury.player.inventory.GamePlayerInventory;
@@ -171,6 +172,11 @@ public class GamePlayer extends Player {
 			return null;
 		}
 		return this.playerData.getPlayerInventory();
+	}
+
+	public void show(GameMob mob) {
+		mob.updateName(this);
+		mob.addViewer(this);
 	}
 
 }

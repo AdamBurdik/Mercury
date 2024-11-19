@@ -29,3 +29,7 @@ invalid = "This command is invalid!"
 [command.translation]
 no_argument_specified = "Please specify an argument for translation!"
 successfully_set = "Language has been successfully set to English"
+
+[entity.zombie]
+rogue = "Rogue Zombie"
+friendly = "Friendly Zombie"

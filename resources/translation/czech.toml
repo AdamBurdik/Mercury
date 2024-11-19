@@ -29,3 +29,7 @@ invalid = "Tento příkaz neexistuje!"
 [command.translation]
 no_argument_specified = "Prosím, specifikuj argument pro překlad!"
 successfully_set = "Jazyk byl úspěšně nastaven na češtinu!"
+
+[entity.zombie]
+rogue = "Zlotřilý Zombie"
+friendly = "Přátelský Zombie"

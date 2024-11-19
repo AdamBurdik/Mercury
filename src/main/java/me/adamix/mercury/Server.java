@@ -2,10 +2,7 @@ package me.adamix.mercury;
 
 import lombok.Getter;
 import me.adamix.mercury.command.*;
-import me.adamix.mercury.command.debug.ColorTestCommand;
-import me.adamix.mercury.command.debug.InventoryTestCommand;
-import me.adamix.mercury.command.debug.TestCommand;
-import me.adamix.mercury.command.debug.TranslationTestCommand;
+import me.adamix.mercury.command.debug.*;
 import me.adamix.mercury.command.server.PerformanceCommand;
 import me.adamix.mercury.command.server.StopCommand;
 import me.adamix.mercury.common.ColorPallet;
@@ -16,6 +13,8 @@ import me.adamix.mercury.inventory.core.InventoryManager;
 import me.adamix.mercury.item.core.ItemManager;
 import me.adamix.mercury.listener.player.*;
 import me.adamix.mercury.mob.core.MobManager;
+import me.adamix.mercury.mob.zombie.FriendlyZombie;
+import me.adamix.mercury.mob.zombie.RogueZombie;
 import me.adamix.mercury.monitor.TickMonitorManager;
 import me.adamix.mercury.placeholder.PlaceholderManager;
 import me.adamix.mercury.player.GamePlayer;
@@ -34,6 +33,7 @@ import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.anvil.AnvilLoader;
+import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,14 +60,6 @@ public class Server {
 	@Getter private static TranslationManager translationManager;
 	@Getter private static PlaceholderManager placeholderManager;
 	@Getter private static TickMonitorManager tickMonitorManager;
-
-	private static TomlParseResult loadConfig() throws IOException {
-		Path source = Paths.get(ServerFlag.CONFIG_PATH);
-		TomlParseResult result = Toml.parse(source);
-		result.errors().forEach(error -> LOGGER.error(error.toString()));
-
-		return result;
-	}
 
 	private static void init() {
 
@@ -115,6 +107,10 @@ public class Server {
 		// Register all items in /resource/item directory
 		itemManager.registerAllItems();
 
+		// Register default entities
+		mobManager.register(NamespaceID.from("mercury", "rogue_zombie"), new RogueZombie());
+		mobManager.register(NamespaceID.from("mercury", "friendly_zombie"), new FriendlyZombie());
+
 		// Register event listeners
 		globalEventHandler.addListener(new AsyncPlayerConfigurationListener());
 		globalEventHandler.addListener(new PlayerSpawnListener());
@@ -142,6 +138,7 @@ public class Server {
 		commandManager.register(new StopCommand());
 		commandManager.register(new PerformanceCommand());
 		commandManager.register(new InventoryTestCommand());
+		commandManager.register(new EntityNameTestCommand());
 
 		// Set player provider to custom one
 		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());

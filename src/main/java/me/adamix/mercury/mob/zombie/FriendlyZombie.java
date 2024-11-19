@@ -16,7 +16,7 @@ import java.util.List;
 public class FriendlyZombie extends GameMob {
 	public FriendlyZombie() {
 		super(EntityType.ZOMBIE,
-				"Friendly Zombie",
+				"<dark_green><translation:entity.zombie.friendly>",
 				new MobAttributes()
 						.set(MobAttribute.MOVEMENT_SPEED, 0.21f),
 				new Behaviour()

@@ -3,12 +3,17 @@ package me.adamix.mercury.command;
 import me.adamix.mercury.Server;
 import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.mob.core.GameMob;
+import me.adamix.mercury.mob.core.MobManager;
+import me.adamix.mercury.player.GamePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 import net.minestom.server.entity.Player;
+import net.minestom.server.utils.NamespaceID;
+
+import java.util.List;
 
 public class EntityCommand extends Command {
 	public EntityCommand()  {
@@ -35,8 +40,8 @@ public class EntityCommand extends Command {
 
 			switch (action.toLowerCase()) {
 				case "spawn":
-					for (String id : Server.getMobManager().getEntityIdCollection()) {
-						suggestion.addEntry(new SuggestionEntry(id));
+					for (NamespaceID namespaceID : Server.getMobManager().getEntityIdCollection()) {
+						suggestion.addEntry(new SuggestionEntry(namespaceID.asString()));
 					}
 			}
 		});
@@ -56,7 +61,7 @@ public class EntityCommand extends Command {
 		}, actionArgument);
 
 		addSyntax((sender, ctx) -> {
-			if (!(sender instanceof Player player)) {
+			if (!(sender instanceof GamePlayer player)) {
 				return;
 			}
 
@@ -66,16 +71,18 @@ public class EntityCommand extends Command {
 			switch (action.toLowerCase()) {
 				case "spawn":
 
-					GameMob entity = Server.getMobManager().get(second);
-					if (entity == null) {
+					NamespaceID namespaceID = NamespaceID.from(second);
+
+					MobManager mobManager = Server.getMobManager();
+					if (!mobManager.contains(namespaceID)) {
 						sender.sendMessage(
 								Component.text("Please specify valid entity id!")
 										.color(ColorPallet.ERROR.getColor())
 						);
 						return;
 					}
-
-					entity.spawn(player.getPosition(), player.getInstance());
+					GameMob mob = mobManager.get(namespaceID);
+					mob.spawn(player.getPosition(), player.getInstance(), List.of(player));
 
 			}
 

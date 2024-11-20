@@ -69,13 +69,13 @@ public class Server {
 
 		config = new Configuration(configFile);
 
-		boolean mojangAuth = Boolean.TRUE.equals(config.getBoolean("mojangAuth"));
+		boolean mojangAuth = Boolean.TRUE.equals(config.getBoolean("mojang_auth"));
 		if (mojangAuth) {
 			LOGGER.info("Using mojang authentication.");
 			MojangAuth.init();
 		}
 
-		String brandName = config.getString("brandName");
+		String brandName = config.getString("brand_name");
 		if (brandName != null) {
 			MinecraftServer.setBrandName(brandName);
 		}

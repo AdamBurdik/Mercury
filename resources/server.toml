@@ -1,3 +1,3 @@
-mojangAuth = true
-brandName = "Mercury"
+mojang_auth = false
+brand_name = "Mercury"
 console_translation_id = "en"

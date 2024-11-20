@@ -6,21 +6,16 @@ import me.adamix.mercury.mob.core.attribute.MobAttribute;
 import me.adamix.mercury.mob.core.attribute.MobAttributes;
 import me.adamix.mercury.mob.core.behaviour.MobBehaviour;
 import me.adamix.mercury.player.GamePlayer;
-import me.adamix.mercury.translation.Translation;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-import net.minestom.server.coordinate.Pos;
-import net.minestom.server.entity.*;
+import net.minestom.server.entity.EntityCreature;
+import net.minestom.server.entity.EntityType;
+import net.minestom.server.entity.Metadata;
 import net.minestom.server.entity.attribute.Attribute;
-import net.minestom.server.entity.metadata.EntityMeta;
-import net.minestom.server.instance.Instance;
 import net.minestom.server.network.packet.server.play.EntityMetaDataPacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Getter

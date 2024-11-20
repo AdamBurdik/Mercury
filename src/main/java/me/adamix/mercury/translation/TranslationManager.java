@@ -1,8 +1,8 @@
 package me.adamix.mercury.translation;
 
 import lombok.Getter;
-import me.adamix.mercury.flag.ServerFlag;
 import me.adamix.mercury.Server;
+import me.adamix.mercury.flag.ServerFlag;
 import me.adamix.mercury.player.GamePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

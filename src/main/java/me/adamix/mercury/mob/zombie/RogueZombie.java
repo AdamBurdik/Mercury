@@ -27,7 +27,7 @@ public class RogueZombie extends GameMob {
 	}
 
 	private static class Behaviour extends MobBehaviour {
-
+		
 		@Override
 		public void init(EntityCreature entity) {
 			addTargetSelectors(List.of(

@@ -1,7 +1,7 @@
 package me.adamix.mercury.listener.player;
 
-import me.adamix.mercury.item.core.GameItem;
 import me.adamix.mercury.Server;
+import me.adamix.mercury.item.core.GameItem;
 import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerChangeHeldSlotEvent;

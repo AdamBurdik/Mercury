@@ -1,13 +1,11 @@
 package me.adamix.mercury.command;
 
-import me.adamix.mercury.common.ColorPallet;
-import me.adamix.mercury.item.core.GameItem;
 import me.adamix.mercury.Server;
+import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.item.core.ItemManager;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;

@@ -1,7 +1,7 @@
 package me.adamix.mercury.listener.player;
 
-import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.Server;
+import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.translation.Translation;
 import net.minestom.server.MinecraftServer;

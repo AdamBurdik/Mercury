@@ -1,13 +1,13 @@
 package me.adamix.mercury.item.core;
 
 import lombok.Getter;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.common.SerializableEntity;
 import me.adamix.mercury.item.core.attribute.ItemAttribute;
 import me.adamix.mercury.item.core.attribute.ItemAttributeValue;
 import me.adamix.mercury.item.core.attribute.ItemAttributes;
 import me.adamix.mercury.item.core.rarity.ItemRarity;
-import me.adamix.mercury.Server;
 import me.adamix.mercury.placeholder.PlaceholderManager;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.translation.Translation;

@@ -2,7 +2,6 @@ package me.adamix.mercury.mob.core;
 
 import me.adamix.mercury.exception.mob.GameMobNotFoundException;
 import me.adamix.mercury.mob.core.behaviour.MobBehaviour;
-import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.metadata.EntityMeta;
 import net.minestom.server.instance.Instance;

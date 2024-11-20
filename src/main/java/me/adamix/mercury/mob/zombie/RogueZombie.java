@@ -19,7 +19,7 @@ import java.util.List;
 public class RogueZombie extends GameMob {
 	public RogueZombie() {
 		super(EntityType.ZOMBIE,
-				"<dark_green><translation:entity.zombie.rogue>",
+				"<dark_green><translation:entity.zombie.rogue>, Hello <player_name>!",
 				new MobAttributes()
 						.set(MobAttribute.MOVEMENT_SPEED, 0.21f),
 				new Behaviour()

@@ -26,6 +26,9 @@ public class PlaceholderManager {
 		registerPlayer("player_health", (args, player) -> {
 			return String.valueOf(player.getHealth());
 		});
+		registerPlayer("player_name", (args, player) -> {
+			return player.getUsername();
+		});
 		registerPlayer("player_max_health", (args, player) -> {
 			return String.valueOf(player.getMaxHealth());
 		});

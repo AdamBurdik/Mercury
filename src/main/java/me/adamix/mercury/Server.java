@@ -59,6 +59,7 @@ public class Server {
 	@Getter private static TickMonitorManager tickMonitorManager;
 
 	private static void init() {
+		LOGGER.info("Initializing mercury server {} ({})", MinecraftServer.VERSION_NAME, MinecraftServer.PROTOCOL_VERSION);
 
 		minecraftServer = MinecraftServer.init();
 		File configFile = new File(ServerFlag.CONFIG_PATH);

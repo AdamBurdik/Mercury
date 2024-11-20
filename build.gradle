@@ -13,7 +13,9 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    implementation "net.minestom:minestom-snapshots:277dceacf1"
+//    implementation 'net.minestom:minestom-snapshots:bb7acc2e77'
+    implementation 'net.minestom:minestom-snapshots:1_21_2-ee6a7180b4'
+//    net.minestom:minestom-snapshots:1_21_2-
     implementation 'org.slf4j:slf4j-api:2.0.16'
     implementation 'ch.qos.logback:logback-classic:1.5.12'
     compileOnly 'org.projectlombok:lombok:1.18.34'

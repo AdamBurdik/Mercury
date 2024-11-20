@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public enum ItemAttribute {
 	DAMAGE,
-	ATTACK_SPEED(Attribute.GENERIC_ATTACK_SPEED),
-	MOVEMENT_SPEED(Attribute.GENERIC_MOVEMENT_SPEED),
+	ATTACK_SPEED(Attribute.ATTACK_SPEED),
+	MOVEMENT_SPEED(Attribute.MOVEMENT_SPEED),
 	MAX_HEALTH;
 
 	@Nullable

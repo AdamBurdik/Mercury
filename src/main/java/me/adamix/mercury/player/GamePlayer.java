@@ -14,6 +14,7 @@ import net.minestom.server.entity.attribute.AttributeInstance;
 import net.minestom.server.entity.attribute.AttributeModifier;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.event.trait.PlayerEvent;
+import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,8 +30,8 @@ public class GamePlayer extends Player {
 	private @Nullable PlayerData playerData;
 	private final @NotNull Set<GameMob> viewedMobs = new HashSet<>();
 
-	public GamePlayer(@NotNull UUID uuid, @NotNull String username, @NotNull PlayerConnection playerConnection) {
-		super(uuid, username, playerConnection);
+	public GamePlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
+		super(playerConnection, gameProfile);
 	}
 
 	/**
@@ -120,7 +121,7 @@ public class GamePlayer extends Player {
 			return;
 		}
 		this.playerData.setMovementSpeed(movementSpeed);
-		getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(movementSpeed);
+		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(movementSpeed);
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class GamePlayer extends Player {
 		if (this.playerData == null) {
 			return;
 		}
-		AttributeInstance attribute = getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+		AttributeInstance attribute = getAttribute(Attribute.MOVEMENT_SPEED);
 		attribute.addModifier(new AttributeModifier("movement_speed", amount, operation));
 		this.playerData.setMovementSpeed((float) attribute.getValue());
 	}

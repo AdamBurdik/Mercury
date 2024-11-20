@@ -28,8 +28,8 @@ public class PlayerDataManager {
 				"en",
 				health,
 				health,
-				(float) Attribute.GENERIC_MOVEMENT_SPEED.defaultValue(),
-				(float) Attribute.GENERIC_ATTACK_SPEED.defaultValue(),
+				(float) Attribute.MOVEMENT_SPEED.defaultValue(),
+				(float) Attribute.ATTACK_SPEED.defaultValue(),
 				new GamePlayerInventory()
 		);
 	}
@@ -63,8 +63,8 @@ public class PlayerDataManager {
 							"en",
 							health,
 							health,
-							(float) Attribute.GENERIC_MOVEMENT_SPEED.defaultValue(),
-							(float) Attribute.GENERIC_ATTACK_SPEED.defaultValue(),
+							(float) Attribute.MOVEMENT_SPEED.defaultValue(),
+							(float) Attribute.ATTACK_SPEED.defaultValue(),
 							new GamePlayerInventory()
 					)
 			);

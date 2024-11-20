@@ -22,19 +22,19 @@ import java.util.Map;
 public class GameMob extends EntityCreature {
 	private final @NotNull EntityType entityType;
 	private final @NotNull String name;
-	private final @NotNull MobAttributes attributes;
-	private @Nullable MobBehaviour behaviour;
+	private final @NotNull MobAttributes mobAttributes;
+	private final @Nullable MobBehaviour behaviour;
 
 	public GameMob(
 			@NotNull EntityType entityType,
 			@NotNull String name,
-			@NotNull MobAttributes attributes,
+			@NotNull MobAttributes mobAttributes,
 			@Nullable MobBehaviour behaviour
 		) {
 		super(entityType);
 		this.entityType = entityType;
 		this.name = name;
-		this.attributes = attributes;
+		this.mobAttributes = mobAttributes;
 		this.behaviour = behaviour;
 	}
 
@@ -42,9 +42,9 @@ public class GameMob extends EntityCreature {
 	 * Applies attributes which entity should include by default
 	 */
 	public void applyVanillaAttributes() {
-		this.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
+		this.getAttribute(Attribute.MOVEMENT_SPEED)
 				.setBaseValue(
-						attributes.get(MobAttribute.MOVEMENT_SPEED)
+						mobAttributes.get(MobAttribute.MOVEMENT_SPEED)
 				);
 	}
 

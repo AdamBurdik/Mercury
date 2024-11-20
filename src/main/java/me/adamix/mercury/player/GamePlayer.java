@@ -175,8 +175,8 @@ public class GamePlayer extends Player {
 	}
 
 	public void show(GameMob mob) {
-		mob.updateName(this);
 		mob.addViewer(this);
+		mob.updateName(this);
 	}
 
 }

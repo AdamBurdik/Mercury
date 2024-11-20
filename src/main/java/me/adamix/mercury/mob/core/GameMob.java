@@ -10,18 +10,18 @@ import me.adamix.mercury.translation.Translation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.coordinate.Pos;
-import net.minestom.server.entity.Entity;
-import net.minestom.server.entity.EntityCreature;
-import net.minestom.server.entity.EntityType;
-import net.minestom.server.entity.Player;
+import net.minestom.server.entity.*;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.metadata.EntityMeta;
 import net.minestom.server.instance.Instance;
+import net.minestom.server.network.packet.server.play.EntityMetaDataPacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class GameMob extends EntityCreature {
@@ -43,6 +43,9 @@ public class GameMob extends EntityCreature {
 		this.behaviour = behaviour;
 	}
 
+	/**
+	 * Applies attributes which entity should include by default
+	 */
 	public void applyVanillaAttributes() {
 		this.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
 				.setBaseValue(
@@ -50,6 +53,9 @@ public class GameMob extends EntityCreature {
 				);
 	}
 
+	/**
+	 * Applies goal and target selectors from behaviour to entity
+	 */
 	public void applyBehaviour() {
 		if (this.behaviour == null) {
 			return;
@@ -61,10 +67,24 @@ public class GameMob extends EntityCreature {
 		);
 	}
 
+	/**
+	 * Updates entity entity for specific player, supports placeholders
+	 * @param player player to update name for
+	 */
 	public void updateName(GamePlayer player) {
-		EntityMeta entityMeta = this.getEntityMeta();
 		Component component = Server.getPlaceholderManager().parse(this.name, player);
-		entityMeta.setCustomName(component);
-		entityMeta.setCustomNameVisible(true);
+
+		// Create copy of original immutable metadata map
+		EntityMetaDataPacket metaDataPacket = this.getMetadataPacket();
+		Map<Integer, Metadata.Entry<?>> entries = new HashMap<>(metaDataPacket.entries());
+
+		entries.put(2, Metadata.OptChat(component));
+
+		EntityMetaDataPacket packet = new EntityMetaDataPacket(
+				this.getEntityId(),
+				entries
+		);
+
+		player.sendPacket(packet);
 	}
 }

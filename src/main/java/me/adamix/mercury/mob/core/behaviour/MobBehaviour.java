@@ -31,7 +31,17 @@ public class MobBehaviour {
 		this.targetSelectors.addAll(targetSelectors);
 	}
 
+	/**
+	 * Called when entity is created, before all other methods in behaviour
+	 * @param entity entity that has been spawned
+	 */
 	public void init(EntityCreature entity) {};
+
+	/**
+	 * Called right after {@link #init(EntityCreature)}, when spawning entity to instance
+	 * @param instance instance where entity will be spawned in
+	 * @param pos position where entity will be spawned
+	 */
 	public void onSpawn(Instance instance, Pos pos) {}
 	public void onPlayerAttack() {}
 	public void onDamagedByPlayer() {}

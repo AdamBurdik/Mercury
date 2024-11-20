@@ -79,7 +79,10 @@ public class EntityCommand extends Command {
 						return;
 					}
 					GameMob mob = mobManager.spawn(namespaceID, player.getInstance(), player.getPosition());
-					player.show(mob);
+
+					for (GamePlayer onlinePlayer : Server.getOnlinePlayers()) {
+						onlinePlayer.show(mob);
+					}
 			}
 
 		}, actionArgument, secondArgument);

@@ -174,6 +174,10 @@ public class GamePlayer extends Player {
 		return this.playerData.getPlayerInventory();
 	}
 
+	/**
+	 * Shows {@link GameMob game mob} to player and update its name
+	 * @param mob mob to show
+	 */
 	public void show(GameMob mob) {
 		mob.addViewer(this);
 		mob.updateName(this);

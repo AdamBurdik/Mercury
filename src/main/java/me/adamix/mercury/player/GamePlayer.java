@@ -18,6 +18,8 @@ import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -25,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 public class GamePlayer extends Player {
 	private @NotNull PlayerState state = PlayerState.LIMBO;
 	private @Nullable PlayerData playerData;
+	private final @NotNull Set<GameMob> viewedMobs = new HashSet<>();
 
 	public GamePlayer(@NotNull UUID uuid, @NotNull String username, @NotNull PlayerConnection playerConnection) {
 		super(uuid, username, playerConnection);
@@ -180,7 +183,18 @@ public class GamePlayer extends Player {
 	 */
 	public void show(GameMob mob) {
 		mob.addViewer(this);
+		this.viewedMobs.add(mob);
+
 		mob.updateName(this);
+	}
+
+	/**
+	 * Hides {@link GameMob game mob} from player
+	 * @param mob mob to hide
+	 */
+	public void hide(GameMob mob) {
+		mob.removeViewer(this);
+		this.viewedMobs.remove(mob);
 	}
 
 }

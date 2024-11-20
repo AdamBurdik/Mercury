@@ -58,20 +58,20 @@ public class MobManager {
 			Constructor<? extends GameMob> constructor = clazz.getConstructor();
 			GameMob mob = constructor.newInstance();
 			mob.applyVanillaAttributes();
-			mob.applyBehaviour();
 
 			// Apply meta to mob
 			EntityMeta meta = mob.getEntityMeta();
 			meta.setCustomNameVisible(true);
 
+			this.gameMobs.put(mob.getUuid(), mob);
+			mob.setInstance(instance, position);
+
 			MobBehaviour behaviour = mob.getBehaviour();
 			if (behaviour != null) {
 				behaviour.init(mob);
 				behaviour.onSpawn(instance, position);
+				mob.applyBehaviour();
 			}
-
-			this.gameMobs.put(mob.getUuid(), mob);
-			mob.setInstance(instance, position);
 
 			return mob;
 

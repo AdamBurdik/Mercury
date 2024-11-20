@@ -4,6 +4,7 @@ import me.adamix.mercury.exception.mob.GameMobNotFoundException;
 import me.adamix.mercury.mob.core.behaviour.MobBehaviour;
 import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.entity.metadata.EntityMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
@@ -58,6 +59,10 @@ public class MobManager {
 			GameMob mob = constructor.newInstance();
 			mob.applyVanillaAttributes();
 			mob.applyBehaviour();
+
+			// Apply meta to mob
+			EntityMeta meta = mob.getEntityMeta();
+			meta.setCustomNameVisible(true);
 
 			MobBehaviour behaviour = mob.getBehaviour();
 			if (behaviour != null) {

@@ -1,6 +1,5 @@
 package me.adamix.mercury.inventory;
 
-import me.adamix.mercury.Server;
 import me.adamix.mercury.inventory.core.GameInventory;
 import me.adamix.mercury.inventory.core.context.CloseContext;
 import me.adamix.mercury.inventory.core.context.InventoryConfig;
@@ -13,11 +12,17 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.PotionEffect;
 import net.minestom.server.tag.Tag;
+import net.minestom.server.utils.NamespaceID;
 
 import java.util.List;
 import java.util.UUID;
 
 public class ProfileSelectionInventory extends GameInventory {
+	private final List<PlayerData> playerDataList;
+
+	public ProfileSelectionInventory(List<PlayerData> playerDataList) {
+		this.playerDataList = playerDataList;
+	}
 
 	@Override
 	public void onInit(InventoryConfig config) {
@@ -27,9 +32,6 @@ public class ProfileSelectionInventory extends GameInventory {
 
 	@Override
 	public void onOpen(OpenContext ctx) {
-		GamePlayer player = ctx.getPlayer();
-
-		List<PlayerData> playerDataList = Server.getPlayerDataManager().getPlayerDataList(player.getUuid());
 		int i = 0;
 		for (PlayerData playerData : playerDataList) {
 			ItemStack itemStack = ItemStack.of(Material.GRASS_BLOCK)
@@ -59,9 +61,16 @@ public class ProfileSelectionInventory extends GameInventory {
 						clickPlayer.setNoGravity(false);
 						click.close();
 					});
-
 			i++;
 		}
+
+		ctx.slot(16, NamespaceID.from("mercury", "create_new_profile"))
+				.onClick((click) -> {
+					click.setCancelled(true);
+					click.close();
+					ProfileCreationInventory inventory = new ProfileCreationInventory();
+					click.getPlayer().openGameInventory(inventory);
+				});
 	}
 
 	@Override

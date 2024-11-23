@@ -2,6 +2,7 @@ package me.adamix.mercury.command;
 
 import me.adamix.mercury.Server;
 import me.adamix.mercury.common.ColorPallet;
+import me.adamix.mercury.item.core.GameItem;
 import me.adamix.mercury.item.core.ItemManager;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.player.inventory.GamePlayerInventory;
@@ -37,7 +38,7 @@ public class ItemCommand extends Command {
 
 			switch (action.toLowerCase()) {
 				case "give":
-					for (NamespaceID namespaceID : Server.getItemManager().getItemIdCollection()) {
+					for (NamespaceID namespaceID : Server.getItemBlueprintManager().getItemIdCollection()) {
 						suggestion.addEntry(new SuggestionEntry(namespaceID.asString()));
 					}
 			}
@@ -55,7 +56,7 @@ public class ItemCommand extends Command {
 				case "list":
 					sender.sendMessage(
 							Component.text(
-									Server.getItemManager().getItemIdCollection().toString()
+									Server.getItemBlueprintManager().getItemIdCollection().toString()
 							).color(ColorPallet.BLUE.getColor())
 					);
 					break;
@@ -75,9 +76,9 @@ public class ItemCommand extends Command {
 				case "give":
 
 					ItemManager itemManager = Server.getItemManager();
-					NamespaceID namespaceID = NamespaceID.from(second);
+					NamespaceID blueprintID = NamespaceID.from(second);
 
-					if (!itemManager.contains(namespaceID)) {
+					if (!itemManager.canBuild(blueprintID)) {
 						sender.sendMessage(
 								Component.text("Please specify valid item id!")
 										.color(ColorPallet.ERROR.getColor())
@@ -85,8 +86,10 @@ public class ItemCommand extends Command {
 						return;
 					}
 
+					GameItem gameItem = itemManager.buildItem(blueprintID);
+
 					GamePlayerInventory inventory = player.getGameInventory();
-					inventory.addItem(namespaceID);
+					inventory.addItem(gameItem);
 					inventory.updatePlayerInventory(player, false);
 			}
 

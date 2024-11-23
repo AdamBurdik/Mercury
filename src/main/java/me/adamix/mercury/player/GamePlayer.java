@@ -1,7 +1,9 @@
 package me.adamix.mercury.player;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.adamix.mercury.Server;
+import me.adamix.mercury.inventory.core.GameInventory;
 import me.adamix.mercury.mob.core.GameMob;
 import me.adamix.mercury.player.data.PlayerData;
 import me.adamix.mercury.player.data.PlayerDataManager;
@@ -29,6 +31,8 @@ public class GamePlayer extends Player {
 	private @NotNull PlayerState state = PlayerState.LIMBO;
 	private @Nullable PlayerData playerData;
 	private final @NotNull Set<GameMob> viewedMobs = new HashSet<>();
+	@Setter
+	private boolean inDebug = false;
 
 	public GamePlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
 		super(playerConnection, gameProfile);
@@ -40,7 +44,13 @@ public class GamePlayer extends Player {
 	 * @param profileUniqueId unique ID of player profile
 	 */
 	public void loadPlayerData(UUID profileUniqueId) {
-		this.playerData = Server.getPlayerDataManager().getPlayerData(profileUniqueId);
+		CompletableFuture<PlayerData> completableFuture = Server.getPlayerDataManager().getPlayerData(profileUniqueId);
+		if (completableFuture == null) {
+			throw new RuntimeException("Cannot get player data!");
+		}
+		completableFuture.thenAccept(data -> {
+			this.playerData = data;
+		});
 	}
 
 	/**
@@ -196,6 +206,10 @@ public class GamePlayer extends Player {
 	public void hide(GameMob mob) {
 		mob.removeViewer(this);
 		this.viewedMobs.remove(mob);
+	}
+
+	public void openGameInventory(GameInventory inventory) {
+		Server.getInventoryManager().open(inventory, this);
 	}
 
 }

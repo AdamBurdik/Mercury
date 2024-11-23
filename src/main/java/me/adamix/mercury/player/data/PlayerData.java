@@ -13,6 +13,7 @@ import java.util.UUID;
  */
 @Getter
 public class PlayerData {
+	private final @NotNull UUID playerUniqueId;
 	private final @NotNull UUID profileUniqueId;
 	@Setter private @NotNull String translationId;
 	private int health;
@@ -29,15 +30,18 @@ public class PlayerData {
 	 * @param maxHeath       the maximum health of the player
 	 */
 	public PlayerData(
+			@NotNull UUID playerUniqueId,
 			@NotNull UUID profileUniqueId,
-			String translationId,
+			@NotNull String translationId,
 			int health,
 			int maxHeath,
 			float movementSpeed,
 			float attackSpeed,
 			GamePlayerInventory playerInventory
 	) {
+		this.playerUniqueId = playerUniqueId;
 		this.profileUniqueId = profileUniqueId;
+		this.translationId = translationId;
 		this.health = health;
 		this.maxHealth = maxHeath;
 		this.movementSpeed = movementSpeed;

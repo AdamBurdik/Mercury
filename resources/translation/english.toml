@@ -33,3 +33,9 @@ successfully_set = "Language has been successfully set to English"
 [entity.zombie]
 rogue = "Rogue Zombie"
 friendly = "Friendly Zombie"
+
+[inventory.profile.create]
+new_profile_name = "Create New Profile"
+new_profile_description = "Click to create new profile"
+confirm_name = "Create New Profile"
+confirm_description = "Confirm creation of new profile"

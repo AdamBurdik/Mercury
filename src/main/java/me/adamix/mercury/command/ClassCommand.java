@@ -1,6 +1,7 @@
 package me.adamix.mercury.command;
 
 import me.adamix.mercury.Server;
+import me.adamix.mercury.inventory.ProfileSelectionInventory;
 import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.entity.GameMode;
@@ -21,7 +22,10 @@ public class ClassCommand extends Command {
 				player.addEffect(new Potion(PotionEffect.BLINDNESS, Byte.MAX_VALUE, Potion.INFINITE_DURATION));
 				player.sendToLimbo();
 
-				Server.getInventoryManager().open("profile_selection", player);
+				Server.getPlayerDataManager().getPlayerDataListSync(player.getUuid(), (playerDataList -> {
+					ProfileSelectionInventory inventory = new ProfileSelectionInventory(playerDataList);
+					player.openGameInventory(inventory);
+				}));
 			}
 		});
 	}

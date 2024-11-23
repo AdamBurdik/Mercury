@@ -1,9 +1,12 @@
 package me.adamix.mercury.inventory.core.context;
 
 import lombok.Getter;
+import me.adamix.mercury.Server;
 import me.adamix.mercury.inventory.core.component.ItemComponent;
+import me.adamix.mercury.item.core.GameItem;
 import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.item.ItemStack;
+import net.minestom.server.utils.NamespaceID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,5 +24,10 @@ public class OpenContext {
 		ItemComponent component = new ItemComponent(slot, itemStack);
 		itemComponentList.add(component);
 		return component;
+	}
+
+	public ItemComponent slot(int slot, NamespaceID blueprintID) {
+		GameItem gameItem = Server.getItemManager().buildItem(blueprintID);
+		return this.slot(slot, gameItem.toItemStack(this.player));
 	}
 }

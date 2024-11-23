@@ -1,6 +1,7 @@
 package me.adamix.mercury.listener.player;
 
 import me.adamix.mercury.Server;
+import me.adamix.mercury.inventory.ProfileSelectionInventory;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.player.state.PlayerState;
 import net.minestom.server.event.EventListener;
@@ -14,7 +15,11 @@ public class PlayerMoveListener implements EventListener<PlayerMoveEvent> {
 		GamePlayer player = GamePlayer.of(event);
 		if (player.getState() == PlayerState.LIMBO) {
 			event.setCancelled(true);
-			Server.getInventoryManager().open("profile_selection", player);
+
+			Server.getPlayerDataManager().getPlayerDataListSync(player.getUuid(), (playerDataList -> {
+				ProfileSelectionInventory inventory = new ProfileSelectionInventory(playerDataList);
+				player.openGameInventory(inventory);
+			}));
 		}
 
 		return Result.SUCCESS;

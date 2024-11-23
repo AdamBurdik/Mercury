@@ -3,7 +3,6 @@ package me.adamix.mercury.item.core;
 import lombok.Getter;
 import me.adamix.mercury.Server;
 import me.adamix.mercury.common.ColorPallet;
-import me.adamix.mercury.common.SerializableEntity;
 import me.adamix.mercury.item.core.attribute.ItemAttribute;
 import me.adamix.mercury.item.core.attribute.ItemAttributeValue;
 import me.adamix.mercury.item.core.attribute.ItemAttributes;
@@ -18,32 +17,40 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.minestom.server.tag.Tag;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.UUID;
 
+/**
+ * Represents instance of game item created from a blueprint.
+ * Contains item-specific properties and methods for item stack generation.
+ */
 @Getter
-public class GameItem implements SerializableEntity {
-	private final @NotNull NamespaceID id;
+public class GameItem {
+	private final @NotNull UUID itemUniqueId;
+	private final @NotNull NamespaceID blueprintID;
 	private final @NotNull Material baseMaterial;
 	private final @NotNull String name;
 	private final @Nullable String description;
 	private final @NotNull ItemAttributes attributes;
-	private final @NotNull ItemRarity rarity;
-	private static final Tag<String> tag = Tag.String("id");
+	private final @Nullable ItemRarity rarity;
 
 	public GameItem(
-			@NotNull NamespaceID id,
+			@NotNull UUID itemUniqueId,
+			@NotNull NamespaceID blueprintID,
 			@NotNull Material baseMaterial,
 			@NotNull String name,
 			@Nullable String description,
 			@NotNull ItemAttributes attributes,
-			@NotNull ItemRarity rarity
+			@Nullable ItemRarity rarity
 	) {
-		this.id = id;
+		this.itemUniqueId = itemUniqueId;
+		this.blueprintID = blueprintID;
 		this.baseMaterial = baseMaterial;
 		this.name = name;
 		this.description = description;
@@ -52,7 +59,7 @@ public class GameItem implements SerializableEntity {
 	}
 
 	/**
-	 * Create item stack from custom fields
+	 * Create item stack from fields
 	 * @param player - player to create item for
 	 * @return ItemStack
 	 */
@@ -92,12 +99,27 @@ public class GameItem implements SerializableEntity {
 		}
 
 		// Add rarity to lore
-		lore.add(
-				Component.text(translation.get(rarity.translationKey()).toUpperCase())
-						.color(TextColor.color(129, 21, 13))
-						.decoration(TextDecoration.ITALIC, false)
-						.decoration(TextDecoration.BOLD, true)
-		);
+		if (this.rarity != null) {
+			lore.add(
+					Component.text(translation.get(rarity.translationKey()).toUpperCase())
+							.color(TextColor.color(129, 21, 13))
+							.decoration(TextDecoration.ITALIC, false)
+							.decoration(TextDecoration.BOLD, true)
+			);
+		}
+
+		// Add item unique id and blueprint id if player is in debug
+		if (player.isInDebug()) {
+			lore.add(Component.empty());
+			lore.add(
+					Component.text("Id: " + this.itemUniqueId)
+							.color(ColorPallet.DARK_GRAY.getColor())
+			);
+			lore.add(
+					Component.text("Blueprint Id: " + this.blueprintID.asString())
+							.color(ColorPallet.DARK_GRAY.getColor())
+			);
+		}
 
 		// Create and apply all values to item stack
 		return ItemStack.of(this.baseMaterial)
@@ -124,24 +146,5 @@ public class GameItem implements SerializableEntity {
 			valuePart = valuePart.color(ColorPallet.NEGATIVE_RED.getColor());
 		}
 		return valuePart;
-	}
-
-	@Override
-	public String toString() {
-		return String.valueOf(this.serialize());
-	}
-
-	@Override
-	public Map<String, Object> serialize() {
-		Map<String, Object> data = new HashMap<>();
-
-		data.put("id", this.id);
-		data.put("baseMaterial", this.baseMaterial.name());
-		data.put("name", this.name);
-		data.put("description", this.description);
-		data.put("attributes", this.attributes.serialize());
-		data.put("rarity", this.rarity.name());
-
-		return data;
 	}
 }

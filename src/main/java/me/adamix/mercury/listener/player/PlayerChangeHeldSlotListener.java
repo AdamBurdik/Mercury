@@ -2,6 +2,7 @@ package me.adamix.mercury.listener.player;
 
 import me.adamix.mercury.Server;
 import me.adamix.mercury.item.core.GameItem;
+import me.adamix.mercury.item.core.ItemManager;
 import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerChangeHeldSlotEvent;
@@ -9,8 +10,10 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 public class PlayerChangeHeldSlotListener implements EventListener<PlayerChangeHeldSlotEvent> {
-	private static final Tag<String> tag = Tag.String("id");
+	private static final Tag<UUID> tag = Tag.UUID("uniqueId");
 
 	@Override
 	public @NotNull Result run(@NotNull PlayerChangeHeldSlotEvent event) {
@@ -21,12 +24,13 @@ public class PlayerChangeHeldSlotListener implements EventListener<PlayerChangeH
 			return Result.SUCCESS;
 		}
 
-		String id = itemStack.getTag(tag);
-		GameItem item = Server.getItemManager().get(id);
-		if (item == null) {
+		UUID uniqueId = itemStack.getTag(tag);
+
+		ItemManager itemManager = Server.getItemManager();
+		if (!itemManager.contains(uniqueId)) {
 			return Result.SUCCESS;
 		}
-
+		GameItem item = itemManager.get(uniqueId);
 		item.getAttributes().applyToPlayer(player);
 
 		return Result.SUCCESS;

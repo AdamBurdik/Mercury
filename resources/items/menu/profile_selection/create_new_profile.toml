@@ -1,0 +1,4 @@
+id = "mercury:create_new_profile"
+name = "<dark_green><!italic><bold><translation:inventory.profile.create.new_profile_name>"
+description = "<!italic><green><translation:inventory.profile.create.new_profile_description>"
+base_material = "lime_dye"

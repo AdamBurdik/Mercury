@@ -15,8 +15,7 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.event.trait.InventoryEvent;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
-import net.minestom.server.tag.Tag;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,17 +27,19 @@ import java.util.function.Consumer;
 
 public class InventoryManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(InventoryManager.class);
-	private static final Tag<String> tag = Tag.String("inventory_id");
-	private final Map<String, GameInventory> registeredInventoryMap = new HashMap<>();
+	private final Map<UUID, GameInventory> playerInventoryMap = new HashMap<>();
 	private final Map<UUID, InventoryData> playerInventoryData = new HashMap<>();
 
 	public InventoryManager() {
 		EventNode<InventoryEvent> node = EventNode.type("click", EventFilter.INVENTORY)
 				.addListener(InventoryPreClickEvent.class, event -> {
-					GameInventory inventory = getGameInventory(event.getInventory());
-					if (inventory == null) {
+					GamePlayer player = GamePlayer.of(event);
+
+					if (!playerHasInventory(player.getUuid())) {
 						return;
 					}
+
+					GameInventory inventory = getPlayerInventory(player.getUuid());
 
 					// Handle lambda function
 					InventoryData inventoryData = playerInventoryData.get(event.getPlayer().getUuid());
@@ -46,8 +47,6 @@ public class InventoryManager {
 					if (itemComponent == null) {
 						return;
 					}
-
-					GamePlayer player = GamePlayer.of(event);
 
 					ItemClickContext clickContext = new ItemClickContext(
 							itemComponent.getItemStack(),
@@ -79,12 +78,14 @@ public class InventoryManager {
 					}
 				})
 				.addListener(InventoryCloseEvent.class, event -> {
-					GameInventory inventory = getGameInventory(event.getInventory());
-					if (inventory == null) {
+					GamePlayer player = GamePlayer.of(event);
+
+					if (!playerHasInventory(player.getUuid())) {
 						return;
 					}
 
-					GamePlayer player = GamePlayer.of(event);
+					GameInventory inventory = getPlayerInventory(player.getUuid());
+
 					InventoryData inventoryData = playerInventoryData.get(player.getUuid());
 
 					CloseContext closeContext = new CloseContext(player);
@@ -92,46 +93,22 @@ public class InventoryManager {
 					inventory.onClose(closeContext);
 
 					if (closeContext.isCancelled() && !inventoryData.isForceClose()) {
-						open(event.getInventory().getTag(tag), player);
+						open(inventory, player);
+					} else {
+						playerInventoryMap.remove(player.getUuid());
+						playerInventoryData.remove(player.getUuid());
 					}
 				});
+
 		MinecraftServer.getGlobalEventHandler().addChild(node);
 	}
 
-	public @Nullable GameInventory getGameInventory(@Nullable Inventory inventory) {
-		if (inventory == null) {
-			return null;
-		}
-
-		if (!inventory.hasTag(tag)) {
-			return null;
-		}
-
-		String id = inventory.getTag(tag);
-		return registeredInventoryMap.get(id);
-	}
-
-	public void register(String id, GameInventory inventory) {
-		registeredInventoryMap.put(id, inventory);
-	}
-
-	public @Nullable GameInventory get(String id) {
-		return registeredInventoryMap.get(id);
-	}
-
-	public void open(String id, GamePlayer player) {
-		GameInventory gameInventory = get(id);
-		if (gameInventory == null) {
-			return;
-		}
-
+	public void open(GameInventory gameInventory, GamePlayer player) {
 		InventoryConfig inventoryConfig = new InventoryConfig();
 		gameInventory.onInit(inventoryConfig);
 
 		InventoryType inventoryType = InventoryType.valueOf("CHEST_" + inventoryConfig.getRows() + "_ROW");
-
 		Inventory inventory = new Inventory(inventoryType, inventoryConfig.getTitle());
-		inventory.setTag(tag, id);
 
 		OpenContext openContext = new OpenContext(player);
 		gameInventory.onOpen(openContext);
@@ -146,20 +123,44 @@ public class InventoryManager {
 
 		InventoryData inventoryData = new InventoryData(inventory, itemComponentList);
 		playerInventoryData.put(player.getUuid(), inventoryData);
+		playerInventoryMap.put(player.getUuid(), gameInventory);
 
 		MinecraftServer.getSchedulerManager().scheduleNextTick(() -> {
 			player.openInventory(inventory);
 		});
+
 	}
 
 	public void close(GamePlayer player) {
-		Inventory inventory = player.getOpenInventory();
-		GameInventory gameInventory = getGameInventory(inventory);
-		if (gameInventory == null) {
+		if (!playerHasInventory(player.getUuid())) {
 			return;
 		}
 
-		playerInventoryData.get(player.getUuid()).setForceClose(true);
+		getPlayerInventoryData(player.getUuid()).setForceClose(true);
 		player.closeInventory();
+	}
+
+	public boolean hasPlayerData(UUID playerUniqueId) {
+		return playerInventoryData.containsKey(playerUniqueId);
+	}
+
+	public @NotNull InventoryData getPlayerInventoryData(UUID playerUniqueId) {
+		if (!playerInventoryData.containsKey(playerUniqueId)) {
+			throw new RuntimeException("Player with uuid " + playerUniqueId + " does not have inventory data!");
+		}
+
+		return playerInventoryData.get(playerUniqueId);
+	}
+
+	public boolean playerHasInventory(UUID playerUniqueId) {
+		return playerInventoryMap.containsKey(playerUniqueId);
+	}
+
+	public @NotNull GameInventory getPlayerInventory(UUID playerUniqueId) {
+		if (!playerInventoryMap.containsKey(playerUniqueId)) {
+			throw new RuntimeException("Player with uuid " + playerUniqueId + " does not have any inventory!");
+		}
+
+		return playerInventoryMap.get(playerUniqueId);
 	}
 }

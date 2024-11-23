@@ -1,5 +1,8 @@
 package me.adamix.mercury;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
 import me.adamix.mercury.command.*;
 import me.adamix.mercury.command.debug.*;
@@ -8,9 +11,9 @@ import me.adamix.mercury.command.server.StopCommand;
 import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.configuration.Configuration;
 import me.adamix.mercury.flag.ServerFlag;
-import me.adamix.mercury.inventory.ProfileSelectionInventory;
 import me.adamix.mercury.inventory.core.InventoryManager;
 import me.adamix.mercury.item.core.ItemManager;
+import me.adamix.mercury.item.core.blueprint.ItemBlueprintManager;
 import me.adamix.mercury.listener.player.*;
 import me.adamix.mercury.mob.core.MobManager;
 import me.adamix.mercury.mob.zombie.FriendlyZombie;
@@ -51,12 +54,30 @@ public class Server {
 	@Getter private static InstanceContainer mainInstance;
 	@Getter private static Configuration config;
 	@Getter private static MobManager mobManager;
+	@Getter private static ItemBlueprintManager itemBlueprintManager;
 	@Getter private static ItemManager itemManager;
 	@Getter private static PlayerDataManager playerDataManager;
 	@Getter private static InventoryManager inventoryManager;
 	@Getter private static TranslationManager translationManager;
 	@Getter private static PlaceholderManager placeholderManager;
 	@Getter private static TickMonitorManager tickMonitorManager;
+	private static MongoClient mongoClient;
+
+	private static void connectToMongoDatabase() {
+		Dotenv dotenv = Dotenv.configure().directory(ServerFlag.RESOURCES_PATH).load();
+
+		String mongoUsername = dotenv.get("MONGO_USERNAME");
+		String mongoPassword = dotenv.get("MONGO_PASSWORD");
+		String mongoLink = dotenv.get("MONGO_LINK");
+
+		String connectionString = "mongodb+srv://"
+				+ mongoUsername
+				+ ":"
+				+ mongoPassword
+				+ mongoLink;
+
+		mongoClient = MongoClients.create(connectionString);
+	}
 
 	private static void init() {
 		LOGGER.info("Initializing mercury server {} ({})", MinecraftServer.VERSION_NAME, MinecraftServer.PROTOCOL_VERSION);
@@ -83,10 +104,14 @@ public class Server {
 
 		GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
 
+		// Connect to mongo cluster
+		connectToMongoDatabase();
+
 		// Initialize managers
 		mobManager = new MobManager();
-		itemManager = new ItemManager();
-		playerDataManager = new PlayerDataManager();
+		itemBlueprintManager = new ItemBlueprintManager();
+		itemManager = new ItemManager(itemBlueprintManager);
+		playerDataManager = new PlayerDataManager(mongoClient);
 		inventoryManager = new InventoryManager();
 		translationManager = new TranslationManager();
 		placeholderManager = new PlaceholderManager();
@@ -99,11 +124,8 @@ public class Server {
 		translationManager.loadTranslation("english.toml");
 		translationManager.loadTranslation("czech.toml");
 
-		// Register default inventories
-		inventoryManager.register("profile_selection", new ProfileSelectionInventory());
-
 		// Register all items in /resource/item directory
-		itemManager.registerAllItems();
+		itemBlueprintManager.registerAllItems();
 
 		// Register default entities
 		mobManager.register(NamespaceID.from("mercury", "rogue_zombie"), RogueZombie.class);
@@ -137,6 +159,7 @@ public class Server {
 		commandManager.register(new PerformanceCommand());
 		commandManager.register(new InventoryTestCommand());
 		commandManager.register(new EntityNameTestCommand());
+		commandManager.register(new DatabaseTestCommand());
 
 		// Set player provider to custom one
 		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());

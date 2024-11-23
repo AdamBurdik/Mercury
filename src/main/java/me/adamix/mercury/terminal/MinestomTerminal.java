@@ -47,7 +47,8 @@ public class MinestomTerminal {
 				String command;
 				try {
 					command = reader.readLine(PROMPT);
-					if (!COMMAND_MANAGER.commandExists(command)) {
+					String[] split = command.split(" ");
+					if (!COMMAND_MANAGER.commandExists(split[0])) {
 						String translationId =  Server.getConfig().getString("console_translation_id");
 						Translation translation = Server.getTranslationManager().getTranslation(translationId);
 

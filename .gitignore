@@ -49,3 +49,4 @@ bin/
 
 ### Velocity ###
 velocity/
+resources/.env

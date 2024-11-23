@@ -30,6 +30,12 @@ invalid = "This command is invalid!"
 no_argument_specified = "Please specify an argument for translation!"
 successfully_set = "Language has been successfully set to English"
 
+[command.playtime]
+your_playtime = "Your playtime is: "
+
+[server]
+shutdown = "Server shutdown"
+
 [entity.zombie]
 rogue = "Rogue Zombie"
 friendly = "Friendly Zombie"

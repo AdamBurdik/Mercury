@@ -23,6 +23,7 @@ import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -31,11 +32,11 @@ import java.util.concurrent.CompletableFuture;
 @Getter
 public class GamePlayer extends Player {
 	private @NotNull PlayerState state = PlayerState.LIMBO;
-	private @NotNull PlayerData playerData;
+	private @Nullable PlayerData playerData;
 	private @Nullable ProfileData profileData;
 	private final @NotNull Set<GameMob> viewedMobs = new HashSet<>();
 	@Setter
-	private boolean inDebug = false;
+	private boolean inDebug = true;
 
 	public GamePlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
 		super(playerConnection, gameProfile);
@@ -53,7 +54,8 @@ public class GamePlayer extends Player {
 		completableFuture.thenAccept(data -> {
 			if (data == null) {
 				data = new PlayerData(
-						getUuid()
+						getUuid(),
+						Duration.ZERO
 				);
 				Server.getPlayerDataManager().savePlayerData(data);
 			}

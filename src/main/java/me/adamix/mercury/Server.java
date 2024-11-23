@@ -25,6 +25,8 @@ import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.player.data.PlayerDataManager;
 import me.adamix.mercury.player.profile.ProfileDataManager;
 import me.adamix.mercury.player.provider.GamePlayerProvider;
+import me.adamix.mercury.task.PlayTimeTask;
+import me.adamix.mercury.task.SaveDataTask;
 import me.adamix.mercury.terminal.MinestomTerminal;
 import me.adamix.mercury.translation.Translation;
 import me.adamix.mercury.translation.TranslationManager;
@@ -140,6 +142,7 @@ public class Server {
 		// Register event listeners
 		globalEventHandler.addListener(new AsyncPlayerConfigurationListener());
 		globalEventHandler.addListener(new PlayerSpawnListener());
+		globalEventHandler.addListener(new PlayerDisconnectListener());
 		globalEventHandler.addListener(new PlayerMoveListener());
 		globalEventHandler.addListener(new PlayerChangeHeldSlotListener());
 		globalEventHandler.addListener(new PlayerCommandListener());
@@ -166,6 +169,11 @@ public class Server {
 		commandManager.register(new InventoryTestCommand());
 		commandManager.register(new EntityNameTestCommand());
 		commandManager.register(new DatabaseTestCommand());
+		commandManager.register(new PlayTimeCommand());
+
+		// Start tasks
+		new PlayTimeTask().start();
+		new SaveDataTask().start();
 
 		// Set player provider to custom one
 		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());

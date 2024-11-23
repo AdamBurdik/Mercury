@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -58,7 +59,12 @@ public class PlayerDataManager {
 		}
 		UUID playerUniqueId = UUID.fromString(playerStringUniqueId);
 
-		return new PlayerData(playerUniqueId);
+		long playTimeSeconds = document.containsKey("playTime") ? document.getLong("playTime") : 0;
+
+		return new PlayerData(
+				playerUniqueId,
+				Duration.ofSeconds(playTimeSeconds)
+		);
 	}
 
 	/**
@@ -71,7 +77,8 @@ public class PlayerDataManager {
 
 		CompletableFuture.runAsync(() -> {
 			Document playerDocument = new Document()
-					.append("playerUniqueId", playerData.getPlayerUniqueId().toString());
+					.append("playerUniqueId", playerData.getPlayerUniqueId().toString())
+					.append("playTime", playerData.getPlayTime().getSeconds());
 
 			playerDataCollection.replaceOne(Filters.eq("playerUniqueId", playerUniqueId.toString()), playerDocument, new ReplaceOptions().upsert(true));
 		});

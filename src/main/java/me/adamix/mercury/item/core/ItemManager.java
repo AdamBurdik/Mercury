@@ -21,9 +21,11 @@ public class ItemManager {
 
 	public GameItem buildItem(NamespaceID blueprintID) {
 		GameItemBlueprint itemBlueprint = blueprintManager.get(blueprintID);
-		GameItem gameItem = itemBlueprint.build();
 
-		gameItemMap.put(UUID.randomUUID(), gameItem);
+		UUID randomUniqueId = UUID.randomUUID();
+		GameItem gameItem = itemBlueprint.build(randomUniqueId);
+		gameItemMap.put(randomUniqueId, gameItem);
+
 		return gameItem;
 	}
 

@@ -17,6 +17,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.minestom.server.tag.Tag;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +40,7 @@ public class GameItem {
 	private final @Nullable String description;
 	private final @NotNull ItemAttributes attributes;
 	private final @Nullable ItemRarity rarity;
+	private static final Tag<UUID> idTag = Tag.UUID("uniqueId");
 
 	public GameItem(
 			@NotNull UUID itemUniqueId,
@@ -129,7 +131,8 @@ public class GameItem {
 				.withLore(
 						lore
 				)
-				.withoutExtraTooltip();
+				.withoutExtraTooltip()
+				.withTag(idTag, this.itemUniqueId);
 	}
 
 	private @NotNull Component getComponent(ItemAttributeValue value, String sign, boolean isPositive) {

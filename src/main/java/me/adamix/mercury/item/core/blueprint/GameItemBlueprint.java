@@ -43,9 +43,9 @@ public class GameItemBlueprint implements SerializableEntity {
 		this.rarity = rarity;
 	}
 
-	public GameItem build() {
+	public GameItem build(UUID itemUniqueId) {
 		return new GameItem(
-				UUID.randomUUID(),
+				itemUniqueId,
 				this.blueprintID,
 				this.baseMaterial,
 				this.name,

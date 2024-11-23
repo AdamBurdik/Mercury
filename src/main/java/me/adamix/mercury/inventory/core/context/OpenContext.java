@@ -9,12 +9,14 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.utils.NamespaceID;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class OpenContext {
 	private final GamePlayer player;
-	private final List<ItemComponent> itemComponentList = new ArrayList<>();
+	private final Map<Integer, ItemComponent> itemComponentList = new HashMap<>();
 
 	public OpenContext(GamePlayer player) {
 		this.player = player;
@@ -22,7 +24,7 @@ public class OpenContext {
 
 	public ItemComponent slot(int slot, ItemStack itemStack) {
 		ItemComponent component = new ItemComponent(slot, itemStack);
-		itemComponentList.add(component);
+		itemComponentList.put(slot, component);
 		return component;
 	}
 

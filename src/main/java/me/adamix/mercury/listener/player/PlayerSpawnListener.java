@@ -17,6 +17,7 @@ public class PlayerSpawnListener implements EventListener<PlayerSpawnEvent> {
 	@Override
 	public @NotNull Result run(@NotNull PlayerSpawnEvent event) {
 		GamePlayer player = GamePlayer.of(event);
+		player.loadPlayerData();
 
 		Component message = Component.newline()
 						.append(
@@ -31,7 +32,7 @@ public class PlayerSpawnListener implements EventListener<PlayerSpawnEvent> {
 		player.sendMessage(message);
 		player.addEffect(new Potion(PotionEffect.BLINDNESS, Byte.MAX_VALUE, Potion.INFINITE_DURATION));
 
-		Server.getPlayerDataManager().getPlayerDataListSync(player.getUuid(), (playerDataList -> {
+		Server.getProfileDataManager().getProfileDataListSync(player.getUuid(), (playerDataList -> {
 			ProfileSelectionInventory inventory = new ProfileSelectionInventory(playerDataList);
 			player.openGameInventory(inventory);
 		}));

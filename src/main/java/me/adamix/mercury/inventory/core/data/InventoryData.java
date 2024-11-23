@@ -6,29 +6,24 @@ import me.adamix.mercury.inventory.core.component.ItemComponent;
 import net.minestom.server.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Map;
 
 @Getter
 public class InventoryData {
 	private final Inventory inventory;
-	private final List<ItemComponent> itemComponentList;
+	private final Map<Integer, ItemComponent> itemComponentMap;
 	@Setter
 	private boolean forceClose;
 
 	public InventoryData(
 			Inventory inventory,
-			List<ItemComponent> itemComponentList
+			Map<Integer, ItemComponent> itemComponentMap
 	) {
 		this.inventory = inventory;
-		this.itemComponentList = itemComponentList;
+		this.itemComponentMap = itemComponentMap;
 	}
 
 	public @Nullable ItemComponent getItemComponent(int slot) {
-		for (ItemComponent component : itemComponentList) {
-			if (component.getSlot() == slot) {
-				return component;
-			}
-		}
-		return null;
+		return itemComponentMap.get(slot);
 	}
 }

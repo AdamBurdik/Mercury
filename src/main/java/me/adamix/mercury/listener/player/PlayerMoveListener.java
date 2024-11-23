@@ -16,7 +16,7 @@ public class PlayerMoveListener implements EventListener<PlayerMoveEvent> {
 		if (player.getState() == PlayerState.LIMBO) {
 			event.setCancelled(true);
 
-			Server.getPlayerDataManager().getPlayerDataListSync(player.getUuid(), (playerDataList -> {
+			Server.getProfileDataManager().getProfileDataListSync(player.getUuid(), (playerDataList -> {
 				ProfileSelectionInventory inventory = new ProfileSelectionInventory(playerDataList);
 				player.openGameInventory(inventory);
 			}));

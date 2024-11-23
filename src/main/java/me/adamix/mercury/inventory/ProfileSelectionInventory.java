@@ -5,7 +5,7 @@ import me.adamix.mercury.inventory.core.context.CloseContext;
 import me.adamix.mercury.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.inventory.core.context.OpenContext;
 import me.adamix.mercury.player.GamePlayer;
-import me.adamix.mercury.player.data.PlayerData;
+import me.adamix.mercury.player.profile.ProfileData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.item.ItemStack;
@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class ProfileSelectionInventory extends GameInventory {
-	private final List<PlayerData> playerDataList;
+	private final List<ProfileData> profileDataList;
 
-	public ProfileSelectionInventory(List<PlayerData> playerDataList) {
-		this.playerDataList = playerDataList;
+	public ProfileSelectionInventory(List<ProfileData> profileDataList) {
+		this.profileDataList = profileDataList;
 	}
 
 	@Override
@@ -33,13 +33,13 @@ public class ProfileSelectionInventory extends GameInventory {
 	@Override
 	public void onOpen(OpenContext ctx) {
 		int i = 0;
-		for (PlayerData playerData : playerDataList) {
+		for (ProfileData profileData : profileDataList) {
 			ItemStack itemStack = ItemStack.of(Material.GRASS_BLOCK)
 					.withCustomName(
 							Component.text(i)
 					).withTag(
 							Tag.UUID("profile_uuid"),
-							playerData.getProfileUniqueId()
+							profileData.getProfileUniqueId()
 					);
 
 			ctx.slot(i + 11, itemStack)
@@ -55,7 +55,7 @@ public class ProfileSelectionInventory extends GameInventory {
 										.color(TextColor.color(97, 101, 165))
 						);
 
-						clickPlayer.loadPlayerData(selectedProfileUniqueId);
+						clickPlayer.loadProfileData(selectedProfileUniqueId);
 						clickPlayer.removeEffect(PotionEffect.BLINDNESS);
 						clickPlayer.sendToSpawn();
 						clickPlayer.setNoGravity(false);

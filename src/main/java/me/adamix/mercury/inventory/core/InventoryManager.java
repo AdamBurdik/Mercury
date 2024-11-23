@@ -113,15 +113,15 @@ public class InventoryManager {
 		OpenContext openContext = new OpenContext(player);
 		gameInventory.onOpen(openContext);
 
-		List<ItemComponent> itemComponentList = openContext.getItemComponentList();
-		for (ItemComponent component : itemComponentList) {
+		Map<Integer, ItemComponent> itemComponentMap = openContext.getItemComponentList();
+		itemComponentMap.forEach((slot, component) -> {
 			inventory.setItemStack(
-					component.getSlot(),
+					slot,
 					component.getItemStack()
 			);
-		}
+		});
 
-		InventoryData inventoryData = new InventoryData(inventory, itemComponentList);
+		InventoryData inventoryData = new InventoryData(inventory, itemComponentMap);
 		playerInventoryData.put(player.getUuid(), inventoryData);
 		playerInventoryMap.put(player.getUuid(), gameInventory);
 

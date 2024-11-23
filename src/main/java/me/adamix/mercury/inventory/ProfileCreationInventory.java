@@ -6,8 +6,8 @@ import me.adamix.mercury.inventory.core.context.CloseContext;
 import me.adamix.mercury.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.inventory.core.context.OpenContext;
 import me.adamix.mercury.player.GamePlayer;
-import me.adamix.mercury.player.data.PlayerData;
-import me.adamix.mercury.player.data.PlayerDataManager;
+import me.adamix.mercury.player.profile.ProfileData;
+import me.adamix.mercury.player.profile.ProfileDataManager;
 import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import net.minestom.server.utils.NamespaceID;
 
@@ -28,10 +28,10 @@ public class ProfileCreationInventory extends GameInventory {
 					GamePlayer clickPlayer = click.getPlayer();
 
 					click.setCancelled(true);
-					PlayerDataManager playerDataManager = Server.getPlayerDataManager();
+					ProfileDataManager profileDataManager = Server.getProfileDataManager();
 					// ToDO Create new player data with default values from config
-					playerDataManager.savePlayerData(
-							new PlayerData(
+					profileDataManager.saveProfileData(
+							new ProfileData(
 									clickPlayer.getUuid(),
 									UUID.randomUUID(),
 									"en",
@@ -44,8 +44,8 @@ public class ProfileCreationInventory extends GameInventory {
 					);
 					click.close();
 
-					Server.getPlayerDataManager().getPlayerDataListSync(clickPlayer.getUuid(), (playerDataList -> {
-						ProfileSelectionInventory inventory = new ProfileSelectionInventory(playerDataList);
+					Server.getProfileDataManager().getProfileDataListSync(clickPlayer.getUuid(), (profileDataList -> {
+						ProfileSelectionInventory inventory = new ProfileSelectionInventory(profileDataList);
 						clickPlayer.openGameInventory(inventory);
 					}));
 

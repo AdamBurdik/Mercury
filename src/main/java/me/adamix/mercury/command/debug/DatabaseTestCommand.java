@@ -1,8 +1,8 @@
 package me.adamix.mercury.command.debug;
 
 import me.adamix.mercury.Server;
-import me.adamix.mercury.player.data.PlayerData;
-import me.adamix.mercury.player.data.PlayerDataManager;
+import me.adamix.mercury.player.profile.ProfileData;
+import me.adamix.mercury.player.profile.ProfileDataManager;
 import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -23,8 +23,8 @@ public class DatabaseTestCommand extends Command {
 		var stringArg2 = ArgumentType.String("uuid2");
 
 		setDefaultExecutor((sender, ctx) -> {
-			PlayerDataManager manager = Server.getPlayerDataManager();
-			var retrievedData = manager.getPlayerDataList(UUID.fromString("498ac192-52ea-463b-9129-c4cd53c2c057"));
+			ProfileDataManager manager = Server.getProfileDataManager();
+			var retrievedData = manager.getProfileDataList(UUID.fromString("498ac192-52ea-463b-9129-c4cd53c2c057"));
 			retrievedData.thenAccept(retrievedPlayerData -> {
 				LOGGER.info("Retrieved data: {}", retrievedPlayerData.toString());
 			});
@@ -37,7 +37,7 @@ public class DatabaseTestCommand extends Command {
 			UUID uuid = UUID.fromString(ctx.get(stringArg));
 			UUID playerUUID = UUID.fromString(ctx.get(stringArg2));
 
-			var data = new PlayerData(
+			var data = new ProfileData(
 					playerUUID,
 					uuid,
 					"en",
@@ -48,10 +48,10 @@ public class DatabaseTestCommand extends Command {
 					new GamePlayerInventory()
 			);
 
-			PlayerDataManager manager = Server.getPlayerDataManager();
+			ProfileDataManager manager = Server.getProfileDataManager();
 			LOGGER.info("saving data");
-			manager.savePlayerData(data);
-			var retrievedData = manager.getPlayerData(data.getProfileUniqueId());
+			manager.saveProfileData(data);
+			var retrievedData = manager.getProfileData(data.getProfileUniqueId());
 			retrievedData.thenAccept(retrievedPlayerData -> {
 				LOGGER.info("Retrieved data: {}", retrievedPlayerData);
 			});

@@ -15,14 +15,14 @@ public class ClassCommand extends Command {
 		setDefaultExecutor((sender, ctx) -> {
 
 			if (sender instanceof GamePlayer player) {
-				player.clearPlayerData();
+				player.clearProfileData();
 
 				player.setNoGravity(true);
 				player.setGameMode(GameMode.CREATIVE);
 				player.addEffect(new Potion(PotionEffect.BLINDNESS, Byte.MAX_VALUE, Potion.INFINITE_DURATION));
 				player.sendToLimbo();
 
-				Server.getPlayerDataManager().getPlayerDataListSync(player.getUuid(), (playerDataList -> {
+				Server.getProfileDataManager().getProfileDataListSync(player.getUuid(), (playerDataList -> {
 					ProfileSelectionInventory inventory = new ProfileSelectionInventory(playerDataList);
 					player.openGameInventory(inventory);
 				}));

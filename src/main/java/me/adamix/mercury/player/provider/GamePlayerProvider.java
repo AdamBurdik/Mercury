@@ -7,8 +7,6 @@ import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 public class GamePlayerProvider implements PlayerProvider {
 
 	@Override

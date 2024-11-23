@@ -2,6 +2,7 @@ package me.adamix.mercury;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
 import me.adamix.mercury.command.*;
@@ -22,6 +23,7 @@ import me.adamix.mercury.monitor.TickMonitorManager;
 import me.adamix.mercury.placeholder.PlaceholderManager;
 import me.adamix.mercury.player.GamePlayer;
 import me.adamix.mercury.player.data.PlayerDataManager;
+import me.adamix.mercury.player.profile.ProfileDataManager;
 import me.adamix.mercury.player.provider.GamePlayerProvider;
 import me.adamix.mercury.terminal.MinestomTerminal;
 import me.adamix.mercury.translation.Translation;
@@ -57,6 +59,7 @@ public class Server {
 	@Getter private static ItemBlueprintManager itemBlueprintManager;
 	@Getter private static ItemManager itemManager;
 	@Getter private static PlayerDataManager playerDataManager;
+	@Getter private static ProfileDataManager profileDataManager;
 	@Getter private static InventoryManager inventoryManager;
 	@Getter private static TranslationManager translationManager;
 	@Getter private static PlaceholderManager placeholderManager;
@@ -111,7 +114,10 @@ public class Server {
 		mobManager = new MobManager();
 		itemBlueprintManager = new ItemBlueprintManager();
 		itemManager = new ItemManager(itemBlueprintManager);
-		playerDataManager = new PlayerDataManager(mongoClient);
+		MongoDatabase playerDatabase = mongoClient.getDatabase("PlayerData");
+
+		playerDataManager = new PlayerDataManager(playerDatabase);
+		profileDataManager = new ProfileDataManager(playerDatabase);
 		inventoryManager = new InventoryManager();
 		translationManager = new TranslationManager();
 		placeholderManager = new PlaceholderManager();

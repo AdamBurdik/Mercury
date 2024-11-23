@@ -14,7 +14,7 @@ public class InventoryCommand extends Command {
 				return;
 			}
 
-			Server.getPlayerDataManager().getPlayerDataListSync(player.getUuid(), (playerDataList -> {
+			Server.getProfileDataManager().getProfileDataListSync(player.getUuid(), (playerDataList -> {
 				ProfileSelectionInventory inventory = new ProfileSelectionInventory(playerDataList);
 				player.openGameInventory(inventory);
 			}));

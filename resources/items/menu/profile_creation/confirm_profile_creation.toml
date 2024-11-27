@@ -1,4 +1,4 @@
 id = "mercury:confirm_profile_creation"
 name = "<dark_green><!italic><bold><translation:inventory.profile.create.confirm_name>"
 description = "<!italic><green><translation:inventory.profile.create.confirm_description>"
-base_material = "lime_dye"
+material = "lime_dye"

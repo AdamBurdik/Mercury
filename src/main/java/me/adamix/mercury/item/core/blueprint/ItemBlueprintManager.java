@@ -22,7 +22,6 @@ public class ItemBlueprintManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemBlueprintManager.class);
 	private final Map<NamespaceID, GameItemBlueprint> itemBlueprintMap = new HashMap<>();
 
-
 	public void registerAllItems() {
 		File itemDirectory = new File("resources/items/");
 		List<File> fileList = FileUtils.getAllFiles(itemDirectory);
@@ -39,44 +38,17 @@ public class ItemBlueprintManager {
 
 	public void register(@NotNull File file) {
 		if (!file.exists()) {
-			LOGGER.error("Unable to register item! File does not exists");
-			return;
+			throw new RuntimeException("Unable to register item! File does not exist");
 		}
 
 		try {
 			TomlParseResult result = Toml.parse(file.toPath());
-			if (result.hasErrors())  {
-				result.errors().forEach(error -> LOGGER.error("Error while parsing {} configuration !\n{}\n", file.getName(), error.toString()));
-				return;
-			}
+			TomlUtils.handleErrors(result, file.getName());
 
-			String stringId = result.getString("id");
-			if (stringId == null) {
-				LOGGER.error("Unable to find id property in {} configuration!", file.getName());
-				return;
-			}
-
-			NamespaceID namespaceID = NamespaceID.from(stringId);
-
-			String name = result.getString("name");
-			if (name == null) {
-				LOGGER.error("Unable to find name property in {} ({}) configuration!", namespaceID, file.getName());
-				return;
-			}
-
+			NamespaceID namespaceID = TomlUtils.getNamespacedID(result, "id");
+			String name = TomlUtils.getString(result, "name");
 			String description = result.getString("description");
-
-			String baseMaterial = result.getString("base_material");
-			if (baseMaterial == null) {
-				LOGGER.error("Unable to find base_material property in {} ({}) configuration!", namespaceID, file.getName());
-				return;
-			}
-
-			Material material = Material.fromNamespaceId(baseMaterial);
-			if (material == null) {
-				LOGGER.error("Unknown material {} in {} ({}) configuration! Please specify valid material. e.g. 'minecraft:diamond_sword'", baseMaterial, namespaceID, file.getName());
-				return;
-			}
+			Material material = TomlUtils.getMaterial(result, "material");
 
 			String rarity = result.getString("rarity");
 			ItemRarity itemRarity = null;
@@ -84,7 +56,7 @@ public class ItemBlueprintManager {
 				try {
 					itemRarity = ItemRarity.valueOf(rarity.toUpperCase());
 				} catch (IllegalArgumentException e) {
-					LOGGER.error("Unknown rarity {} in {} ({}) configuration! Please specify valid rarity. e.g. 'common'", baseMaterial, namespaceID, file.getName());
+					LOGGER.error("Unknown rarity {} in {} ({}) configuration! Please specify valid rarity. e.g. 'common'", rarity, namespaceID, file.getName());
 					return;
 				}
 			}
@@ -100,7 +72,7 @@ public class ItemBlueprintManager {
 			}
 
 
-			LOGGER.info("Registering item {} ({})", namespaceID, file.getName());
+			LOGGER.info("Item '{}' ({}) has been registered", namespaceID, file.getName());
 			GameItemBlueprint item = new GameItemBlueprint(
 					namespaceID,
 					material,

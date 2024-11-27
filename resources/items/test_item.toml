@@ -3,7 +3,7 @@
 id = "mercury:test_item"
 name = "<dark_red><!italic><bold><translation:item.name.test_item>"
 description = "<!italic><red><translation:item.description.test_item>"
-base_material = "diamond_sword"
+material = "diamond_sword"
 rarity = "unique"
 
 [attributes]

@@ -1,0 +1,8 @@
+id = "mercury:default"
+spawn_pos = [0.0, 64.0, 0.0, 0.0, 0.0] # x, y, z, yaw, pitch
+world_name = "main"
+
+[[spawners]]
+position = [25, 10, 0]
+radius = [1, 0, 2, 2, 2, 2] # down, up, north, south, west, east
+entity_types = ["mercury:rogue_zombie"]

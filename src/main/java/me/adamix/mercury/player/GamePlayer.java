@@ -35,6 +35,7 @@ public class GamePlayer extends Player {
 	private @Nullable PlayerData playerData;
 	private @Nullable ProfileData profileData;
 	private final @NotNull Set<GameMob> viewedMobs = new HashSet<>();
+	private @Nullable UUID dungeonUniqueId;
 	@Setter
 	private boolean inDebug = true;
 

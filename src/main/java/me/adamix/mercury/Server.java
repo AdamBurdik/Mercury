@@ -7,10 +7,13 @@ import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
 import me.adamix.mercury.command.*;
 import me.adamix.mercury.command.debug.*;
+import me.adamix.mercury.command.dungeon.EnterDungeonCommand;
 import me.adamix.mercury.command.server.PerformanceCommand;
 import me.adamix.mercury.command.server.StopCommand;
 import me.adamix.mercury.common.ColorPallet;
 import me.adamix.mercury.configuration.Configuration;
+import me.adamix.mercury.dungeon.DungeonManager;
+import me.adamix.mercury.dungeon.instance.DungeonInstanceManager;
 import me.adamix.mercury.flag.ServerFlag;
 import me.adamix.mercury.inventory.core.InventoryManager;
 import me.adamix.mercury.item.core.ItemManager;
@@ -66,6 +69,8 @@ public class Server {
 	@Getter private static TranslationManager translationManager;
 	@Getter private static PlaceholderManager placeholderManager;
 	@Getter private static TickMonitorManager tickMonitorManager;
+	@Getter private static DungeonInstanceManager dungeonInstanceManager;
+	@Getter private static DungeonManager dungeonManager;
 	private static MongoClient mongoClient;
 
 	private static void connectToMongoDatabase() {
@@ -124,6 +129,8 @@ public class Server {
 		translationManager = new TranslationManager();
 		placeholderManager = new PlaceholderManager();
 		tickMonitorManager = new TickMonitorManager();
+		dungeonInstanceManager = new DungeonInstanceManager();
+		dungeonManager = new DungeonManager();
 
 		// Start tick monitor
 		tickMonitorManager.start();
@@ -138,6 +145,10 @@ public class Server {
 		// Register default entities
 		mobManager.register(NamespaceID.from("mercury", "rogue_zombie"), RogueZombie.class);
 		mobManager.register(NamespaceID.from("mercury", "friendly_zombie"), FriendlyZombie.class);
+
+		// Register dungeon instances and dungeons
+		dungeonInstanceManager.registerAllInstances();
+		dungeonManager.registerAllDungeons();
 
 		// Register event listeners
 		globalEventHandler.addListener(new AsyncPlayerConfigurationListener());
@@ -170,6 +181,7 @@ public class Server {
 		commandManager.register(new EntityNameTestCommand());
 		commandManager.register(new DatabaseTestCommand());
 		commandManager.register(new PlayTimeCommand());
+		commandManager.register(new EnterDungeonCommand());
 
 		// Start tasks
 		new PlayTimeTask().start();

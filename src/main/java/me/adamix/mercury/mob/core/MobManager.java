@@ -33,7 +33,7 @@ public class MobManager {
 	 */
 	public void register(NamespaceID namespaceID, Class<? extends GameMob> clazz) {
 		registeredMobs.put(namespaceID, clazz);
-		LOGGER.info("Entity {} has been registered", namespaceID.asString());
+		LOGGER.info("Entity '{}' has been registered", namespaceID.asString());
 	}
 
 	/**

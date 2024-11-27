@@ -5,7 +5,7 @@
 
 	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
-			<pattern>[%d{dd/MM/YY - HH:mm:ss}] %boldCyan(%-1.-10thread) %boldGreen(%-25.-25logger{0}) %highlightex(%-6level) %highlightex(%msg%n)</pattern>
+			<pattern>[%d{dd/MM/YY - HH:mm:ss}] %boldCyan(%-10.-10thread) %boldGreen(%-25.-25logger{0}) %highlightex(%-6level) %highlightex(%msg%n)</pattern>
 		</layout>
 
 	</appender>

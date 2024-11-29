@@ -49,7 +49,7 @@ public class DungeonManager {
 		TomlConfiguration toml = new TomlConfiguration(tomlFile);
 
 		NamespaceID dungeonID = toml.getNamespacedIDSafe("id");
-		NamespaceID instanceID = toml.getNamespacedIDSafe("dungeon_id");
+		NamespaceID instanceID = toml.getNamespacedIDSafe("instance_id");
 
 		DungeonConfiguration config = new DungeonConfiguration(
 				instanceID

@@ -11,24 +11,41 @@ repositories {
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-//    implementation 'net.minestom:minestom-snapshots:bb7acc2e77'
+    // Minestom stuff
     implementation 'net.minestom:minestom-snapshots:1_21_2-ee6a7180b4'
-    implementation 'org.mongodb:mongodb-driver-sync:5.2.0'
-
-    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
-    implementation 'org.slf4j:slf4j-api:2.0.16'
-    implementation 'ch.qos.logback:logback-classic:1.5.12'
-    compileOnly 'org.projectlombok:lombok:1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
-    implementation 'org.tomlj:tomlj:1.1.1'
-    implementation "net.kyori:adventure-text-minimessage:4.17.0"
-    implementation 'org.jline:jline:3.27.1'
+    // implementation 'net.minestom:minestom-snapshots:bb7acc2e77'
+    implementation 'dev.hollowcube:polar:1.11.4'
     implementation 'dev.hollowcube:schem:1.2.0'
 
+    // Database
+    implementation 'org.mongodb:mongodb-driver-sync:5.2.0'
+
+    // JUnit
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // Logger
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    implementation 'ch.qos.logback:logback-classic:1.5.12'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    implementation 'org.tomlj:tomlj:1.1.1'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
     testCompileOnly 'org.projectlombok:lombok:1.18.34'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    // Tomlj
+    implementation 'org.tomlj:tomlj:1.1.1'
+
+    // Dot Env
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
+    // Kyori Adventure
+    implementation "net.kyori:adventure-text-minimessage:4.17.0"
+
+    // Jline
+    implementation 'org.jline:jline:3.27.1'
 }
 
 java {

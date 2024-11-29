@@ -1,6 +1,9 @@
 package me.adamix.mercury.player.profile;
 
-import com.mongodb.client.*;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import me.adamix.mercury.player.inventory.GamePlayerInventory;

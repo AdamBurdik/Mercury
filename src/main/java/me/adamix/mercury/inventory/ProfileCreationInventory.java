@@ -6,9 +6,9 @@ import me.adamix.mercury.inventory.core.context.CloseContext;
 import me.adamix.mercury.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.inventory.core.context.OpenContext;
 import me.adamix.mercury.player.GamePlayer;
+import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import me.adamix.mercury.player.profile.ProfileData;
 import me.adamix.mercury.player.profile.ProfileDataManager;
-import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import net.minestom.server.utils.NamespaceID;
 
 import java.util.UUID;

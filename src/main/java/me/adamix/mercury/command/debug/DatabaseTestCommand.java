@@ -1,9 +1,9 @@
 package me.adamix.mercury.command.debug;
 
 import me.adamix.mercury.Server;
+import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import me.adamix.mercury.player.profile.ProfileData;
 import me.adamix.mercury.player.profile.ProfileDataManager;
-import me.adamix.mercury.player.inventory.GamePlayerInventory;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.entity.attribute.Attribute;

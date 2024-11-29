@@ -13,8 +13,6 @@ import org.tomlj.TomlTable;
 
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
-
 public class TomlUtils {
 	public static @Nullable ItemAttributeValue parseItemAttribute(TomlTable table, String fileName) {
 		if (!table.contains(fileName)) {

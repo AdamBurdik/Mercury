@@ -8,9 +8,7 @@ import me.adamix.mercury.player.GamePlayer;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.utils.NamespaceID;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Getter

@@ -17,9 +17,11 @@ import java.util.Objects;
 
 public class TomlConfiguration {
 	private final TomlParseResult parseResult;
+	private final String fileName;
 
 	public TomlConfiguration(@NotNull File tomlFile) {
 		try {
+			this.fileName = tomlFile.getName();
 			this.parseResult = Toml.parse(tomlFile.toPath());
 			if (this.parseResult.hasErrors()) {
 				this.parseResult.errors().forEach(error -> {
@@ -34,7 +36,7 @@ public class TomlConfiguration {
 
 	public void mustContain(@NotNull String dottedKey) {
 		if (!this.parseResult.contains(dottedKey)) {
-			throw new RuntimeException("Unable to find property " + dottedKey + "!");
+			throw new RuntimeException("Unable to find property " + dottedKey + " in " + fileName + "!");
 		}
 	}
 
@@ -67,7 +69,7 @@ public class TomlConfiguration {
 		TomlArray tomlArray = this.parseResult.getArray(dottedKey);
 		Objects.requireNonNull(tomlArray);
 		if (tomlArray.size() != 3 && tomlArray.size() != 5) {
-			throw new RuntimeException("Array with position must have 3 (x, y, z) or 5 (x, y, z, yaw, pitch) values!");
+			throw new RuntimeException("Invalid position in " + fileName + "! Array with position must have 3 (x, y, z) or 5 (x, y, z, yaw, pitch) values!");
 		}
 		double x = tomlArray.getDouble(0);
 		double y = tomlArray.getDouble(1);
@@ -105,7 +107,7 @@ public class TomlConfiguration {
 		mustContain(dottedKey);
 		Material material = Material.fromNamespaceId(getStringSafe(dottedKey));
 		if (material == null) {
-			throw new RuntimeException("Invalid material id " + dottedKey + "! Please specify valid one. eg. 'minecraft:stone'");
+			throw new RuntimeException("Invalid material id " + dottedKey + " in " + fileName + "! Please specify valid one. eg. 'minecraft:stone'");
 		}
 		return material;
 	}

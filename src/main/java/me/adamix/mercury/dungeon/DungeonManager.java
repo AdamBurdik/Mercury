@@ -4,6 +4,7 @@ import me.adamix.mercury.Server;
 import me.adamix.mercury.dungeon.configuration.DungeonConfiguration;
 import me.adamix.mercury.dungeon.instance.DungeonInstance;
 import me.adamix.mercury.player.GamePlayer;
+import me.adamix.mercury.toml.TomlConfiguration;
 import me.adamix.mercury.utils.FileUtils;
 import me.adamix.mercury.utils.TomlUtils;
 import net.minestom.server.utils.NamespaceID;
@@ -23,7 +24,7 @@ public class DungeonManager {
 	private final Map<NamespaceID, DungeonConfiguration> configurationMap = new HashMap<>();
 	private final Map<UUID, Dungeon> dungeonMap = new HashMap<>();
 
-	public Dungeon create(NamespaceID dungeonID, Set<GamePlayer> playerSet) {
+	public @NotNull Dungeon create(@NotNull NamespaceID dungeonID, @NotNull Set<GamePlayer> playerSet) {
 		DungeonConfiguration config = configurationMap.get(dungeonID);
 		DungeonInstance dungeonInstance = Server.getDungeonInstanceManager().create(config.instanceID());
 
@@ -32,7 +33,7 @@ public class DungeonManager {
 		return dungeon;
 	}
 
-	public void register(NamespaceID dungeonID, DungeonConfiguration config) {
+	public void register(@NotNull NamespaceID dungeonID, @NotNull DungeonConfiguration config) {
 		LOGGER.info("Dungeon '{}' has been registered", dungeonID.asString());
 		configurationMap.put(dungeonID, config);
 	}
@@ -41,33 +42,28 @@ public class DungeonManager {
 		FileUtils.forEachFile("resources/dungeon/dungeons", FileUtils.isTomlPredicate, this::register);
 	}
 
-	public void register(File tomlFile) {
+	public void register(@NotNull File tomlFile) {
 		if (!tomlFile.exists()) {
 			throw new RuntimeException("Unable to register dungeon instance! File does not exist");
 		}
 
-		try {
-			TomlParseResult result = Toml.parse(tomlFile.toPath());
-			TomlUtils.handleErrors(result, tomlFile.getName());
+		TomlConfiguration toml = new TomlConfiguration(tomlFile);
 
-			NamespaceID dungeonID = TomlUtils.getNamespacedID(result, "id");
-			NamespaceID instanceID = TomlUtils.getNamespacedID(result, "instance");
+		NamespaceID dungeonID = toml.getNamespacedIDSafe("id");
+		NamespaceID instanceID = toml.getNamespacedIDSafe("dungeon_id");
 
-			DungeonConfiguration config = new DungeonConfiguration(
-					instanceID
-			);
-			this.register(dungeonID, config);
+		DungeonConfiguration config = new DungeonConfiguration(
+				instanceID
+		);
 
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		this.register(dungeonID, config);
 	}
 
-	public boolean hasDungeon(UUID dungeonUniqueId) {
+	public boolean hasDungeon(@NotNull UUID dungeonUniqueId) {
 		return dungeonMap.containsKey(dungeonUniqueId);
 	}
 
-	public @Nullable Dungeon getDungeon(UUID dungeonUniqueId) {
+	public @Nullable Dungeon getDungeon(@NotNull UUID dungeonUniqueId) {
 		return dungeonMap.get(dungeonUniqueId);
 	}
 }

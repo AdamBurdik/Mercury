@@ -50,3 +50,4 @@ bin/
 ### Velocity ###
 velocity/
 resources/.env
+worlds/schematic_world/xaeromap.txt

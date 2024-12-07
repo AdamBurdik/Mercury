@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 	<statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
-	<conversionRule conversionWord="highlightex" converterClass="me.adamix.mercury.logback.HighlightingCompositeConverterEx"/>
+	<conversionRule conversionWord="highlightex" converterClass="me.adamix.mercury.server.logback.HighlightingCompositeConverterEx"/>
 
 	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">

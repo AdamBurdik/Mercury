@@ -8,6 +8,7 @@ version = '0.1'
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -15,7 +16,8 @@ dependencies {
     implementation 'net.minestom:minestom-snapshots:1_21_2-ee6a7180b4'
     // implementation 'net.minestom:minestom-snapshots:bb7acc2e77'
     implementation 'dev.hollowcube:polar:1.11.4'
-    implementation 'dev.hollowcube:schem:1.2.0'
+//    implementation 'dev.hollowcube:schem:1.2.0'
+    implementation files("libs/schem-dev.jar")
 
     // Database
     implementation 'org.mongodb:mongodb-driver-sync:5.2.0'
@@ -46,6 +48,11 @@ dependencies {
 
     // Jline
     implementation 'org.jline:jline:3.27.1'
+
+    // JDA
+    implementation("net.dv8tion:JDA:5.2.1") {
+        exclude module: 'opus-java'
+    }
 }
 
 java {

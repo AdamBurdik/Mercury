@@ -2,7 +2,7 @@ package me.adamix.mercury.server.command.dungeon;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.dungeon.room.DungeonRoom;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.hollowcube.schem.Rotation;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.coordinate.Point;
@@ -52,7 +52,7 @@ public class GenerateCommand extends Command {
 		super("generate", "gen");
 
 		setDefaultExecutor((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 

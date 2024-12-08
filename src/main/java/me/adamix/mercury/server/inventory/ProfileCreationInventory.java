@@ -2,11 +2,11 @@ package me.adamix.mercury.server.inventory;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
-import me.adamix.mercury.server.inventory.core.GameInventory;
+import me.adamix.mercury.server.inventory.core.MercuryInventory;
 import me.adamix.mercury.server.inventory.core.context.CloseContext;
 import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.server.inventory.core.context.OpenContext;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
@@ -15,7 +15,7 @@ import net.minestom.server.utils.NamespaceID;
 
 import java.util.UUID;
 
-public class ProfileCreationInventory extends GameInventory {
+public class ProfileCreationInventory extends MercuryInventory {
 
 	@Override
 	public void onInit(InventoryConfig config) {
@@ -27,7 +27,7 @@ public class ProfileCreationInventory extends GameInventory {
 	public void onOpen(OpenContext ctx) {
 		ctx.slot(4 * 9 - 1, NamespaceID.from("mercury:confirm_profile_creation"))
 				.onClick((click) -> {
-					GamePlayer clickPlayer = click.getPlayer();
+					MercuryPlayer clickPlayer = click.getPlayer();
 
 					click.setCancelled(true);
 					ProfileDataManager profileDataManager = Server.getProfileDataManager();

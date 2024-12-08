@@ -1,6 +1,6 @@
 package me.adamix.mercury.server.task.core;
 
-public interface GameTask {
+public interface MercuryTask {
 	void start();
 	void cancel();
 }

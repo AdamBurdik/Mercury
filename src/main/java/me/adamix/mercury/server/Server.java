@@ -28,7 +28,7 @@ import me.adamix.mercury.server.mob.zombie.FriendlyZombie;
 import me.adamix.mercury.server.mob.zombie.RogueZombie;
 import me.adamix.mercury.server.monitor.TickMonitorManager;
 import me.adamix.mercury.server.placeholder.PlaceholderManager;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.data.PlayerDataManager;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
 import me.adamix.mercury.server.player.provider.GamePlayerProvider;
@@ -279,7 +279,7 @@ public class Server {
 		tickMonitorManager.stop();
 
 		for (@NotNull Player onlinePlayer : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
-			GamePlayer player = GamePlayer.of(onlinePlayer);
+			MercuryPlayer player = MercuryPlayer.of(onlinePlayer);
 			Translation translation = translationManager.getTranslation(player.getTranslationId());
 
 			player.kick(
@@ -291,9 +291,9 @@ public class Server {
 		MinecraftServer.stopCleanly();
 	}
 
-	public static Collection<GamePlayer> getOnlinePlayers() {
+	public static Collection<MercuryPlayer> getOnlinePlayers() {
 		Collection<Player> playerCollection = MinecraftServer.getConnectionManager().getOnlinePlayers();
-		return playerCollection.stream().map(GamePlayer::of).collect(Collectors.toList());
+		return playerCollection.stream().map(MercuryPlayer::of).collect(Collectors.toList());
 	}
 
 	public static File file(String path) {

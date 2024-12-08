@@ -2,7 +2,7 @@ package me.adamix.mercury.server.item.core.blueprint;
 
 import lombok.Getter;
 import me.adamix.mercury.server.common.SerializableEntity;
-import me.adamix.mercury.server.item.core.GameItem;
+import me.adamix.mercury.server.item.core.MercuryItem;
 import me.adamix.mercury.server.item.core.attribute.ItemAttributes;
 import me.adamix.mercury.server.item.core.rarity.ItemRarity;
 import net.minestom.server.item.Material;
@@ -19,7 +19,7 @@ import java.util.UUID;
  * Typically used to define items loaded from config file
  */
 @Getter
-public class GameItemBlueprint implements SerializableEntity {
+public class MercuryItemBlueprint implements SerializableEntity {
 	private final @NotNull NamespaceID blueprintID;
 	private final @NotNull Material baseMaterial;
 	private final @NotNull String name;
@@ -27,7 +27,7 @@ public class GameItemBlueprint implements SerializableEntity {
 	private final @NotNull ItemAttributes attributes;
 	private final @Nullable ItemRarity rarity;
 
-	public GameItemBlueprint(
+	public MercuryItemBlueprint(
 			@NotNull NamespaceID blueprintID,
 			@NotNull Material baseMaterial,
 			@NotNull String name,
@@ -43,8 +43,8 @@ public class GameItemBlueprint implements SerializableEntity {
 		this.rarity = rarity;
 	}
 
-	public GameItem build(UUID itemUniqueId) {
-		return new GameItem(
+	public MercuryItem build(UUID itemUniqueId) {
+		return new MercuryItem(
 				itemUniqueId,
 				this.blueprintID,
 				this.baseMaterial,

@@ -8,7 +8,7 @@ import me.adamix.mercury.server.item.core.attribute.ItemAttributeValue;
 import me.adamix.mercury.server.item.core.attribute.ItemAttributes;
 import me.adamix.mercury.server.item.core.rarity.ItemRarity;
 import me.adamix.mercury.server.placeholder.PlaceholderManager;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.translation.Translation;
 import me.adamix.mercury.server.translation.TranslationManager;
 import net.kyori.adventure.text.Component;
@@ -32,7 +32,7 @@ import java.util.UUID;
  * Contains item-specific properties and methods for item stack generation.
  */
 @Getter
-public class GameItem {
+public class MercuryItem {
 	private final @NotNull UUID itemUniqueId;
 	private final @NotNull NamespaceID blueprintID;
 	private final @NotNull Material baseMaterial;
@@ -42,7 +42,7 @@ public class GameItem {
 	private final @Nullable ItemRarity rarity;
 	private static final Tag<UUID> idTag = Tag.UUID("uniqueId");
 
-	public GameItem(
+	public MercuryItem(
 			@NotNull UUID itemUniqueId,
 			@NotNull NamespaceID blueprintID,
 			@NotNull Material baseMaterial,
@@ -65,7 +65,7 @@ public class GameItem {
 	 * @param player - player to create item for
 	 * @return ItemStack
 	 */
-	public ItemStack toItemStack(GamePlayer player) {
+	public ItemStack toItemStack(MercuryPlayer player) {
 		PlaceholderManager placeholder = Server.getPlaceholderManager();
 		Translation translation = TranslationManager.getTranslation(player);
 

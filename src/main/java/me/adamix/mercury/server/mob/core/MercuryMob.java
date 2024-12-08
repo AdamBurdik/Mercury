@@ -5,7 +5,7 @@ import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.mob.core.attribute.MobAttribute;
 import me.adamix.mercury.server.mob.core.attribute.MobAttributes;
 import me.adamix.mercury.server.mob.core.behaviour.MobBehaviour;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
@@ -19,13 +19,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class GameMob extends EntityCreature {
+public class MercuryMob extends EntityCreature {
 	private final @NotNull EntityType entityType;
 	private final @NotNull String name;
 	private final @NotNull MobAttributes mobAttributes;
 	private final @Nullable MobBehaviour behaviour;
 
-	public GameMob(
+	public MercuryMob(
 			@NotNull EntityType entityType,
 			@NotNull String name,
 			@NotNull MobAttributes mobAttributes,
@@ -66,7 +66,7 @@ public class GameMob extends EntityCreature {
 	 * Updates entity entity for specific player, supports placeholders
 	 * @param player player to update name for
 	 */
-	public void updateName(GamePlayer player) {
+	public void updateName(MercuryPlayer player) {
 		Component component = Server.getPlaceholderManager().parse(this.name, player);
 
 		// Create copy of original immutable metadata map

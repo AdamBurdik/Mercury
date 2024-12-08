@@ -8,7 +8,7 @@ import me.adamix.mercury.server.inventory.core.context.OpenContext;
 
 
 @Getter
-public abstract class GameInventory {
+public abstract class MercuryInventory {
 
 	public void onInit(InventoryConfig config) {
 		config.rows(1);

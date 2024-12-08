@@ -2,7 +2,7 @@ package me.adamix.mercury.server.item.core.attribute;
 
 import lombok.Getter;
 import me.adamix.mercury.server.common.SerializableEntity;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.attribute.AttributeModifier;
 import net.minestom.server.entity.attribute.AttributeOperation;
@@ -46,7 +46,7 @@ public class ItemAttributes implements SerializableEntity {
 		return attributeMap.get(attribute);
 	}
 
-	public void applyToPlayer(GamePlayer player) {
+	public void applyToPlayer(MercuryPlayer player) {
 		attributeMap.forEach((attribute, value) -> {
 			Attribute defaultAttribute = attribute.getDefaultAttribute();
 			if (defaultAttribute != null) {

@@ -2,7 +2,7 @@ package me.adamix.mercury.server.command.dungeon;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.dungeon.room.DungeonRoom;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.hollowcube.schem.SchematicBuilder;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -18,7 +18,7 @@ public class RoomBuilderCommand extends Command {
 	private static Point westPoint = null;
 	private static Point eastPoint = null;
 
-	public Point getTargetPoint(GamePlayer player) {
+	public Point getTargetPoint(MercuryPlayer player) {
 		return player.getTargetBlockPosition(10);
 	}
 
@@ -28,7 +28,7 @@ public class RoomBuilderCommand extends Command {
 		var stringArg = ArgumentType.String("action");
 
 		addSyntax((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 

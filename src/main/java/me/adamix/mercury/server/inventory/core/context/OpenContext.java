@@ -3,8 +3,8 @@ package me.adamix.mercury.server.inventory.core.context;
 import lombok.Getter;
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.inventory.core.component.ItemComponent;
-import me.adamix.mercury.server.item.core.GameItem;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.item.core.MercuryItem;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.utils.NamespaceID;
 
@@ -13,10 +13,10 @@ import java.util.Map;
 
 @Getter
 public class OpenContext {
-	private final GamePlayer player;
+	private final MercuryPlayer player;
 	private final Map<Integer, ItemComponent> itemComponentList = new HashMap<>();
 
-	public OpenContext(GamePlayer player) {
+	public OpenContext(MercuryPlayer player) {
 		this.player = player;
 	}
 
@@ -27,7 +27,7 @@ public class OpenContext {
 	}
 
 	public ItemComponent slot(int slot, NamespaceID blueprintID) {
-		GameItem gameItem = Server.getItemManager().buildItem(blueprintID);
-		return this.slot(slot, gameItem.toItemStack(this.player));
+		MercuryItem mercuryItem = Server.getItemManager().buildItem(blueprintID);
+		return this.slot(slot, mercuryItem.toItemStack(this.player));
 	}
 }

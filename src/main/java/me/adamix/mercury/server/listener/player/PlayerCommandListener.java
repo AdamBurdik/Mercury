@@ -2,7 +2,7 @@ package me.adamix.mercury.server.listener.player;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.common.ColorPallet;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.translation.Translation;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.EventListener;
@@ -15,7 +15,7 @@ public class PlayerCommandListener implements EventListener<PlayerCommandEvent> 
 		String command = event.getCommand();
 		String[] split = command.split(" ");
 		if (!MinecraftServer.getCommandManager().commandExists(split[0])) {
-			GamePlayer player = GamePlayer.of(event);
+			MercuryPlayer player = MercuryPlayer.of(event);
 
 			Translation translation = Server.getTranslationManager().getTranslation(player.getTranslationId());
 			player.sendMessage(

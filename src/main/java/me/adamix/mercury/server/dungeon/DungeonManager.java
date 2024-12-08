@@ -3,7 +3,7 @@ package me.adamix.mercury.server.dungeon;
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.dungeon.configuration.DungeonConfiguration;
 import me.adamix.mercury.server.dungeon.instance.DungeonInstance;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.toml.TomlConfiguration;
 import me.adamix.mercury.server.utils.FileUtils;
 import net.minestom.server.utils.NamespaceID;
@@ -23,7 +23,7 @@ public class DungeonManager {
 	private final Map<NamespaceID, DungeonConfiguration> configurationMap = new HashMap<>();
 	private final Map<UUID, Dungeon> dungeonMap = new HashMap<>();
 
-	public @NotNull Dungeon create(@NotNull NamespaceID dungeonID, @NotNull Set<GamePlayer> playerSet) {
+	public @NotNull Dungeon create(@NotNull NamespaceID dungeonID, @NotNull Set<MercuryPlayer> playerSet) {
 		DungeonConfiguration config = configurationMap.get(dungeonID);
 		DungeonInstance dungeonInstance = Server.getDungeonInstanceManager().create(config.instanceID());
 

@@ -18,19 +18,19 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Manager used to register, spawn and retrieve {@link GameMob game mobs} in the server
+ * Manager used to register, spawn and retrieve {@link MercuryMob game mobs} in the server
  */
 public class MobManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MobManager.class);
-	private final Map<NamespaceID, Class<? extends GameMob>> registeredMobs = new HashMap<>();
-	private final Map<UUID, GameMob> gameMobs = new HashMap<>();
+	private final Map<NamespaceID, Class<? extends MercuryMob>> registeredMobs = new HashMap<>();
+	private final Map<UUID, MercuryMob> gameMobs = new HashMap<>();
 
 	/**
 	 * Registers a game mob with unique namespaced ID
 	 * @param namespaceID unique ID for mob
-	 * @param clazz class that extends {@link GameMob} representing the mob to register
+	 * @param clazz class that extends {@link MercuryMob} representing the mob to register
 	 */
-	public void register(NamespaceID namespaceID, Class<? extends GameMob> clazz) {
+	public void register(NamespaceID namespaceID, Class<? extends MercuryMob> clazz) {
 		registeredMobs.put(namespaceID, clazz);
 		LOGGER.info("Entity '{}' has been registered", namespaceID.asString());
 	}
@@ -42,18 +42,18 @@ public class MobManager {
 	 * @param namespaceID unique identifier of the mob to spawn
 	 * @param instance {@link Instance} in which to spawn the mob
 	 * @param position {@link Pos} indicating where to spawn the mob
-	 * @return newly spawned {@link GameMob}
+	 * @return newly spawned {@link MercuryMob}
 	 * @throws RuntimeException if the mob with the specified namespaceID is not registered or if there is an error during mob instantiation or behaviour initialization
 	 */
-	public @NotNull GameMob spawn(NamespaceID namespaceID, Instance instance, Pos position) {
+	public @NotNull MercuryMob spawn(NamespaceID namespaceID, Instance instance, Pos position) {
 		if (!this.contains(namespaceID)) {
 			throw new RuntimeException("Game Mob with namespaceID " + namespaceID + " does not exist.");
 		}
 
-		Class<? extends GameMob> clazz = registeredMobs.get(namespaceID);
+		Class<? extends MercuryMob> clazz = registeredMobs.get(namespaceID);
 		try {
-			Constructor<? extends GameMob> constructor = clazz.getConstructor();
-			GameMob mob = constructor.newInstance();
+			Constructor<? extends MercuryMob> constructor = clazz.getConstructor();
+			MercuryMob mob = constructor.newInstance();
 			mob.applyVanillaAttributes();
 
 			// Apply meta to mob
@@ -91,9 +91,9 @@ public class MobManager {
 	 * Retrieves a game mob by its unique UUID
 	 *
 	 * @param uuid unique identifier of the mob
-	 * @return {@link GameMob} associated with the specified UUID, or {@code null} if not found
+	 * @return {@link MercuryMob} associated with the specified UUID, or {@code null} if not found
 	 */
-	public @Nullable GameMob get(UUID uuid) {
+	public @Nullable MercuryMob get(UUID uuid) {
 		return gameMobs.get(uuid);
 	}
 

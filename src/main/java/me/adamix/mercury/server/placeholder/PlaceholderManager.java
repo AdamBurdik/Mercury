@@ -1,7 +1,7 @@
 package me.adamix.mercury.server.placeholder;
 
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.translation.Translation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -18,7 +18,7 @@ public class PlaceholderManager {
 
 	private static PlaceholderManager instance;
 	private final MiniMessage miniMessage;
-	private final Map<String, BiFunction<ArgumentQueue, GamePlayer, String>> playerPlaceholderMap = new HashMap<>();
+	private final Map<String, BiFunction<ArgumentQueue, MercuryPlayer, String>> playerPlaceholderMap = new HashMap<>();
 
 	public PlaceholderManager() {
 		this.miniMessage = MiniMessage.miniMessage();
@@ -45,11 +45,11 @@ public class PlaceholderManager {
 		});
 	}
 
-	public void registerPlayer(@NotNull String name, BiFunction<ArgumentQueue, GamePlayer, String> function) {
+	public void registerPlayer(@NotNull String name, BiFunction<ArgumentQueue, MercuryPlayer, String> function) {
 		playerPlaceholderMap.put(name, function);
 	}
 
-	private TagResolver getTagResolver(GamePlayer player) {
+	private TagResolver getTagResolver(MercuryPlayer player) {
 		TagResolver.Builder builder = TagResolver.builder();
 
 		playerPlaceholderMap.forEach((name, function) -> {
@@ -59,7 +59,7 @@ public class PlaceholderManager {
 		return builder.build();
 	}
 
-	public Component parse(String text, GamePlayer player) {
+	public Component parse(String text, MercuryPlayer player) {
 		return miniMessage.deserialize(text, getTagResolver(player));
 	}
 

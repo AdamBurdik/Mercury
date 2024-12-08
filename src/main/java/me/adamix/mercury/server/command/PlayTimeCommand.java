@@ -2,7 +2,7 @@ package me.adamix.mercury.server.command;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.common.ColorPallet;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.translation.Translation;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.Command;
@@ -14,7 +14,7 @@ public class PlayTimeCommand extends Command {
 		super("playtime");
 
 		setDefaultExecutor((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 

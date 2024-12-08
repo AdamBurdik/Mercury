@@ -1,6 +1,6 @@
 package me.adamix.mercury.server.command.debug;
 
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.entity.Entity;
@@ -13,7 +13,7 @@ public class EntityNameTestCommand extends Command {
 		super("test_entity_name");
 
 		setDefaultExecutor((sender, ctx) -> {
-			if (sender instanceof GamePlayer player) {
+			if (sender instanceof MercuryPlayer player) {
 
 				var entity = new Entity(EntityType.ZOMBIE);
 				entity.setAutoViewable(false);

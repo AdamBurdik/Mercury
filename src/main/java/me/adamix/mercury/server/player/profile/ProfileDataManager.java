@@ -9,7 +9,7 @@ import com.mongodb.client.model.ReplaceOptions;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
 import me.adamix.mercury.server.player.stats.Statistics;
-import me.adamix.mercury.server.serialization.GamePlayerInventorySerializer;
+import me.adamix.mercury.server.serialization.MercuryPlayerInventorySerializer;
 import net.minestom.server.MinecraftServer;
 import org.bson.Document;
 import org.jetbrains.annotations.Nullable;
@@ -95,7 +95,7 @@ public class ProfileDataManager {
 		int maxHealth = document.containsKey("maxHealth") ? document.getInteger("maxHealth") : PlayerDefaults.getMaxHealth();
 		float movementSpeed = document.containsKey("movementSpeed") ? document.getDouble("movementSpeed").floatValue() : PlayerDefaults.getMovementSpeed();
 		float attackSpeed = document.containsKey("attack") ? document.getDouble("attack").floatValue() : PlayerDefaults.getAttackSpeed();
-		GamePlayerInventory inventory = GamePlayerInventorySerializer.deserialize(document);
+		GamePlayerInventory inventory = MercuryPlayerInventorySerializer.deserialize(document);
 
 		Map<String, Object> statisticMap = document.containsKey("statistics") ? document.get("statistics", Document.class) : new HashMap<>();
 		Statistics profileStatistics = new Statistics();
@@ -136,7 +136,7 @@ public class ProfileDataManager {
 					.append("maxHealth", profileData.getMaxHealth())
 					.append("movementSpeed", profileData.getMovementSpeed())
 					.append("attackSpeed", profileData.getAttackSpeed())
-					.append("inventory", GamePlayerInventorySerializer.serialize(profileData.getPlayerInventory()))
+					.append("inventory", MercuryPlayerInventorySerializer.serialize(profileData.getPlayerInventory()))
 					.append("statistics", profileData.getStatistics().serialize()
 			);
 

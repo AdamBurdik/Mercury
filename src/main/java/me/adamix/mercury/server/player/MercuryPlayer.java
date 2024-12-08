@@ -5,8 +5,8 @@ import lombok.Setter;
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.exceptions.PlayerDataNotAvailableException;
 import me.adamix.mercury.server.exceptions.ProfileDataNotAvailableException;
-import me.adamix.mercury.server.inventory.core.GameInventory;
-import me.adamix.mercury.server.mob.core.GameMob;
+import me.adamix.mercury.server.inventory.core.MercuryInventory;
+import me.adamix.mercury.server.mob.core.MercuryMob;
 import me.adamix.mercury.server.player.data.PlayerData;
 import me.adamix.mercury.server.player.data.PlayerDataManager;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
@@ -32,16 +32,16 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Getter
-public class GamePlayer extends Player {
+public class MercuryPlayer extends Player {
 	private @NotNull PlayerState state = PlayerState.INIT;
 	private @Nullable ProfileData profileData;
 	private @Nullable PlayerData playerData;
-	private final @NotNull Set<GameMob> viewedMobs = new HashSet<>();
+	private final @NotNull Set<MercuryMob> viewedMobs = new HashSet<>();
 	private @Nullable UUID dungeonUniqueId;
 	@Setter
 	private boolean inDebug = true;
 
-	public GamePlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
+	public MercuryPlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
 		super(playerConnection, gameProfile);
 	}
 
@@ -242,10 +242,10 @@ public class GamePlayer extends Player {
 	}
 
 	/**
-	 * Shows {@link GameMob game mob} to player and update its name
+	 * Shows {@link MercuryMob game mob} to player and update its name
 	 * @param mob mob to show
 	 */
-	public void show(GameMob mob) {
+	public void show(MercuryMob mob) {
 		mob.addViewer(this);
 		this.viewedMobs.add(mob);
 
@@ -253,10 +253,10 @@ public class GamePlayer extends Player {
 	}
 
 	/**
-	 * Hides {@link GameMob game mob} from player
+	 * Hides {@link MercuryMob game mob} from player
 	 * @param mob mob to hide
 	 */
-	public void hide(GameMob mob) {
+	public void hide(MercuryMob mob) {
 		mob.removeViewer(this);
 		this.viewedMobs.remove(mob);
 	}
@@ -265,15 +265,15 @@ public class GamePlayer extends Player {
 	 * Opens the specified game inventory
 	 * @param inventory inventory to open
 	 */
-	public void openGameInventory(@NotNull GameInventory inventory) {
+	public void openGameInventory(@NotNull MercuryInventory inventory) {
 		Server.getInventoryManager().open(inventory, this);
 	}
 
-	public static @NotNull GamePlayer of(@NotNull PlayerEvent event) {
-		return (GamePlayer) event.getPlayer();
+	public static @NotNull MercuryPlayer of(@NotNull PlayerEvent event) {
+		return (MercuryPlayer) event.getPlayer();
 	}
 
-	public static @NotNull GamePlayer of(@NotNull Player player) {
-		return (GamePlayer) player;
+	public static @NotNull MercuryPlayer of(@NotNull Player player) {
+		return (MercuryPlayer) player;
 	}
 }

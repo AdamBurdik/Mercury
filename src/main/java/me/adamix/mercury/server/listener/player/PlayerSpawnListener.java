@@ -2,7 +2,7 @@ package me.adamix.mercury.server.listener.player;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.inventory.ProfileSelectionInventory;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.entity.GameMode;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerSpawnListener implements EventListener<PlayerSpawnEvent> {
 	@Override
 	public @NotNull Result run(@NotNull PlayerSpawnEvent event) {
-		GamePlayer player = GamePlayer.of(event);
+		MercuryPlayer player = MercuryPlayer.of(event);
 		player.loadPlayerData();
 
 		Component message = Component.newline()

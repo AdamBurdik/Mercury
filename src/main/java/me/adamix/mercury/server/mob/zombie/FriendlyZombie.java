@@ -1,6 +1,6 @@
 package me.adamix.mercury.server.mob.zombie;
 
-import me.adamix.mercury.server.mob.core.GameMob;
+import me.adamix.mercury.server.mob.core.MercuryMob;
 import me.adamix.mercury.server.mob.core.attribute.MobAttribute;
 import me.adamix.mercury.server.mob.core.attribute.MobAttributes;
 import me.adamix.mercury.server.mob.core.behaviour.MobBehaviour;
@@ -13,7 +13,7 @@ import net.minestom.server.entity.ai.target.ClosestEntityTarget;
 
 import java.util.List;
 
-public class FriendlyZombie extends GameMob {
+public class FriendlyZombie extends MercuryMob {
 	public FriendlyZombie() {
 		super(EntityType.ZOMBIE,
 				"<dark_green><translation:entity.zombie.friendly>",

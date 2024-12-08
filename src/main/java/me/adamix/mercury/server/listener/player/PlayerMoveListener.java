@@ -2,7 +2,7 @@ package me.adamix.mercury.server.listener.player;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.inventory.ProfileSelectionInventory;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.state.PlayerState;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerMoveEvent;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerMoveListener implements EventListener<PlayerMoveEvent> {
 	@Override
 	public @NotNull Result run(@NotNull PlayerMoveEvent event) {
-		GamePlayer player = GamePlayer.of(event);
+		MercuryPlayer player = MercuryPlayer.of(event);
 		if (player.getState() == PlayerState.LIMBO) {
 			event.setCancelled(true);
 

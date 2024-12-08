@@ -1,9 +1,9 @@
 package me.adamix.mercury.server.listener.player;
 
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.item.core.GameItem;
+import me.adamix.mercury.server.item.core.MercuryItem;
 import me.adamix.mercury.server.item.core.ItemManager;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerChangeHeldSlotEvent;
 import net.minestom.server.item.ItemStack;
@@ -17,7 +17,7 @@ public class PlayerChangeHeldSlotListener implements EventListener<PlayerChangeH
 
 	@Override
 	public @NotNull Result run(@NotNull PlayerChangeHeldSlotEvent event) {
-		GamePlayer player = GamePlayer.of(event);
+		MercuryPlayer player = MercuryPlayer.of(event);
 
 		ItemStack itemStack = player.getInventory().getItemStack(event.getSlot());
 		if (!itemStack.hasTag(tag)) {
@@ -30,7 +30,7 @@ public class PlayerChangeHeldSlotListener implements EventListener<PlayerChangeH
 		if (!itemManager.contains(uniqueId)) {
 			return Result.SUCCESS;
 		}
-		GameItem item = itemManager.get(uniqueId);
+		MercuryItem item = itemManager.get(uniqueId);
 		item.getAttributes().applyToPlayer(player);
 
 		return Result.SUCCESS;

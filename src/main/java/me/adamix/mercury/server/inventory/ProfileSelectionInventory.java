@@ -1,10 +1,10 @@
 package me.adamix.mercury.server.inventory;
 
-import me.adamix.mercury.server.inventory.core.GameInventory;
+import me.adamix.mercury.server.inventory.core.MercuryInventory;
 import me.adamix.mercury.server.inventory.core.context.CloseContext;
 import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.server.inventory.core.context.OpenContext;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -16,7 +16,7 @@ import net.minestom.server.tag.Tag;
 import java.util.List;
 import java.util.UUID;
 
-public class ProfileSelectionInventory extends GameInventory {
+public class ProfileSelectionInventory extends MercuryInventory {
 	private final List<ProfileData> profileDataList;
 
 	public ProfileSelectionInventory(List<ProfileData> profileDataList) {
@@ -47,7 +47,7 @@ public class ProfileSelectionInventory extends GameInventory {
 
 						UUID selectedProfileUniqueId = click.getItemStack().getTag(Tag.UUID("profile_uuid"));
 
-						GamePlayer clickPlayer = click.getPlayer();
+						MercuryPlayer clickPlayer = click.getPlayer();
 
 						clickPlayer.sendMessage(
 								Component.text("You selected profile with id: " + selectedProfileUniqueId)

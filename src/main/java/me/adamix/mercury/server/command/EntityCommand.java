@@ -2,9 +2,9 @@ package me.adamix.mercury.server.command;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.common.ColorPallet;
-import me.adamix.mercury.server.mob.core.GameMob;
+import me.adamix.mercury.server.mob.core.MercuryMob;
 import me.adamix.mercury.server.mob.core.MobManager;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -58,7 +58,7 @@ public class EntityCommand extends Command {
 		}, actionArgument);
 
 		addSyntax((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 
@@ -79,9 +79,9 @@ public class EntityCommand extends Command {
 						return;
 					}
 
-					GameMob mob = mobManager.spawn(namespaceID, player.getInstance(), player.getPosition());
+					MercuryMob mob = mobManager.spawn(namespaceID, player.getInstance(), player.getPosition());
 
-					for (GamePlayer onlinePlayer : Server.getOnlinePlayers()) {
+					for (MercuryPlayer onlinePlayer : Server.getOnlinePlayers()) {
 						onlinePlayer.show(mob);
 					}
 			}

@@ -6,7 +6,7 @@ import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.server.inventory.core.context.ItemClickContext;
 import me.adamix.mercury.server.inventory.core.context.OpenContext;
 import me.adamix.mercury.server.inventory.core.data.InventoryData;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
@@ -26,19 +26,19 @@ import java.util.function.Consumer;
 
 public class InventoryManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(InventoryManager.class);
-	private final Map<UUID, GameInventory> playerInventoryMap = new HashMap<>();
+	private final Map<UUID, MercuryInventory> playerInventoryMap = new HashMap<>();
 	private final Map<UUID, InventoryData> playerInventoryData = new HashMap<>();
 
 	public InventoryManager() {
 		EventNode<InventoryEvent> node = EventNode.type("click", EventFilter.INVENTORY)
 				.addListener(InventoryPreClickEvent.class, event -> {
-					GamePlayer player = GamePlayer.of(event);
+					MercuryPlayer player = MercuryPlayer.of(event);
 
 					if (!playerHasInventory(player.getUuid())) {
 						return;
 					}
 
-					GameInventory inventory = getPlayerInventory(player.getUuid());
+					MercuryInventory inventory = getPlayerInventory(player.getUuid());
 
 					// Handle lambda function
 					InventoryData inventoryData = playerInventoryData.get(event.getPlayer().getUuid());
@@ -77,13 +77,13 @@ public class InventoryManager {
 					}
 				})
 				.addListener(InventoryCloseEvent.class, event -> {
-					GamePlayer player = GamePlayer.of(event);
+					MercuryPlayer player = MercuryPlayer.of(event);
 
 					if (!playerHasInventory(player.getUuid())) {
 						return;
 					}
 
-					GameInventory inventory = getPlayerInventory(player.getUuid());
+					MercuryInventory inventory = getPlayerInventory(player.getUuid());
 
 					InventoryData inventoryData = playerInventoryData.get(player.getUuid());
 
@@ -102,15 +102,15 @@ public class InventoryManager {
 		MinecraftServer.getGlobalEventHandler().addChild(node);
 	}
 
-	public void open(GameInventory gameInventory, GamePlayer player) {
+	public void open(MercuryInventory mercuryInventory, MercuryPlayer player) {
 		InventoryConfig inventoryConfig = new InventoryConfig();
-		gameInventory.onInit(inventoryConfig);
+		mercuryInventory.onInit(inventoryConfig);
 
 		InventoryType inventoryType = InventoryType.valueOf("CHEST_" + inventoryConfig.getRows() + "_ROW");
 		Inventory inventory = new Inventory(inventoryType, inventoryConfig.getTitle());
 
 		OpenContext openContext = new OpenContext(player);
-		gameInventory.onOpen(openContext);
+		mercuryInventory.onOpen(openContext);
 
 		Map<Integer, ItemComponent> itemComponentMap = openContext.getItemComponentList();
 		itemComponentMap.forEach((slot, component) -> {
@@ -122,7 +122,7 @@ public class InventoryManager {
 
 		InventoryData inventoryData = new InventoryData(inventory, itemComponentMap);
 		playerInventoryData.put(player.getUuid(), inventoryData);
-		playerInventoryMap.put(player.getUuid(), gameInventory);
+		playerInventoryMap.put(player.getUuid(), mercuryInventory);
 
 		MinecraftServer.getSchedulerManager().scheduleNextTick(() -> {
 			player.openInventory(inventory);
@@ -130,7 +130,7 @@ public class InventoryManager {
 
 	}
 
-	public void close(GamePlayer player) {
+	public void close(MercuryPlayer player) {
 		if (!playerHasInventory(player.getUuid())) {
 			return;
 		}
@@ -155,7 +155,7 @@ public class InventoryManager {
 		return playerInventoryMap.containsKey(playerUniqueId);
 	}
 
-	public @NotNull GameInventory getPlayerInventory(UUID playerUniqueId) {
+	public @NotNull MercuryInventory getPlayerInventory(UUID playerUniqueId) {
 		if (!playerInventoryMap.containsKey(playerUniqueId)) {
 			throw new RuntimeException("Player with uuid " + playerUniqueId + " does not have any inventory!");
 		}

@@ -1,7 +1,7 @@
 package me.adamix.mercury.server.command.dungeon;
 
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.utils.NamespaceID;
@@ -15,7 +15,7 @@ public class EnterDungeonCommand extends Command {
 		var dungeonIDArgument = ArgumentType.String("dungeonID");
 
 		setDefaultExecutor((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 

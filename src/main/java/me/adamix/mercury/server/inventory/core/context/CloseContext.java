@@ -1,14 +1,14 @@
 package me.adamix.mercury.server.inventory.core.context;
 
 import lombok.Getter;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 
 @Getter
 public class CloseContext {
-	private final GamePlayer player;
+	private final MercuryPlayer player;
 	private boolean isCancelled = false;
 
-	public CloseContext(GamePlayer player) {
+	public CloseContext(MercuryPlayer player) {
 		this.player = player;
 	}
 

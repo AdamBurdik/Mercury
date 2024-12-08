@@ -19,7 +19,7 @@ import java.util.*;
 
 public class ItemBlueprintManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemBlueprintManager.class);
-	private final Map<NamespaceID, GameItemBlueprint> itemBlueprintMap = new HashMap<>();
+	private final Map<NamespaceID, MercuryItemBlueprint> itemBlueprintMap = new HashMap<>();
 
 	public void registerAllItems() {
 		File itemDirectory = new File("resources/items/");
@@ -70,7 +70,7 @@ public class ItemBlueprintManager {
 
 
 		LOGGER.info("Item '{}' ({}) has been registered", namespaceID, tomlFile.getName());
-		GameItemBlueprint item = new GameItemBlueprint(
+		MercuryItemBlueprint item = new MercuryItemBlueprint(
 				namespaceID,
 				material,
 				name,
@@ -84,11 +84,11 @@ public class ItemBlueprintManager {
 	}
 
 
-	public void register(GameItemBlueprint item) {
+	public void register(MercuryItemBlueprint item) {
 		itemBlueprintMap.put(item.getBlueprintID(), item);
 	}
 
-	public @NotNull GameItemBlueprint get(NamespaceID blueprintID) {
+	public @NotNull MercuryItemBlueprint get(NamespaceID blueprintID) {
 		if (!itemBlueprintMap.containsKey(blueprintID)) {
 			throw new RuntimeException("No blueprint item exists with id " + blueprintID.asString() + "!");
 		}
@@ -103,7 +103,7 @@ public class ItemBlueprintManager {
 		return itemBlueprintMap.keySet();
 	}
 
-	public @NotNull Collection<GameItemBlueprint> getAllItems() {
+	public @NotNull Collection<MercuryItemBlueprint> getAllItems() {
 		return this.itemBlueprintMap.values();
 	}
 }

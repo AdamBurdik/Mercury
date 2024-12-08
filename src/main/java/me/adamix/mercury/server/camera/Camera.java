@@ -1,7 +1,7 @@
 package me.adamix.mercury.server.camera;
 
 import me.adamix.mercury.server.camera.interpolation.IInterpolation;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
@@ -14,11 +14,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Camera {
-	private final GamePlayer player;
+	private final MercuryPlayer player;
 	private Entity camera;
 	private Task task;
 
-	public Camera(GamePlayer player) {
+	public Camera(MercuryPlayer player) {
 		this.player = player;
 	}
 

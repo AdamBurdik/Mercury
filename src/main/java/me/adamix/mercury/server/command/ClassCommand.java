@@ -2,7 +2,7 @@ package me.adamix.mercury.server.command;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.inventory.ProfileSelectionInventory;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.potion.Potion;
@@ -14,7 +14,7 @@ public class ClassCommand extends Command {
 
 		setDefaultExecutor((sender, ctx) -> {
 
-			if (sender instanceof GamePlayer player) {
+			if (sender instanceof MercuryPlayer player) {
 				player.clearProfileData();
 
 				player.setNoGravity(true);

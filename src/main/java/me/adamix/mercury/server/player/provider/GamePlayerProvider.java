@@ -1,6 +1,6 @@
 package me.adamix.mercury.server.player.provider;
 
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.network.PlayerProvider;
 import net.minestom.server.network.player.GameProfile;
@@ -11,6 +11,6 @@ public class GamePlayerProvider implements PlayerProvider {
 
 	@Override
 	public @NotNull Player createPlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
-		return new GamePlayer(playerConnection, gameProfile);
+		return new MercuryPlayer(playerConnection, gameProfile);
 	}
 }

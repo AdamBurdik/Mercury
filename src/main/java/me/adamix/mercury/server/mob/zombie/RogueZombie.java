@@ -1,6 +1,6 @@
 package me.adamix.mercury.server.mob.zombie;
 
-import me.adamix.mercury.server.mob.core.GameMob;
+import me.adamix.mercury.server.mob.core.MercuryMob;
 import me.adamix.mercury.server.mob.core.attribute.MobAttribute;
 import me.adamix.mercury.server.mob.core.attribute.MobAttributes;
 import me.adamix.mercury.server.mob.core.behaviour.MobBehaviour;
@@ -16,7 +16,7 @@ import net.minestom.server.utils.time.TimeUnit;
 
 import java.util.List;
 
-public class RogueZombie extends GameMob {
+public class RogueZombie extends MercuryMob {
 	public RogueZombie() {
 		super(EntityType.ZOMBIE,
 				"<dark_green><translation:entity.zombie.rogue>, Hello <player_name>!",

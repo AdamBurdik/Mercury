@@ -2,7 +2,7 @@ package me.adamix.mercury.server.command;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.common.ColorPallet;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.translation.Translation;
 import me.adamix.mercury.server.translation.TranslationManager;
 import net.kyori.adventure.text.Component;
@@ -16,7 +16,7 @@ public class TranslationCommand extends Command {
 		super("translation", "language", "lang");
 
 		setDefaultExecutor((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 
@@ -38,7 +38,7 @@ public class TranslationCommand extends Command {
 		}));
 
 		addSyntax((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 

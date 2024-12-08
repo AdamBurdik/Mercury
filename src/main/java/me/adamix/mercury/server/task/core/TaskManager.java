@@ -4,17 +4,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TaskManager {
-	private final Set<GameTask> gameTaskSet = new HashSet<>();
+	private final Set<MercuryTask> mercuryTaskSet = new HashSet<>();
 
-	public void startTask(GameTask gameTask) {
-		gameTaskSet.add(gameTask);
-		gameTask.start();
+	public void startTask(MercuryTask mercuryTask) {
+		mercuryTaskSet.add(mercuryTask);
+		mercuryTask.start();
 	}
 
 	public void stopAllTasks() {
-		for (GameTask gameTask : gameTaskSet) {
-			gameTask.cancel();
+		for (MercuryTask mercuryTask : mercuryTaskSet) {
+			mercuryTask.cancel();
 		}
-		gameTaskSet.clear();
+		mercuryTaskSet.clear();
 	}
 }

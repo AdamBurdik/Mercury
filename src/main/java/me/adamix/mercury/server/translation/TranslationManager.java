@@ -4,7 +4,7 @@ import lombok.Getter;
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.flag.ServerFlag;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ public class TranslationManager {
 		return translationMap.get(translationId);
 	}
 
-	public static @NotNull Translation getTranslation(GamePlayer player) {
+	public static @NotNull Translation getTranslation(MercuryPlayer player) {
 		return Server.getTranslationManager().getTranslation(player.getTranslationId());
 	}
 }

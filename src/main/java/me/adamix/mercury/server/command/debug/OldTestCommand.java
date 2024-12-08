@@ -2,7 +2,7 @@ package me.adamix.mercury.server.command.debug;
 
 import me.adamix.mercury.server.camera.Camera;
 import me.adamix.mercury.server.camera.interpolation.QuadraticBezierCurve;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -31,7 +31,7 @@ public class OldTestCommand extends Command {
 	private Entity controlPoint;
 	private List<Entity> curveList = new ArrayList<>();
 
-//	private void camera(Pos startingPos, Pos endingPos, float interval, float speed, GamePlayer player) {
+//	private void camera(Pos startingPos, Pos endingPos, float interval, float speed, MercuryPlayer player) {
 //
 //		Entity camera = new Entity(EntityType.BAT);
 //		camera.setInstance(player.getInstance(), startingPos);
@@ -47,7 +47,7 @@ public class OldTestCommand extends Command {
 //		List<Pos> points = quadraticCurve(startingPos, endingPos, 75);
 //		AtomicInteger i = new AtomicInteger();
 //
-//		Task[] taskHolder = new Task[1]; // Array to hold the Task reference
+//		MercuryTask[] taskHolder = new MercuryTask[1]; // Array to hold the MercuryTask reference
 //		taskHolder[0] = MinecraftServer.getSchedulerManager()
 //				.buildTask(() -> {
 //					if (i.get() >= 100) {
@@ -102,7 +102,7 @@ public class OldTestCommand extends Command {
 		return pointList;
 	}
 
-	private void camera(GamePlayer player, Pos pos1, Pos pos2, Pos controlPos, Duration duration, int stepCount) {
+	private void camera(MercuryPlayer player, Pos pos1, Pos pos2, Pos controlPos, Duration duration, int stepCount) {
 		List<Point> pointList = quadraticBezierCurve(
 				pos1,
 				pos2,
@@ -158,7 +158,7 @@ public class OldTestCommand extends Command {
 		var count = ArgumentType.Integer("count");
 
 		addSyntax((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 
@@ -181,7 +181,7 @@ public class OldTestCommand extends Command {
 		}, stringArg);
 
 		addSyntax((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 

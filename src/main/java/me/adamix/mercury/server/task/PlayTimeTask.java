@@ -1,21 +1,21 @@
 package me.adamix.mercury.server.task;
 
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.data.PlayerData;
 import me.adamix.mercury.server.player.state.PlayerState;
-import me.adamix.mercury.server.task.core.GameTask;
+import me.adamix.mercury.server.task.core.MercuryTask;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 
-public class PlayTimeTask implements GameTask {
+public class PlayTimeTask implements MercuryTask {
 	private Task task;
 
 	@Override
 	public void start() {
 		task = MinecraftServer.getSchedulerManager().scheduleTask(() -> {
-			for (GamePlayer onlinePlayer : Server.getOnlinePlayers()) {
+			for (MercuryPlayer onlinePlayer : Server.getOnlinePlayers()) {
 				if (onlinePlayer.getState() == PlayerState.PLAY) {
 					PlayerData data = onlinePlayer.getPlayerData();
 					data.getStatistics().increase("play_time", 1);

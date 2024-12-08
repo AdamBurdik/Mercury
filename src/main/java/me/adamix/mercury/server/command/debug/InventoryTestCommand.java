@@ -1,6 +1,6 @@
 package me.adamix.mercury.server.command.debug;
 
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.command.builder.Command;
 
 import java.util.Arrays;
@@ -10,7 +10,7 @@ public class InventoryTestCommand extends Command {
 		super("test_inv");
 
 		setDefaultExecutor((sender, ctx) -> {
-			if (sender instanceof GamePlayer player) {
+			if (sender instanceof MercuryPlayer player) {
 
 				sender.sendMessage(
 						Arrays.toString(player.getInventory().getItemStacks())

@@ -2,9 +2,9 @@ package me.adamix.mercury.server.command;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.common.ColorPallet;
-import me.adamix.mercury.server.item.core.GameItem;
+import me.adamix.mercury.server.item.core.MercuryItem;
 import me.adamix.mercury.server.item.core.ItemManager;
-import me.adamix.mercury.server.player.GamePlayer;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.Command;
@@ -65,7 +65,7 @@ public class ItemCommand extends Command {
 		}, actionArgument);
 
 		addSyntax((sender, ctx) -> {
-			if (!(sender instanceof GamePlayer player)) {
+			if (!(sender instanceof MercuryPlayer player)) {
 				return;
 			}
 
@@ -86,10 +86,10 @@ public class ItemCommand extends Command {
 						return;
 					}
 
-					GameItem gameItem = itemManager.buildItem(blueprintID);
+					MercuryItem mercuryItem = itemManager.buildItem(blueprintID);
 
 					GamePlayerInventory inventory = player.getGameInventory();
-					inventory.addItem(gameItem);
+					inventory.addItem(mercuryItem);
 					inventory.updatePlayerInventory(player, false);
 			}
 

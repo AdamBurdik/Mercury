@@ -34,6 +34,7 @@ import me.adamix.mercury.server.player.profile.ProfileDataManager;
 import me.adamix.mercury.server.player.provider.GamePlayerProvider;
 import me.adamix.mercury.server.task.PlayTimeTask;
 import me.adamix.mercury.server.task.SaveDataTask;
+import me.adamix.mercury.server.task.core.TaskManager;
 import me.adamix.mercury.server.terminal.MinestomTerminal;
 import me.adamix.mercury.server.toml.TomlConfiguration;
 import me.adamix.mercury.server.translation.Translation;
@@ -77,6 +78,7 @@ public class Server {
 	@Getter private static DungeonInstanceManager dungeonInstanceManager;
 	@Getter private static DungeonManager dungeonManager;
 	@Getter private static RoomManager roomManager;
+	@Getter private static TaskManager taskManager;
 	private static MongoClient mongoClient;
 
 	/**
@@ -137,6 +139,7 @@ public class Server {
 		dungeonInstanceManager = new DungeonInstanceManager();
 		dungeonManager = new DungeonManager();
 		roomManager = new RoomManager();
+		taskManager = new TaskManager();
 	}
 
 	/**
@@ -246,10 +249,11 @@ public class Server {
 		commandManager.register(new CheckPlayerDataCommand());
 
 		// Start tasks
-		new PlayTimeTask().start();
-		new SaveDataTask().start();
+		taskManager.startTask(new PlayTimeTask());
+		taskManager.startTask(new SaveDataTask());
 
 		MinecraftServer.getSchedulerManager().buildShutdownTask(() -> {
+			taskManager.stopAllTasks();
 
 			LOGGER.info("Server shutting down!");
 			new Thread(() -> {

@@ -26,7 +26,7 @@ public class Translation {
 
 	public @NotNull String get(String dottedKey) {
 		if (!translationMap.containsKey(dottedKey)) {
-			LOGGER.error("Unable to get translation for key: {}", dottedKey);
+			LOGGER.error("Unable to get translation for key: {}:{}!", this.translationCode, dottedKey);
 			return translationCode + ":" + dottedKey;
 		}
 		return translationMap.get(dottedKey);

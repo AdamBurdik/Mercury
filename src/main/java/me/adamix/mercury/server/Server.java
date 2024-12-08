@@ -243,10 +243,26 @@ public class Server {
 		commandManager.register(new EnterDungeonCommand());
 		commandManager.register(new RoomBuilderCommand());
 		commandManager.register(new GenerateCommand());
+		commandManager.register(new CheckPlayerDataCommand());
 
 		// Start tasks
 		new PlayTimeTask().start();
 		new SaveDataTask().start();
+
+		MinecraftServer.getSchedulerManager().buildShutdownTask(() -> {
+
+			LOGGER.info("Server shutting down!");
+			new Thread(() -> {
+				try {
+					while (!MinecraftServer.isStopping()) {
+						Thread.sleep(1000);
+					}
+					System.exit(0);
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}).start();
+		});
 	}
 
 	private static void start() {

@@ -15,23 +15,12 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class PlaceholderManager {
-
-	private static PlaceholderManager instance;
-	private final MiniMessage miniMessage;
 	private final Map<String, BiFunction<ArgumentQueue, MercuryPlayer, String>> playerPlaceholderMap = new HashMap<>();
 
 	public PlaceholderManager() {
-		this.miniMessage = MiniMessage.miniMessage();
-
-		registerPlayer("player_health", (args, player) -> {
-			return String.valueOf(player.getHealth());
-		});
-		registerPlayer("player_name", (args, player) -> {
-			return player.getUsername();
-		});
-		registerPlayer("player_max_health", (args, player) -> {
-			return String.valueOf(player.getMaxHealth());
-		});
+		registerPlayer("player_health", (args, player) -> String.valueOf(player.getHealth()));
+		registerPlayer("player_name", (args, player) -> player.getUsername());
+		registerPlayer("player_max_health", (args, player) -> String.valueOf(player.getMaxHealth()));
 		registerPlayer("translation", (args, player) -> {
 			if (!args.hasNext()) {
 				return "Invalid Key";
@@ -60,12 +49,6 @@ public class PlaceholderManager {
 	}
 
 	public Component parse(String text, MercuryPlayer player) {
-		return miniMessage.deserialize(text, getTagResolver(player));
+		return MiniMessage.miniMessage().deserialize(text, getTagResolver(player));
 	}
-
-
-	public static PlaceholderManager get() {
-		return instance != null ? instance : new PlaceholderManager();
-	}
-
 }

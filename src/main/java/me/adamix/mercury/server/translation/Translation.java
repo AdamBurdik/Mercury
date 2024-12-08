@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents object of translation. Include map with all translations
+ */
 public class Translation {
 	private final Logger LOGGER = LoggerFactory.getLogger(Translation.class);
 	private final String translationCode;
@@ -24,6 +27,11 @@ public class Translation {
 		}
 	}
 
+	/**
+	 * Retrieves translation by key as string
+	 * @param dottedKey key to get translation by
+	 * @return translation {@link String}
+	 */
 	public @NotNull String get(String dottedKey) {
 		if (!translationMap.containsKey(dottedKey)) {
 			LOGGER.error("Unable to get translation for key: {}:{}!", this.translationCode, dottedKey);
@@ -32,6 +40,11 @@ public class Translation {
 		return translationMap.get(dottedKey);
 	}
 
+	/**
+	 * Retrieves translation by key as component
+	 * @param dottedKey key to get translation by
+	 * @return translation {@link Component}
+	 */
 	public @NotNull Component getComponent(String dottedKey) {
 		return Component.text(this.get(dottedKey));
 	}

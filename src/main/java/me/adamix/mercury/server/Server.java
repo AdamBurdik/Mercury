@@ -269,11 +269,17 @@ public class Server {
 		});
 	}
 
+	/**
+	 * Start the server
+	 */
 	private static void start() {
 		minecraftServer.start("0.0.0.0", 25565);
 		MinestomTerminal.start();
 	}
 
+	/**
+	 * Stop the server and kick all players
+	 */
 	public static void stop() {
 		// Stop and save necessary stuff
 		tickMonitorManager.stop();
@@ -291,15 +297,23 @@ public class Server {
 		MinecraftServer.stopCleanly();
 	}
 
+	/**
+	 * Retrieves collection of online players
+	 * @return collectio of {@link MercuryPlayer}
+	 */
 	public static Collection<MercuryPlayer> getOnlinePlayers() {
 		Collection<Player> playerCollection = MinecraftServer.getConnectionManager().getOnlinePlayers();
 		return playerCollection.stream().map(MercuryPlayer::of).collect(Collectors.toList());
 	}
 
+	/**
+	 * Retrieves specific file in resource directory
+	 * @param path the relative path of file
+	 * @return the {@link File} from specific path
+	 */
 	public static File file(String path) {
 		return new File(ServerFlag.RESOURCES_PATH + path);
 	}
-
 
 	public static void main(String[] args) {
 		init();

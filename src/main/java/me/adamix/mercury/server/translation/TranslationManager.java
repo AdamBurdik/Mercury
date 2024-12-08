@@ -57,7 +57,6 @@ public class TranslationManager {
 	 */
 	public @NotNull Translation getTranslation(@Nullable String translationId) {
 		if (translationId == null) {
-			// ToDO get default translation code from config
 			translationId = PlayerDefaults.getTranslationId();
 		}
 		if (!translationMap.containsKey(translationId)) {

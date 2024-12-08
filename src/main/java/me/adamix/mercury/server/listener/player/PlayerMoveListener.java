@@ -21,6 +21,12 @@ public class PlayerMoveListener implements EventListener<PlayerMoveEvent> {
 				player.openGameInventory(inventory);
 			}));
 		}
+		if (player.getState() == PlayerState.PLAY) {
+			// Setting Y to 0 because walked distance should ignore jumping
+			player.getProfileData().getStatistics().increase(
+					"walked",
+					(float) player.getPosition().withY(0).distance(event.getNewPosition().withY(0)));
+		}
 
 		return Result.SUCCESS;
 	}

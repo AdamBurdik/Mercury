@@ -8,6 +8,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
+import me.adamix.mercury.server.player.stats.Statistics;
 import me.adamix.mercury.server.serialization.GamePlayerInventorySerializer;
 import net.minestom.server.MinecraftServer;
 import org.bson.Document;
@@ -15,9 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -88,6 +87,15 @@ public class ProfileDataManager {
 		float attackSpeed = document.containsKey("attack") ? document.getDouble("attack").floatValue() : PlayerDefaults.getAttackSpeed();
 		GamePlayerInventory inventory = GamePlayerInventorySerializer.deserialize(document);
 
+		Map<String, Object> statisticMap = document.containsKey("statistics") ? document.get("statistics", Document.class) : new HashMap<>();
+		Statistics profileStatistics = new Statistics();
+
+		statisticMap.forEach((key, value) -> {
+			if (value instanceof Float floatValue) {
+				profileStatistics.set(key, floatValue);
+			}
+		});
+
 		return new ProfileData(
 				playerUniqueId,
 				profileUniqueId,
@@ -96,7 +104,8 @@ public class ProfileDataManager {
 				maxHealth,
 				movementSpeed,
 				attackSpeed,
-				inventory
+				inventory,
+				profileStatistics
 		);
 	}
 
@@ -117,7 +126,9 @@ public class ProfileDataManager {
 					.append("maxHealth", profileData.getMaxHealth())
 					.append("movementSpeed", profileData.getMovementSpeed())
 					.append("attackSpeed", profileData.getAttackSpeed())
-					.append("inventory", GamePlayerInventorySerializer.serialize(profileData.getPlayerInventory()));
+					.append("inventory", GamePlayerInventorySerializer.serialize(profileData.getPlayerInventory()))
+					.append("statistics", profileData.getStatistics().serialize()
+			);
 
 			profileDataCollection.replaceOne(Filters.eq("profileUniqueId", profileUniqueId.toString()), playerDocument, new ReplaceOptions().upsert(true));
 		});

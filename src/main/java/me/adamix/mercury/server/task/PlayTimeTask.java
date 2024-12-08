@@ -3,6 +3,7 @@ package me.adamix.mercury.server.task;
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.player.GamePlayer;
 import me.adamix.mercury.server.player.data.PlayerData;
+import me.adamix.mercury.server.player.state.PlayerState;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
@@ -14,9 +15,9 @@ public class PlayTimeTask {
 		task = MinecraftServer.getSchedulerManager().scheduleTask(() -> {
 
 			for (GamePlayer onlinePlayer : Server.getOnlinePlayers()) {
-				PlayerData data = onlinePlayer.getPlayerData();
-				if (data != null) {
-					onlinePlayer.getPlayerData().increasePlayTime(1);
+				if (onlinePlayer.getState() == PlayerState.PLAY) {
+					PlayerData data = onlinePlayer.getPlayerData();
+					data.getStatistics().increase("play_time", 1);
 				}
 			}
 

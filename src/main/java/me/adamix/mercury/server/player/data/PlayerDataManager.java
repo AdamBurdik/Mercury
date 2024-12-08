@@ -6,12 +6,14 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
+import me.adamix.mercury.server.player.stats.Statistics;
 import org.bson.Document;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -45,12 +47,12 @@ public class PlayerDataManager {
 					return null;
 				}
 
-				return extractProfileData(document);
+				return extractPlayerData(document);
 			}
 		});
 	}
 
-	private PlayerData extractProfileData(Document document) {
+	private PlayerData extractPlayerData(Document document) {
 		// ToDo Change hardcoded default values
 		// Maybe add helper method to get default values?
 		String playerStringUniqueId = document.getString("playerUniqueId");
@@ -59,11 +61,18 @@ public class PlayerDataManager {
 		}
 		UUID playerUniqueId = UUID.fromString(playerStringUniqueId);
 
-		long playTimeSeconds = document.containsKey("playTime") ? document.getLong("playTime") : 0;
+		Map<String, Object> statisticMap = document.containsKey("statistics") ? document.get("statistics", Document.class) : new HashMap<>();
+		Statistics profileStatistics = new Statistics();
+
+		statisticMap.forEach((key, value) -> {
+			if (value instanceof Float floatValue) {
+				profileStatistics.set(key, floatValue);
+			}
+		});
 
 		return new PlayerData(
 				playerUniqueId,
-				Duration.ofSeconds(playTimeSeconds)
+				profileStatistics
 		);
 	}
 
@@ -78,7 +87,7 @@ public class PlayerDataManager {
 		CompletableFuture.runAsync(() -> {
 			Document playerDocument = new Document()
 					.append("playerUniqueId", playerData.getPlayerUniqueId().toString())
-					.append("playTime", playerData.getPlayTime().getSeconds());
+					.append("statistics", playerData.getStatistics().serialize());
 
 			playerDataCollection.replaceOne(Filters.eq("playerUniqueId", playerUniqueId.toString()), playerDocument, new ReplaceOptions().upsert(true));
 		});

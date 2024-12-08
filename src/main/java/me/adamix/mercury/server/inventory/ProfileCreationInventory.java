@@ -9,6 +9,7 @@ import me.adamix.mercury.server.player.GamePlayer;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
+import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.utils.NamespaceID;
 
 import java.util.UUID;
@@ -39,7 +40,8 @@ public class ProfileCreationInventory extends GameInventory {
 									100,
 									0.1f,
 									0.1f,
-									new GamePlayerInventory()
+									new GamePlayerInventory(),
+									new Statistics()
 							)
 					);
 					click.close();

@@ -4,6 +4,7 @@ import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
+import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.entity.attribute.Attribute;
@@ -45,7 +46,8 @@ public class DatabaseTestCommand extends Command {
 					health,
 					(float) Attribute.MOVEMENT_SPEED.defaultValue(),
 					(float) Attribute.ATTACK_SPEED.defaultValue(),
-					new GamePlayerInventory()
+					new GamePlayerInventory(),
+					new Statistics()
 			);
 
 			ProfileDataManager manager = Server.getProfileDataManager();

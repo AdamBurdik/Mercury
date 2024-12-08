@@ -18,14 +18,15 @@ public class PlayTimeCommand extends Command {
 				return;
 			}
 
-			Duration playtime = player.getPlayerData().getPlayTime();
+			float playtime = player.getPlayerData().getStatistics().get("play_time");
+			Duration duration = Duration.ofSeconds((long) playtime);
 
 			Translation translation = Server.getTranslationManager().getTranslation(player.getTranslationId());
 			Component component = translation.getComponent("command.playtime.your_playtime");
 
 			player.sendMessage(
 					component.append(
-							Component.text(playtime.toHours() + "h, " + playtime.toMinutes() % 60 + "min, " + playtime.getSeconds() % 60 + "s")
+							Component.text(duration.toHours() + "h, " + duration.toMinutes() % 60 + "min, " + duration.getSeconds() % 60 + "s")
 					).color(ColorPallet.MATERIAL_EMERALD.getColor())
 			);
 		});

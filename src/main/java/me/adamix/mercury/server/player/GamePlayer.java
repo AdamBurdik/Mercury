@@ -11,6 +11,7 @@ import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
 import me.adamix.mercury.server.player.state.PlayerState;
+import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.attribute.Attribute;
@@ -23,7 +24,6 @@ import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -31,9 +31,9 @@ import java.util.concurrent.CompletableFuture;
 
 @Getter
 public class GamePlayer extends Player {
-	private @NotNull PlayerState state = PlayerState.LIMBO;
-	private @Nullable PlayerData playerData;
+	private @NotNull PlayerState state = PlayerState.INIT;
 	private @Nullable ProfileData profileData;
+	private @Nullable PlayerData playerData;
 	private final @NotNull Set<GameMob> viewedMobs = new HashSet<>();
 	private @Nullable UUID dungeonUniqueId;
 	@Setter
@@ -43,6 +43,31 @@ public class GamePlayer extends Player {
 		super(playerConnection, gameProfile);
 	}
 
+	public @NotNull PlayerData getPlayerData() {
+		if (state == PlayerState.INIT) {
+			throw new RuntimeException("Cannot get player data in initialization state!");
+		}
+		if (playerData == null) {
+			throw new RuntimeException("Player data is not loaded yet!");
+		}
+
+		return playerData;
+	}
+
+	public @NotNull ProfileData getProfileData() {
+		if (state == PlayerState.INIT) {
+			throw new RuntimeException("Cannot get profile data when player is in initialization state!");
+		}
+		if (state == PlayerState.LIMBO) {
+			throw new RuntimeException("Cannot get profile data when player is in limbo state!");
+		}
+		if (profileData == null) {
+			throw new RuntimeException("Profile data is not loaded yet!");
+		}
+
+		return profileData;
+	}
+
 	/**
 	 * Retrieves player data from {@link PlayerDataManager} and save it to player instance
 	 */
@@ -50,17 +75,18 @@ public class GamePlayer extends Player {
 		CompletableFuture<PlayerData> completableFuture = Server.getPlayerDataManager().getPlayerData(this.getUuid());
 		if (completableFuture == null) {
 			this.kick("Cannot get player data from database! Please notify admins about this message!");
-			throw new RuntimeException("Cannot get player data!");
+			throw new RuntimeException("Cannot get player data of " + this.getUsername() + "!");
 		}
 		completableFuture.thenAccept(data -> {
 			if (data == null) {
 				data = new PlayerData(
 						getUuid(),
-						Duration.ZERO
+						new Statistics()
 				);
 				Server.getPlayerDataManager().savePlayerData(data);
 			}
 			this.playerData = data;
+			this.state = PlayerState.LIMBO;
 		});
 	}
 
@@ -96,7 +122,7 @@ public class GamePlayer extends Player {
 	 * Teleport player to spawn location and change his state
 	 */
 	public void sendToSpawn() {
-		this.state = PlayerState.SPAWN;
+		this.state = PlayerState.PLAY;
 		teleport(Server.SPAWN_LOCATION);
 	}
 
@@ -115,12 +141,14 @@ public class GamePlayer extends Player {
 	 */
 	@Override
 	public void setHealth(float health) {
-		if (this.profileData == null) {
+		if (state == PlayerState.INIT) {
 			return;
 		}
 
-		this.profileData.setHealth((int) health);
-		if (this.profileData.getHealth() < 0 && !isDead) {
+		ProfileData profileData = getProfileData();
+
+		profileData.setHealth((int) health);
+		if (profileData.getHealth() < 0 && !isDead) {
 			kill();
 		}
 	}
@@ -131,9 +159,8 @@ public class GamePlayer extends Player {
 	 */
 	@Override
 	public float getHealth() {
-		if (this.profileData == null) {
-			return -1;
-		}
+		ProfileData profileData = getProfileData();
+
 		return profileData.getHealth();
 	}
 
@@ -142,9 +169,8 @@ public class GamePlayer extends Player {
 	 * @return The player max health, or -1 if profile data is null
 	 */
 	public int getMaxHealth() {
-		if (this.profileData == null) {
-			return -1;
-		}
+		ProfileData profileData = getProfileData();
+
 		return profileData.getMaxHealth();
 	}
 
@@ -153,10 +179,9 @@ public class GamePlayer extends Player {
 	 * @param movementSpeed new movement speed value
 	 */
 	public void setMovementSpeed(float movementSpeed) {
-		if (this.profileData == null) {
-			return;
-		}
-		this.profileData.setMovementSpeed(movementSpeed);
+		ProfileData profileData = getProfileData();
+
+		profileData.setMovementSpeed(movementSpeed);
 		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(movementSpeed);
 	}
 
@@ -166,12 +191,11 @@ public class GamePlayer extends Player {
 	 * @param operation - Attribute operation to apply (Add, Multiply Base or Multiply Total)
 	 */
 	public void modifyMovementSpeed(float amount, AttributeOperation operation) {
-		if (this.profileData == null) {
-			return;
-		}
+		ProfileData profileData = getProfileData();
+
 		AttributeInstance attribute = getAttribute(Attribute.MOVEMENT_SPEED);
 		attribute.addModifier(new AttributeModifier("movement_speed", amount, operation));
-		this.profileData.setMovementSpeed((float) attribute.getValue());
+		profileData.setMovementSpeed((float) attribute.getValue());
 	}
 
 	/**
@@ -179,39 +203,29 @@ public class GamePlayer extends Player {
 	 * @return The player current movement speed, or -1 if profile data is null
 	 */
 	public float getMovementSpeed() {
-		if (this.profileData == null) {
-			return -1;
-		}
-		return this.profileData.getMovementSpeed();
-	}
+		ProfileData profileData = getProfileData();
 
-	public static @NotNull GamePlayer of(@NotNull PlayerEvent event) {
-		return (GamePlayer) event.getPlayer();
-	}
-	public static @NotNull GamePlayer of(@NotNull Player player) {
-		return (GamePlayer) player;
+		return profileData.getMovementSpeed();
 	}
 
 	/**
 	 * Retrieves player current translation id
 	 * @return The player current translation id, or null if profile data is null
 	 */
-	public @Nullable String getTranslationId() {
-		if (this.profileData == null) {
-			return null;
-		}
-		return this.profileData.getTranslationId();
+	public @NotNull String getTranslationId() {
+		ProfileData profileData = getProfileData();
+
+		return profileData.getTranslationId();
 	}
 
 	/**
 	 * Retrieves custom player inventory
 	 * @return game player inventory
 	 */
-	public @Nullable GamePlayerInventory getGameInventory() {
-		if (this.profileData == null) {
-			return null;
-		}
-		return this.profileData.getPlayerInventory();
+	public @NotNull GamePlayerInventory getGameInventory() {
+		ProfileData profileData = getProfileData();
+
+		return profileData.getPlayerInventory();
 	}
 
 	/**
@@ -238,8 +252,15 @@ public class GamePlayer extends Player {
 	 * Opens the specified game inventory
 	 * @param inventory inventory to open
 	 */
-	public void openGameInventory(GameInventory inventory) {
+	public void openGameInventory(@NotNull GameInventory inventory) {
 		Server.getInventoryManager().open(inventory, this);
 	}
 
+	public static @NotNull GamePlayer of(@NotNull PlayerEvent event) {
+		return (GamePlayer) event.getPlayer();
+	}
+
+	public static @NotNull GamePlayer of(@NotNull Player player) {
+		return (GamePlayer) player;
+	}
 }

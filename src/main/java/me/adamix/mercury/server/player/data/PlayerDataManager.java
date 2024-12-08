@@ -53,8 +53,6 @@ public class PlayerDataManager {
 	}
 
 	private PlayerData extractPlayerData(Document document) {
-		// ToDo Change hardcoded default values
-		// Maybe add helper method to get default values?
 		String playerStringUniqueId = document.getString("playerUniqueId");
 		if (!document.containsKey("playerUniqueId")) {
 			throw new RuntimeException("Player data does not include player uuid!");
@@ -65,8 +63,8 @@ public class PlayerDataManager {
 		Statistics profileStatistics = new Statistics();
 
 		statisticMap.forEach((key, value) -> {
-			if (value instanceof Float floatValue) {
-				profileStatistics.set(key, floatValue);
+			if (value instanceof Double doubleValue) {
+				profileStatistics.set(key, doubleValue.floatValue());
 			}
 		});
 

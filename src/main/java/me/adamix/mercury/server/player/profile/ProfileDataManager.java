@@ -91,8 +91,8 @@ public class ProfileDataManager {
 		Statistics profileStatistics = new Statistics();
 
 		statisticMap.forEach((key, value) -> {
-			if (value instanceof Float floatValue) {
-				profileStatistics.set(key, floatValue);
+			if (value instanceof Double doubleValue) {
+				profileStatistics.set(key, doubleValue.floatValue());
 			}
 		});
 

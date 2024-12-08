@@ -3,6 +3,8 @@ package me.adamix.mercury.server.player;
 import lombok.Getter;
 import lombok.Setter;
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.exceptions.PlayerDataNotAvailableException;
+import me.adamix.mercury.server.exceptions.ProfileDataNotAvailableException;
 import me.adamix.mercury.server.inventory.core.GameInventory;
 import me.adamix.mercury.server.mob.core.GameMob;
 import me.adamix.mercury.server.player.data.PlayerData;
@@ -43,26 +45,38 @@ public class GamePlayer extends Player {
 		super(playerConnection, gameProfile);
 	}
 
+	/**
+	 * Retrieves player data.
+	 *
+	 * @return the {@link PlayerData} associated with the player
+	 * @throws PlayerDataNotAvailableException if the player is in the initialization state
+	 *                                         or the player data has not been loaded yet
+	 */
 	public @NotNull PlayerData getPlayerData() {
 		if (state == PlayerState.INIT) {
-			throw new RuntimeException("Cannot get player data in initialization state!");
+			throw new PlayerDataNotAvailableException("Cannot get player data in initialization state!");
 		}
 		if (playerData == null) {
-			throw new RuntimeException("Player data is not loaded yet!");
+			throw new PlayerDataNotAvailableException("Player data is not loaded yet!");
 		}
 
 		return playerData;
 	}
 
+	/**
+	 * Retrieves player dat
+	 * @return the {@link PlayerData} associated with player currently selected profile
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
+	 */
 	public @NotNull ProfileData getProfileData() {
 		if (state == PlayerState.INIT) {
-			throw new RuntimeException("Cannot get profile data when player is in initialization state!");
+			throw new ProfileDataNotAvailableException("Cannot get profile data when player is in initialization state!");
 		}
 		if (state == PlayerState.LIMBO) {
-			throw new RuntimeException("Cannot get profile data when player is in limbo state!");
+			throw new ProfileDataNotAvailableException("Cannot get profile data when player is in limbo state!");
 		}
 		if (profileData == null) {
-			throw new RuntimeException("Profile data is not loaded yet!");
+			throw new ProfileDataNotAvailableException("Profile data is not loaded yet!");
 		}
 
 		return profileData;
@@ -70,12 +84,13 @@ public class GamePlayer extends Player {
 
 	/**
 	 * Retrieves player data from {@link PlayerDataManager} and save it to player instance
+	 * @throws PlayerDataNotAvailableException if player data is not available in database
 	 */
 	public void loadPlayerData() {
 		CompletableFuture<PlayerData> completableFuture = Server.getPlayerDataManager().getPlayerData(this.getUuid());
 		if (completableFuture == null) {
 			this.kick("Cannot get player data from database! Please notify admins about this message!");
-			throw new RuntimeException("Cannot get player data of " + this.getUsername() + "!");
+			throw new PlayerDataNotAvailableException("Cannot get player data of " + this.getUsername() + "!");
 		}
 		completableFuture.thenAccept(data -> {
 			if (data == null) {
@@ -94,11 +109,12 @@ public class GamePlayer extends Player {
 	 * Retrieves profile data from {@link ProfileDataManager} and save it to player instance
 	 *
 	 * @param profileUniqueId unique ID of player profile
+	 * @throws ProfileDataNotAvailableException if profile data is not available in database
 	 */
 	public void loadProfileData(UUID profileUniqueId) {
 		CompletableFuture<ProfileData> completableFuture = Server.getProfileDataManager().getProfileData(profileUniqueId);
 		if (completableFuture == null) {
-			throw new RuntimeException("Cannot get profile data!");
+			throw new ProfileDataNotAvailableException("Cannot get profile data!");
 		}
 		completableFuture.thenAccept(data -> {
 			this.profileData = data;
@@ -138,6 +154,7 @@ public class GamePlayer extends Player {
 	 * Changes the player health, kill it if {@code health} is &lt;= 0 and is not dead yet.
 	 *
 	 * @param health the new player health
+	 * @throws ProfileDataNotAvailableException if the player is in limbo state or the profile data has not been loaded yet
 	 */
 	@Override
 	public void setHealth(float health) {
@@ -156,32 +173,29 @@ public class GamePlayer extends Player {
 	/**
 	 * Retrieves player current health
 	 * @return The player current health, or -1 if profile data is null
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
 	 */
 	@Override
 	public float getHealth() {
-		ProfileData profileData = getProfileData();
-
-		return profileData.getHealth();
+		return getProfileData().getHealth();
 	}
 
 	/**
 	 * Retrieves player max health
 	 * @return The player max health, or -1 if profile data is null
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
 	 */
 	public int getMaxHealth() {
-		ProfileData profileData = getProfileData();
-
-		return profileData.getMaxHealth();
+		return getProfileData().getMaxHealth();
 	}
 
 	/**
 	 * Changes the player movement speed and edit attribute value
 	 * @param movementSpeed new movement speed value
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
 	 */
 	public void setMovementSpeed(float movementSpeed) {
-		ProfileData profileData = getProfileData();
-
-		profileData.setMovementSpeed(movementSpeed);
+		getProfileData().setMovementSpeed(movementSpeed);
 		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(movementSpeed);
 	}
 
@@ -189,43 +203,42 @@ public class GamePlayer extends Player {
 	 * Adjusts the player movement speed by specific amount and operation
 	 * @param amount - Amount to modify movement speed by
 	 * @param operation - Attribute operation to apply (Add, Multiply Base or Multiply Total)
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
 	 */
 	public void modifyMovementSpeed(float amount, AttributeOperation operation) {
-		ProfileData profileData = getProfileData();
-
 		AttributeInstance attribute = getAttribute(Attribute.MOVEMENT_SPEED);
 		attribute.addModifier(new AttributeModifier("movement_speed", amount, operation));
-		profileData.setMovementSpeed((float) attribute.getValue());
+		getProfileData().setMovementSpeed((float) attribute.getValue());
 	}
 
 	/**
 	 * Retrieves player current movement speed
 	 * @return The player current movement speed, or -1 if profile data is null
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
+	 *
 	 */
 	public float getMovementSpeed() {
-		ProfileData profileData = getProfileData();
-
-		return profileData.getMovementSpeed();
+		return getProfileData().getMovementSpeed();
 	}
 
 	/**
 	 * Retrieves player current translation id
 	 * @return The player current translation id, or null if profile data is null
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
+
 	 */
 	public @NotNull String getTranslationId() {
-		ProfileData profileData = getProfileData();
-
-		return profileData.getTranslationId();
+		return getProfileData().getTranslationId();
 	}
 
 	/**
 	 * Retrieves custom player inventory
 	 * @return game player inventory
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
+	 *
 	 */
 	public @NotNull GamePlayerInventory getGameInventory() {
-		ProfileData profileData = getProfileData();
-
-		return profileData.getPlayerInventory();
+		return getProfileData().getPlayerInventory();
 	}
 
 	/**

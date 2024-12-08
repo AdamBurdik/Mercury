@@ -29,10 +29,10 @@ public class ProfileDataManager {
 	}
 
 	/**
-	 * Retrieves ProfileData from database using profile ID
+	 * Retrieves {@link ProfileData} from database using profile ID
 	 *
 	 * @param profileUniqueId unique ID of player profile
-	 * @return the ProfileData containing player profile data
+	 * @return the {@link ProfileData} containing player profile data
 	 */
 	public @Nullable CompletableFuture<ProfileData> getProfileData(UUID profileUniqueId) {
 		return CompletableFuture.supplyAsync(() -> {
@@ -55,6 +55,11 @@ public class ProfileDataManager {
 		});
 	}
 
+	/**
+	 * Retrieves profile data by unique ID synchronously
+	 * @param profileUniqueId unique ID of player profile
+	 * @param consumer consumer which will be called synchronously
+	 */
 	public void getProfileDataSync(UUID profileUniqueId, Consumer<ProfileData> consumer) {
 		MinecraftServer.getSchedulerManager().buildTask(() -> {
 			CompletableFuture<ProfileData> profileData = getProfileData(profileUniqueId);
@@ -67,6 +72,11 @@ public class ProfileDataManager {
 		}).schedule();
 	}
 
+	/**
+	 * Extract {@link ProfileData} from {@link Document} object
+	 * @param document document containing profile data
+	 * @return the {@link ProfileData} containing extracted data
+	 */
 	private ProfileData extractProfileData(Document document) {
 		String playerStringUniqueId = document.getString("playerUniqueId");
 		if (!document.containsKey("playerUniqueId")) {
@@ -110,9 +120,9 @@ public class ProfileDataManager {
 	}
 
 	/**
-	 * Save player data to database
+	 * Save profile data to database
 	 *
-	 * @param profileData player data
+	 * @param profileData profile data to save
 	 */
 	public void saveProfileData(ProfileData profileData) {
 		UUID profileUniqueId = profileData.getProfileUniqueId();
@@ -135,10 +145,10 @@ public class ProfileDataManager {
 	}
 
 	/**
-	 * Retrieves ProfileData list containing all player profile data from database
+	 * Retrieves {@link ProfileData} list containing all player profile data from database
 	 *
-	 * @param playerUniqueId - unique ID of player profile
-	 * @return list of ProfileData
+	 * @param playerUniqueId unique ID of player profile
+	 * @return {@link CompletableFuture} with list of profile data
 	 */
 	public @Nullable CompletableFuture<List<ProfileData>> getProfileDataList(UUID playerUniqueId) {
 		return CompletableFuture.supplyAsync(() -> {
@@ -158,6 +168,11 @@ public class ProfileDataManager {
 		});
 	}
 
+	/**
+	 * Retrives {@link ProfileData} list containing all player profile data from database synchronously
+	 * @param playerUniqueId player unique ID
+	 * @param consumer consumer which will be called synchronously with list of profile data
+	 */
 	public void getProfileDataListSync(UUID playerUniqueId, Consumer<List<ProfileData>> consumer) {
 		MinecraftServer.getSchedulerManager().buildTask(() -> {
 			CompletableFuture<List<ProfileData>> profileDataList = getProfileDataList(playerUniqueId);

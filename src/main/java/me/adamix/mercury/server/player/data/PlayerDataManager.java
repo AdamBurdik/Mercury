@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
+import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.stats.Statistics;
 import org.bson.Document;
 import org.jetbrains.annotations.Nullable;
@@ -52,6 +53,11 @@ public class PlayerDataManager {
 		});
 	}
 
+	/**
+	 * Extract {@link PlayerData} from {@link Document} object
+	 * @param document document containing player data
+	 * @return the {@link PlayerData} containing extracted data
+	 */
 	private PlayerData extractPlayerData(Document document) {
 		String playerStringUniqueId = document.getString("playerUniqueId");
 		if (!document.containsKey("playerUniqueId")) {

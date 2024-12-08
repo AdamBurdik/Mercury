@@ -14,9 +14,7 @@ public class PlayerDisconnectListener implements EventListener<PlayerDisconnectE
 		GamePlayer player = GamePlayer.of(event);
 
 		PlayerData playerData = player.getPlayerData();
-		if (playerData != null) {
-			Server.getPlayerDataManager().savePlayerData(playerData);
-		}
+		Server.getPlayerDataManager().savePlayerData(playerData);
 
 		return Result.SUCCESS;
 	}

@@ -43,7 +43,6 @@ public class TranslationCommand extends Command {
 			}
 
 			String translationId = ctx.get(stringArgument);
-			// ToDo make sure player data is set
 			// ToDo make sure translation id is valid
 			player.getProfileData().setTranslationId(translationId);
 

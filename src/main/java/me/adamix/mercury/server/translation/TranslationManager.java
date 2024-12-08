@@ -2,6 +2,7 @@ package me.adamix.mercury.server.translation;
 
 import lombok.Getter;
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.flag.ServerFlag;
 import me.adamix.mercury.server.player.GamePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +58,7 @@ public class TranslationManager {
 	public @NotNull Translation getTranslation(@Nullable String translationId) {
 		if (translationId == null) {
 			// ToDO get default translation code from config
-			translationId = "en";
+			translationId = PlayerDefaults.getTranslationId();
 		}
 		if (!translationMap.containsKey(translationId)) {
 			Translation translation = translationMap.get("en");

@@ -1,6 +1,7 @@
 package me.adamix.mercury.server.inventory;
 
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.inventory.core.GameInventory;
 import me.adamix.mercury.server.inventory.core.context.CloseContext;
 import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
@@ -30,16 +31,15 @@ public class ProfileCreationInventory extends GameInventory {
 
 					click.setCancelled(true);
 					ProfileDataManager profileDataManager = Server.getProfileDataManager();
-					// ToDO Create new player data with default values from config
 					profileDataManager.saveProfileData(
 							new ProfileData(
 									clickPlayer.getUuid(),
 									UUID.randomUUID(),
-									"en",
-									100,
-									100,
-									0.1f,
-									0.1f,
+									PlayerDefaults.getTranslationId(),
+									PlayerDefaults.getHealth(),
+									PlayerDefaults.getMaxHealth(),
+									PlayerDefaults.getMovementSpeed(),
+									PlayerDefaults.getAttackSpeed(),
 									new GamePlayerInventory(),
 									new Statistics()
 							)

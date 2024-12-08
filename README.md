@@ -18,6 +18,9 @@ This is fun project started to learn more about Minestom.
 - [ ] Dungeon mini-games
 - [x] MongoDB integration
 - [ ] Attributes
+- [ ] Discord bot integration
+- [ ] Website integration
+- [ ] Api
 
 ## ToDo
 - Improve current item and mob system
@@ -55,4 +58,3 @@ This project is licensed under the [MIT](https://choosealicense.com/licenses/mit
 
 ## Credits
 - Inventory system is inspired by [inventory-framework](https://github.com/DevNatan/inventory-framework)
--  

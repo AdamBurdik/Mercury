@@ -1,0 +1,22 @@
+# Example configuration of item
+
+# Required fields for each item
+id = "mercury:example"
+# Supports kyori format and custom placeholders
+name = "<yellow><bold><!italic>Example Item"
+material = "paper"
+
+# Optional fields
+# Supports kyori format, custom placeholders and new line \n
+# Each line needs its own formating
+description = "<yellow>Example Item\nLine 2\n<gold>Line 3"
+rarity = "common"
+
+# Optional attributes
+# Each attribute can be specified as single number or object with value and operation
+# Single number will default to ADD_VALUE operation
+[attributes]
+damage = 10 # = {value = 10, operation="ADD_VALUE"}
+movement_speed = {value = 0.2, operation="MULTIPLY_BASE"}
+max_health = {value = -0.2, operation="MULTIPLY_BASE"}
+attack_speed = {value = 0.2, operation="MULTIPLY_BASE"}

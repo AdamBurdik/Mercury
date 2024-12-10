@@ -133,6 +133,7 @@ public class MercuryPlayer extends Player {
 
 	/**
 	 * Updates player attributes based on equipped items
+	 * @param heldSlot slot of item player is currently holding
 	 */
 	public void updateAttributes(int heldSlot) {
 		// Clear attributes

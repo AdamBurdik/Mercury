@@ -269,6 +269,14 @@ public class MercuryPlayer extends Player {
 		Server.getInventoryManager().open(inventory, this);
 	}
 
+	public boolean hasPlayerData() {
+		return this.playerData != null;
+	}
+
+	public boolean hasProfileData() {
+		return this.profileData != null;
+	}
+
 	public static @NotNull MercuryPlayer of(@NotNull PlayerEvent event) {
 		return (MercuryPlayer) event.getPlayer();
 	}

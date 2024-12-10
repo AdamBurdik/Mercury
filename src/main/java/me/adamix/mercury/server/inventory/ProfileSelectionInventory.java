@@ -12,6 +12,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.PotionEffect;
 import net.minestom.server.tag.Tag;
+import net.minestom.server.utils.NamespaceID;
 
 import java.util.List;
 import java.util.UUID;
@@ -63,14 +64,13 @@ public class ProfileSelectionInventory extends MercuryInventory {
 			i++;
 		}
 
-		// ToDo Inventory is not opening because of this
-//		ctx.slot(16, NamespaceID.from("mercury", "create_new_profile"))
-//				.onClick((click) -> {
-//					click.setCancelled(true);
-//					click.close();
-//					ProfileCreationInventory inventory = new ProfileCreationInventory();
-//					click.getPlayer().openGameInventory(inventory);
-//				});
+		ctx.slot(16, NamespaceID.from("mercury", "create_new_profile"))
+				.onClick((click) -> {
+					click.setCancelled(true);
+					click.close();
+					ProfileCreationInventory inventory = new ProfileCreationInventory();
+					click.getPlayer().openGameInventory(inventory);
+				});
 	}
 
 	@Override

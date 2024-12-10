@@ -11,7 +11,7 @@ public class PlayerChangeHeldSlotListener implements EventListener<PlayerChangeH
 	public @NotNull Result run(@NotNull PlayerChangeHeldSlotEvent event) {
 		MercuryPlayer player = MercuryPlayer.of(event);
 
-		player.updateAttributes();
+		player.updateAttributes(event.getSlot());
 
 		return Result.SUCCESS;
 	}

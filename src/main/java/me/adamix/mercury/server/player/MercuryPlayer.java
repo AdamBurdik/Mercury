@@ -134,7 +134,7 @@ public class MercuryPlayer extends Player {
 	/**
 	 * Updates player attributes based on equipped items
 	 */
-	public void updateAttributes() {
+	public void updateAttributes(int heldSlot) {
 		// Clear attributes
 		for (AttributeInstance attribute : getAttributes()) {
 			attribute.clearModifiers();
@@ -145,7 +145,7 @@ public class MercuryPlayer extends Player {
 
 
 		// Handle currently holding item
-		Optional<MercuryItem> optionalHeldItem = getGameInventory().get(getHeldSlot());
+		Optional<MercuryItem> optionalHeldItem = getGameInventory().get(heldSlot);
 		if (optionalHeldItem.isPresent()) {
 			MercuryItem heldItem = optionalHeldItem.get();
 
@@ -154,6 +154,10 @@ public class MercuryPlayer extends Player {
 				attributeComponent.applyToPlayer(this);
 			}
 		}
+	}
+
+	public void updateAttributes() {
+		this.updateAttributes(getHeldSlot());
 	}
 
 	/**

@@ -6,11 +6,14 @@ import me.adamix.mercury.server.item.attribute.ItemAttributeValue;
 import me.adamix.mercury.server.item.component.AttributeComponent;
 import me.adamix.mercury.server.item.component.DescriptionComponent;
 import me.adamix.mercury.server.item.component.MercuryItemComponent;
+import me.adamix.mercury.server.item.component.RarityComponent;
+import me.adamix.mercury.server.item.rarity.ItemRarity;
 import me.adamix.mercury.server.placeholder.PlaceholderManager;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.translation.Translation;
 import me.adamix.mercury.server.translation.TranslationManager;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.item.ItemStack;
@@ -97,6 +100,19 @@ public record MercuryItem(
 								.decoration(TextDecoration.ITALIC, false)
 				);
 			});
+		}
+
+		// Add rarity to lore if available
+		RarityComponent rarityComponent = getComponent(RarityComponent.class);
+		if (rarityComponent != null) {
+			ItemRarity rarity = rarityComponent.rarity();
+			loreList.add(Component.empty());
+			loreList.add(
+					Component.text(translation.get(rarity.translationKey()).toUpperCase())
+							.color(TextColor.color(129, 21, 13))
+							.decoration(TextDecoration.ITALIC, false)
+							.decoration(TextDecoration.BOLD, true)
+			);
 		}
 
 		// Add debug to lore if player is in debug

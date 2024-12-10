@@ -1,14 +1,12 @@
 package me.adamix.mercury.server.player.inventory;
 
 import lombok.Getter;
-import me.adamix.mercury.server.item.core.MercuryItem;
+import me.adamix.mercury.server.item.MercuryItem;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GamePlayerInventory {
 	@Getter private final Map<Integer, MercuryItem> items = new HashMap<>();
@@ -29,6 +27,10 @@ public class GamePlayerInventory {
 	public void setItem(int slot, MercuryItem mercuryItem) {
 		items.put(slot, mercuryItem);
 		updatedSlots.add(slot);
+	}
+
+	public @NotNull Optional<MercuryItem> get(int slot) {
+		return Optional.ofNullable(items.get(slot));
 	}
 
 	public void updatePlayerInventory(MercuryPlayer player, boolean force) {

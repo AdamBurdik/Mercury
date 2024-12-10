@@ -1,10 +1,8 @@
-package me.adamix.mercury.server.item.core.attribute;
+package me.adamix.mercury.server.item.attribute;
 
 import lombok.Getter;
 import me.adamix.mercury.server.common.SerializableEntity;
-import me.adamix.mercury.server.player.MercuryPlayer;
-import net.minestom.server.entity.attribute.Attribute;
-import net.minestom.server.entity.attribute.AttributeModifier;
+import me.adamix.mercury.server.item.component.AttributeComponent;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,21 +44,8 @@ public class ItemAttributes implements SerializableEntity {
 		return attributeMap.get(attribute);
 	}
 
-	public void applyToPlayer(MercuryPlayer player) {
-		attributeMap.forEach((attribute, value) -> {
-			Attribute defaultAttribute = attribute.getDefaultAttribute();
-			if (defaultAttribute != null) {
-
-				player.getAttribute(defaultAttribute)
-						.addModifier(
-								new AttributeModifier(
-										defaultAttribute.name(),
-										value.value(),
-										value.operation()
-								)
-						);
-			}
-		});
+	public AttributeComponent toComponent() {
+		return new AttributeComponent(this.attributeMap);
 	}
 
 	@Override

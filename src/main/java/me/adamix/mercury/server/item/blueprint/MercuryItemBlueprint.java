@@ -1,15 +1,14 @@
-package me.adamix.mercury.server.item.core.blueprint;
+package me.adamix.mercury.server.item.blueprint;
 
 import lombok.Getter;
 import me.adamix.mercury.server.common.SerializableEntity;
-import me.adamix.mercury.server.item.core.MercuryItem;
-import me.adamix.mercury.server.item.core.attribute.ItemAttributes;
-import me.adamix.mercury.server.item.core.rarity.ItemRarity;
+import me.adamix.mercury.server.item.MercuryItem;
+import me.adamix.mercury.server.item.component.MercuryItemComponent;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,35 +22,27 @@ public class MercuryItemBlueprint implements SerializableEntity {
 	private final @NotNull NamespaceID blueprintID;
 	private final @NotNull Material baseMaterial;
 	private final @NotNull String name;
-	private final @Nullable String description;
-	private final @NotNull ItemAttributes attributes;
-	private final @Nullable ItemRarity rarity;
+	private final MercuryItemComponent[] components;
 
 	public MercuryItemBlueprint(
 			@NotNull NamespaceID blueprintID,
 			@NotNull Material baseMaterial,
 			@NotNull String name,
-			@Nullable String description,
-			@NotNull ItemAttributes attributes,
-			@Nullable ItemRarity rarity
+			@NotNull MercuryItemComponent[] components
 	) {
 		this.blueprintID = blueprintID;
 		this.baseMaterial = baseMaterial;
 		this.name = name;
-		this.description = description;
-		this.attributes = attributes;
-		this.rarity = rarity;
+		this.components = components;
 	}
 
-	public MercuryItem build(UUID itemUniqueId) {
+	public @NotNull MercuryItem build(UUID itemUniqueId) {
 		return new MercuryItem(
 				itemUniqueId,
 				this.blueprintID,
-				this.baseMaterial,
 				this.name,
-				this.description,
-				this.attributes,
-				this.rarity
+				this.baseMaterial,
+				this.components
 		);
 	}
 
@@ -67,9 +58,7 @@ public class MercuryItemBlueprint implements SerializableEntity {
 		data.put("id", this.blueprintID);
 		data.put("baseMaterial", this.baseMaterial.name());
 		data.put("name", this.name);
-		data.put("description", this.description);
-		data.put("attributes", this.attributes.serialize());
-		data.put("rarity", this.rarity.name());
+		data.put("components", Arrays.toString(this.components));
 
 		return data;
 	}

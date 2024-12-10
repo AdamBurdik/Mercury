@@ -1,6 +1,6 @@
 package me.adamix.mercury.server.serialization;
 
-import me.adamix.mercury.server.item.core.MercuryItem;
+import me.adamix.mercury.server.item.MercuryItem;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
 
 import java.util.HashMap;

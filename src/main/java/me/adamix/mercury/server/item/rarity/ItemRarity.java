@@ -1,5 +1,6 @@
-package me.adamix.mercury.server.item.core.rarity;
+package me.adamix.mercury.server.item.rarity;
 
+import me.adamix.mercury.server.item.component.RarityComponent;
 import org.jetbrains.annotations.NotNull;
 
 public enum ItemRarity {
@@ -13,5 +14,9 @@ public enum ItemRarity {
 
 	public @NotNull String translationKey() {
 		return "item.rarity." + this.name().toLowerCase();
+	}
+
+	public RarityComponent toComponent() {
+		return new RarityComponent(this);
 	}
 }

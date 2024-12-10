@@ -1,17 +1,9 @@
 package me.adamix.mercury.server.utils;
 
-import me.adamix.mercury.server.item.core.attribute.ItemAttributeValue;
-import net.minestom.server.coordinate.Pos;
+import me.adamix.mercury.server.item.attribute.ItemAttributeValue;
 import net.minestom.server.entity.attribute.AttributeOperation;
-import net.minestom.server.item.Material;
-import net.minestom.server.utils.NamespaceID;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.tomlj.TomlArray;
-import org.tomlj.TomlParseResult;
 import org.tomlj.TomlTable;
-
-import java.util.Objects;
 
 public class TomlUtils {
 	public static @Nullable ItemAttributeValue parseItemAttribute(TomlTable table, String fileName) {

@@ -1,8 +1,7 @@
 package me.adamix.mercury.server.listener.player;
 
-import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.item.core.MercuryItem;
-import me.adamix.mercury.server.item.core.ItemManager;
+import me.adamix.mercury.server.item.MercuryItem;
+import me.adamix.mercury.server.item.component.AttributeComponent;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerChangeHeldSlotEvent;
@@ -10,6 +9,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class PlayerChangeHeldSlotListener implements EventListener<PlayerChangeHeldSlotEvent> {
@@ -24,14 +24,15 @@ public class PlayerChangeHeldSlotListener implements EventListener<PlayerChangeH
 			return Result.SUCCESS;
 		}
 
-		UUID uniqueId = itemStack.getTag(tag);
-
-		ItemManager itemManager = Server.getItemManager();
-		if (!itemManager.contains(uniqueId)) {
+		Optional<MercuryItem> optionalItem = player.getGameInventory().get(event.getSlot());
+		if (optionalItem.isEmpty()) {
 			return Result.SUCCESS;
 		}
-		MercuryItem item = itemManager.get(uniqueId);
-		item.getAttributes().applyToPlayer(player);
+		MercuryItem item = optionalItem.get();
+		AttributeComponent attributeComponent = item.getComponent(AttributeComponent.class);
+		if (attributeComponent != null) {
+			attributeComponent.applyToPlayer(player);
+		}
 
 		return Result.SUCCESS;
 	}

@@ -1,4 +1,4 @@
-package me.adamix.mercury.server.item.core.attribute;
+package me.adamix.mercury.server.item.attribute;
 
 import me.adamix.mercury.server.common.SerializableEntity;
 import net.minestom.server.entity.attribute.AttributeOperation;

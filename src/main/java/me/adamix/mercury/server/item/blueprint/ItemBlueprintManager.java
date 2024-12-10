@@ -1,15 +1,16 @@
-package me.adamix.mercury.server.item.core.blueprint;
+package me.adamix.mercury.server.item.blueprint;
 
-import me.adamix.mercury.server.item.core.attribute.ItemAttribute;
-import me.adamix.mercury.server.item.core.attribute.ItemAttributes;
-import me.adamix.mercury.server.item.core.rarity.ItemRarity;
+import me.adamix.mercury.server.item.attribute.ItemAttribute;
+import me.adamix.mercury.server.item.attribute.ItemAttributes;
+import me.adamix.mercury.server.item.component.DescriptionComponent;
+import me.adamix.mercury.server.item.component.MercuryItemComponent;
+import me.adamix.mercury.server.item.rarity.ItemRarity;
 import me.adamix.mercury.server.toml.TomlConfiguration;
 import me.adamix.mercury.server.utils.FileUtils;
 import me.adamix.mercury.server.utils.TomlUtils;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tomlj.TomlTable;
@@ -44,28 +45,45 @@ public class ItemBlueprintManager {
 
 		@NotNull NamespaceID namespaceID = toml.getNamespacedIDSafe("id");
 		@NotNull String name = toml.getStringSafe("name");
-		@Nullable String description = toml.getString("description");
 		@NotNull Material material = toml.getMaterialSafe("material");
 
-		String rarity = toml.getString("rarity");
-		ItemRarity itemRarity = null;
-		if (rarity != null) {
-			try {
-				itemRarity = ItemRarity.valueOf(rarity.toUpperCase());
-			} catch (IllegalArgumentException e) {
-				LOGGER.error("Unknown rarity {} in {} ({}) configuration! Please specify valid rarity. e.g. 'common'", rarity, namespaceID, tomlFile.getName());
-				return;
-			}
+		List<MercuryItemComponent> componentList = new ArrayList<>();
+
+		// Parse description to component
+		String description = toml.getString("description");
+		if (description != null) {
+			String[] lines = description.split("\n");
+
+			componentList.add(
+					new DescriptionComponent(lines)
+			);
 		}
 
+		// Parse attributes to component
 		TomlTable attributeTable = toml.getTable("attributes");
-		ItemAttributes itemAttributes = new ItemAttributes();
 		if (attributeTable != null) {
+			ItemAttributes itemAttributes = new ItemAttributes();
 			itemAttributes
 					.set(ItemAttribute.DAMAGE, TomlUtils.parseItemAttribute(attributeTable, "damage"))
 					.set(ItemAttribute.MOVEMENT_SPEED, TomlUtils.parseItemAttribute(attributeTable, "movement_speed"))
 					.set(ItemAttribute.ATTACK_SPEED, TomlUtils.parseItemAttribute(attributeTable, "attack_speed"))
 					.set(ItemAttribute.MAX_HEALTH, TomlUtils.parseItemAttribute(attributeTable, "max_health"));
+			componentList.add(
+					itemAttributes.toComponent()
+			);
+		}
+
+		// Parse rarity to component
+		String rarity = toml.getString("rarity");
+		if (rarity != null) {
+			try {
+				ItemRarity itemRarity = ItemRarity.valueOf(rarity.toUpperCase());
+				componentList.add(itemRarity.toComponent());
+			} catch (IllegalArgumentException e) {
+				throw new RuntimeException(
+						String.format("Unknown rarity %s in %s (%s) configuration! Please specify valid rarity. e.g. 'common'", rarity, namespaceID, tomlFile.getName())
+				);
+			}
 		}
 
 
@@ -74,9 +92,7 @@ public class ItemBlueprintManager {
 				namespaceID,
 				material,
 				name,
-				description,
-				itemAttributes,
-				itemRarity
+				componentList.toArray(new MercuryItemComponent[0])
 		);
 
 		this.register(item);
@@ -88,11 +104,8 @@ public class ItemBlueprintManager {
 		itemBlueprintMap.put(item.getBlueprintID(), item);
 	}
 
-	public @NotNull MercuryItemBlueprint get(NamespaceID blueprintID) {
-		if (!itemBlueprintMap.containsKey(blueprintID)) {
-			throw new RuntimeException("No blueprint item exists with id " + blueprintID.asString() + "!");
-		}
-		return itemBlueprintMap.get(blueprintID);
+	public @NotNull Optional<MercuryItemBlueprint> get(NamespaceID blueprintID) {
+		return Optional.ofNullable(itemBlueprintMap.get(blueprintID));
 	}
 
 	public boolean contains(NamespaceID blueprintID) {

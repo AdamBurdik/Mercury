@@ -1,6 +1,6 @@
 package me.adamix.mercury.server.inventory.core;
 
-import me.adamix.mercury.server.inventory.core.component.ItemComponent;
+import me.adamix.mercury.server.inventory.core.component.InventoryItemComponent;
 import me.adamix.mercury.server.inventory.core.context.CloseContext;
 import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.server.inventory.core.context.ItemClickContext;
@@ -42,17 +42,17 @@ public class InventoryManager {
 
 					// Handle lambda function
 					InventoryData inventoryData = playerInventoryData.get(event.getPlayer().getUuid());
-					ItemComponent itemComponent = inventoryData.getItemComponent(event.getSlot());
-					if (itemComponent == null) {
+					InventoryItemComponent inventoryItemComponent = inventoryData.getItemComponent(event.getSlot());
+					if (inventoryItemComponent == null) {
 						return;
 					}
 
 					ItemClickContext clickContext = new ItemClickContext(
-							itemComponent.getItemStack(),
+							inventoryItemComponent.getItemStack(),
 							event.getSlot(),
 							player
 					);
-					Consumer<ItemClickContext> consumer = itemComponent.getConsumer();
+					Consumer<ItemClickContext> consumer = inventoryItemComponent.getConsumer();
 					if (consumer != null) {
 						consumer.accept(clickContext);
 					}
@@ -112,7 +112,7 @@ public class InventoryManager {
 		OpenContext openContext = new OpenContext(player);
 		mercuryInventory.onOpen(openContext);
 
-		Map<Integer, ItemComponent> itemComponentMap = openContext.getItemComponentList();
+		Map<Integer, InventoryItemComponent> itemComponentMap = openContext.getItemComponentList();
 		itemComponentMap.forEach((slot, component) -> {
 			inventory.setItemStack(
 					slot,

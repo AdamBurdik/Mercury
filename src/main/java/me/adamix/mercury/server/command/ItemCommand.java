@@ -2,8 +2,8 @@ package me.adamix.mercury.server.command;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.common.ColorPallet;
-import me.adamix.mercury.server.item.core.MercuryItem;
-import me.adamix.mercury.server.item.core.ItemManager;
+import me.adamix.mercury.server.item.ItemManager;
+import me.adamix.mercury.server.item.MercuryItem;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
 import net.kyori.adventure.text.Component;
@@ -11,6 +11,8 @@ import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 import net.minestom.server.utils.NamespaceID;
+
+import java.util.Optional;
 
 public class ItemCommand extends Command {
 	public ItemCommand() {
@@ -78,7 +80,8 @@ public class ItemCommand extends Command {
 					ItemManager itemManager = Server.getItemManager();
 					NamespaceID blueprintID = NamespaceID.from(second);
 
-					if (!itemManager.canBuild(blueprintID)) {
+					Optional<MercuryItem> optionalItem = itemManager.buildItem(blueprintID);
+					if (optionalItem.isEmpty()) {
 						sender.sendMessage(
 								Component.text("Please specify valid item id!")
 										.color(ColorPallet.ERROR.getColor())
@@ -86,7 +89,7 @@ public class ItemCommand extends Command {
 						return;
 					}
 
-					MercuryItem mercuryItem = itemManager.buildItem(blueprintID);
+					MercuryItem mercuryItem = optionalItem.get();
 
 					GamePlayerInventory inventory = player.getGameInventory();
 					inventory.addItem(mercuryItem);

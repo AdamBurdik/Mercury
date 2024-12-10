@@ -8,22 +8,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @Getter
-public class ItemComponent implements InventoryComponent {
+public class InventoryItemComponent implements InventoryComponent {
 	private final ItemStack itemStack;
 	private final int slot;
 	private @Nullable Consumer<ItemClickContext> consumer;
 
-	public ItemComponent(int slot, ItemStack itemStack) {
+	public InventoryItemComponent(int slot, ItemStack itemStack) {
 		this.slot = slot;
 		this.itemStack = itemStack;
 	}
 
-	public ItemComponent onClick(Consumer<ItemClickContext> consumer) {
+	public InventoryItemComponent onClick(Consumer<ItemClickContext> consumer) {
 		this.consumer = consumer;
 		return this;
 	}
 
-	public ItemComponent cancelOnClick() {
+	public InventoryItemComponent cancelOnClick() {
 		this.consumer = (click) -> {
 			click.setCancelled(true);
 		};

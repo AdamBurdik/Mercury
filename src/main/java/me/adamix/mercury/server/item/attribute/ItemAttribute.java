@@ -1,4 +1,4 @@
-package me.adamix.mercury.server.item.core.attribute;
+package me.adamix.mercury.server.item.attribute;
 
 import lombok.Getter;
 import net.minestom.server.entity.attribute.Attribute;

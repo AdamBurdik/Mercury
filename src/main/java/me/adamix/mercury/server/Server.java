@@ -20,8 +20,8 @@ import me.adamix.mercury.server.dungeon.instance.DungeonInstanceManager;
 import me.adamix.mercury.server.dungeon.room.RoomManager;
 import me.adamix.mercury.server.flag.ServerFlag;
 import me.adamix.mercury.server.inventory.core.InventoryManager;
-import me.adamix.mercury.server.item.core.ItemManager;
-import me.adamix.mercury.server.item.core.blueprint.ItemBlueprintManager;
+import me.adamix.mercury.server.item.ItemManager;
+import me.adamix.mercury.server.item.blueprint.ItemBlueprintManager;
 import me.adamix.mercury.server.listener.player.*;
 import me.adamix.mercury.server.mob.core.MobManager;
 import me.adamix.mercury.server.mob.zombie.FriendlyZombie;
@@ -127,7 +127,7 @@ public class Server {
 	private static void initManagers() {
 		mobManager = new MobManager();
 		itemBlueprintManager = new ItemBlueprintManager();
-		itemManager = new ItemManager(itemBlueprintManager);
+		itemManager = new ItemManager();
 		MongoDatabase playerDatabase = mongoClient.getDatabase("PlayerData");
 
 		playerDataManager = new PlayerDataManager(playerDatabase);

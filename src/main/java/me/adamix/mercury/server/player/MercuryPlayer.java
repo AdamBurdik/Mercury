@@ -6,6 +6,8 @@ import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.exceptions.PlayerDataNotAvailableException;
 import me.adamix.mercury.server.exceptions.ProfileDataNotAvailableException;
 import me.adamix.mercury.server.inventory.core.MercuryInventory;
+import me.adamix.mercury.server.item.MercuryItem;
+import me.adamix.mercury.server.item.component.AttributeComponent;
 import me.adamix.mercury.server.mob.core.MercuryMob;
 import me.adamix.mercury.server.player.data.PlayerData;
 import me.adamix.mercury.server.player.data.PlayerDataManager;
@@ -25,14 +27,18 @@ import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Getter
 public class MercuryPlayer extends Player {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MercuryPlayer.class);
 	private @NotNull PlayerState state = PlayerState.INIT;
 	private @Nullable ProfileData profileData;
 	private @Nullable PlayerData playerData;
@@ -70,12 +76,15 @@ public class MercuryPlayer extends Player {
 	 */
 	public @NotNull ProfileData getProfileData() {
 		if (state == PlayerState.INIT) {
+			LOGGER.error("Cannot get profile data when player is in initialization state!");
 			throw new ProfileDataNotAvailableException("Cannot get profile data when player is in initialization state!");
 		}
 		if (state == PlayerState.LIMBO) {
+			LOGGER.error("Cannot get profile data when player is in limbo state!");
 			throw new ProfileDataNotAvailableException("Cannot get profile data when player is in limbo state!");
 		}
 		if (profileData == null) {
+			LOGGER.error("Profile data is not loaded yet!");
 			throw new ProfileDataNotAvailableException("Profile data is not loaded yet!");
 		}
 
@@ -118,7 +127,33 @@ public class MercuryPlayer extends Player {
 		}
 		completableFuture.thenAccept(data -> {
 			this.profileData = data;
+			updateAttributes();
 		});
+	}
+
+	/**
+	 * Updates player attributes based on equipped items
+	 */
+	public void updateAttributes() {
+		// Clear attributes
+		for (AttributeInstance attribute : getAttributes()) {
+			attribute.clearModifiers();
+		}
+
+		// Set default attributes (movement speed)
+		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(getProfileData().getMovementSpeed());
+
+
+		// Handle currently holding item
+		Optional<MercuryItem> optionalHeldItem = getGameInventory().get(getHeldSlot());
+		if (optionalHeldItem.isPresent()) {
+			MercuryItem heldItem = optionalHeldItem.get();
+
+			AttributeComponent attributeComponent = heldItem.getComponent(AttributeComponent.class);
+			if (attributeComponent != null) {
+				attributeComponent.applyToPlayer(this);
+			}
+		}
 	}
 
 	/**
@@ -223,11 +258,14 @@ public class MercuryPlayer extends Player {
 
 	/**
 	 * Retrieves player current translation id
-	 * @return The player current translation id, or null if profile data is null
+	 * @return The player current translation id, or null if player data is null
 	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
 
 	 */
-	public @NotNull String getTranslationId() {
+	public @Nullable String getTranslationId() {
+		if (!hasProfileData()) {
+			return null;
+		}
 		return getProfileData().getTranslationId();
 	}
 

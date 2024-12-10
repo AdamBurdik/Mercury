@@ -228,9 +228,7 @@ public class Server {
 
 		// Register commands
 		CommandManager commandManager = MinecraftServer.getCommandManager();
-		commandManager.register(new EntityCommand());
 		commandManager.register(new GamemodeCommand());
-		commandManager.register(new InventoryCommand());
 		commandManager.register(new ItemCommand());
 		commandManager.register(new ClassCommand());
 		commandManager.register(new TranslationCommand());
@@ -247,6 +245,7 @@ public class Server {
 		commandManager.register(new RoomBuilderCommand());
 		commandManager.register(new GenerateCommand());
 		commandManager.register(new CheckPlayerDataCommand());
+		commandManager.register(new DebugCommand());
 
 		// Start tasks
 		taskManager.startTask(new PlayTimeTask());

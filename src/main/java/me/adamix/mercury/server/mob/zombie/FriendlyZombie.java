@@ -18,7 +18,7 @@ public class FriendlyZombie extends MercuryMob {
 		super(EntityType.ZOMBIE,
 				"<dark_green><translation:entity.zombie.friendly>",
 				new MobAttributes()
-						.set(MobAttribute.MOVEMENT_SPEED, 0.21f),
+						.set(MobAttribute.MOVEMENT_SPEED, 0.21),
 				new Behaviour()
 		);
 	}

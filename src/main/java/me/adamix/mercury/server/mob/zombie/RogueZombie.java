@@ -21,7 +21,7 @@ public class RogueZombie extends MercuryMob {
 		super(EntityType.ZOMBIE,
 				"<dark_green><translation:entity.zombie.rogue>, Hello <player_name>!",
 				new MobAttributes()
-						.set(MobAttribute.MOVEMENT_SPEED, 0.21f),
+						.set(MobAttribute.MOVEMENT_SPEED, 0.21),
 				new Behaviour()
 		);
 	}

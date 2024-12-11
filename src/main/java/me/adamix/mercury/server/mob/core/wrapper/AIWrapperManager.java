@@ -3,6 +3,7 @@ package me.adamix.mercury.server.mob.core.wrapper;
 import me.adamix.mercury.server.mob.core.wrapper.goal.FollowEntityWrapper;
 import me.adamix.mercury.server.mob.core.wrapper.goal.GoalWrapper;
 import me.adamix.mercury.server.mob.core.wrapper.goal.RandomStrollWrapper;
+import me.adamix.mercury.server.mob.core.wrapper.target.ClosestEntityWrapper;
 import me.adamix.mercury.server.mob.core.wrapper.target.TargetWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,8 @@ public class AIWrapperManager {
 	public AIWrapperManager() {
 		registerGoalWrapper("followEntity", new FollowEntityWrapper());
 		registerGoalWrapper("randomStroll", new RandomStrollWrapper());
+
+		registerTargetWrapper("closestEntity", new ClosestEntityWrapper());
 	}
 
 	public void registerGoalWrapper(@NotNull String name, @NotNull GoalWrapper goalWrapper) {

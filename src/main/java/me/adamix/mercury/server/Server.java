@@ -11,6 +11,7 @@ import me.adamix.mercury.server.command.debug.*;
 import me.adamix.mercury.server.command.dungeon.EnterDungeonCommand;
 import me.adamix.mercury.server.command.dungeon.GenerateCommand;
 import me.adamix.mercury.server.command.dungeon.RoomBuilderCommand;
+import me.adamix.mercury.server.command.mob.SpawnMobCommand;
 import me.adamix.mercury.server.command.server.PerformanceCommand;
 import me.adamix.mercury.server.command.server.StopCommand;
 import me.adamix.mercury.server.common.ColorPallet;
@@ -24,6 +25,7 @@ import me.adamix.mercury.server.item.ItemManager;
 import me.adamix.mercury.server.item.blueprint.ItemBlueprintManager;
 import me.adamix.mercury.server.listener.player.*;
 import me.adamix.mercury.server.mob.core.MobManager;
+import me.adamix.mercury.server.mob.core.wrapper.AIWrapperManager;
 import me.adamix.mercury.server.mob.zombie.FriendlyZombie;
 import me.adamix.mercury.server.mob.zombie.RogueZombie;
 import me.adamix.mercury.server.monitor.TickMonitorManager;
@@ -79,6 +81,7 @@ public class Server {
 	@Getter private static DungeonManager dungeonManager;
 	@Getter private static RoomManager roomManager;
 	@Getter private static TaskManager taskManager;
+	@Getter private static AIWrapperManager aiWrapperManager;
 	private static MongoClient mongoClient;
 
 	/**
@@ -140,6 +143,7 @@ public class Server {
 		dungeonManager = new DungeonManager();
 		roomManager = new RoomManager();
 		taskManager = new TaskManager();
+		aiWrapperManager = new AIWrapperManager();
 	}
 
 	/**
@@ -204,6 +208,7 @@ public class Server {
 		itemBlueprintManager.registerAllItems();
 
 		// Register default entities
+		mobManager.registerAllMobs();
 		// ToDo move to configuration file
 		mobManager.register(NamespaceID.from("mercury", "rogue_zombie"), RogueZombie.class);
 		mobManager.register(NamespaceID.from("mercury", "friendly_zombie"), FriendlyZombie.class);
@@ -246,6 +251,7 @@ public class Server {
 		commandManager.register(new GenerateCommand());
 		commandManager.register(new CheckPlayerDataCommand());
 		commandManager.register(new DebugCommand());
+		commandManager.register(new SpawnMobCommand());
 
 		// Start tasks
 		taskManager.startTask(new PlayTimeTask());

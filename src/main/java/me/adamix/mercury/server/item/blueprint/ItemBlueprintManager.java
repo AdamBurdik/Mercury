@@ -2,7 +2,7 @@ package me.adamix.mercury.server.item.blueprint;
 
 import me.adamix.mercury.server.item.attribute.ItemAttribute;
 import me.adamix.mercury.server.item.attribute.ItemAttributes;
-import me.adamix.mercury.server.item.component.DescriptionComponent;
+import me.adamix.mercury.server.item.component.ItemDescriptionComponent;
 import me.adamix.mercury.server.item.component.MercuryItemComponent;
 import me.adamix.mercury.server.item.rarity.ItemRarity;
 import me.adamix.mercury.server.toml.TomlConfiguration;
@@ -55,7 +55,7 @@ public class ItemBlueprintManager {
 			String[] lines = description.split("\n");
 
 			componentList.add(
-					new DescriptionComponent(lines)
+					new ItemDescriptionComponent(lines)
 			);
 		}
 

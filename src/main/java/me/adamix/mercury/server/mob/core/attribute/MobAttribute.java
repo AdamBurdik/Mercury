@@ -1,17 +1,29 @@
 package me.adamix.mercury.server.mob.core.attribute;
 
 import lombok.Getter;
+import net.minestom.server.entity.attribute.Attribute;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
 public enum MobAttribute {
-	MOVEMENT_SPEED(1f),
-	DAMAGE(1f),
-	HEALTH(100f),
-	MAX_HEALTH(100f);
+	DAMAGE,
+	ATTACK_SPEED(Attribute.ATTACK_SPEED),
+	MOVEMENT_SPEED(Attribute.MOVEMENT_SPEED),
+	MAX_HEALTH;
 
-	private final float defaultValue;
+	@Nullable
+	final Attribute defaultAttribute;
 
-	MobAttribute(float defaultValue) {
-		this.defaultValue = defaultValue;
+	MobAttribute() {
+		this(null);
+	}
+
+	MobAttribute(@Nullable Attribute defaultAttribute) {
+		this.defaultAttribute = defaultAttribute;
+	}
+
+	public @NotNull String translationKey() {
+		return "mob.attribute." + this.name().toLowerCase();
 	}
 }

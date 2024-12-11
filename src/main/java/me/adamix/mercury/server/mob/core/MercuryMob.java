@@ -2,15 +2,14 @@ package me.adamix.mercury.server.mob.core;
 
 import lombok.Getter;
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.mob.core.attribute.MobAttribute;
 import me.adamix.mercury.server.mob.core.attribute.MobAttributes;
 import me.adamix.mercury.server.mob.core.behaviour.MobBehaviour;
+import me.adamix.mercury.server.mob.core.component.MercuryMobComponent;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.Metadata;
-import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.network.packet.server.play.EntityMetaDataPacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,30 +21,44 @@ import java.util.Map;
 public class MercuryMob extends EntityCreature {
 	private final @NotNull EntityType entityType;
 	private final @NotNull String name;
-	private final @NotNull MobAttributes mobAttributes;
+	private final @NotNull MercuryMobComponent[] components;
 	private final @Nullable MobBehaviour behaviour;
 
 	public MercuryMob(
 			@NotNull EntityType entityType,
 			@NotNull String name,
-			@NotNull MobAttributes mobAttributes,
+			@NotNull MercuryMobComponent[] components,
 			@Nullable MobBehaviour behaviour
 		) {
 		super(entityType);
 		this.entityType = entityType;
 		this.name = name;
-		this.mobAttributes = mobAttributes;
+		this.components = components;
 		this.behaviour = behaviour;
 	}
 
-	/**
-	 * Applies attributes which entity should include by default
-	 */
-	public void applyVanillaAttributes() {
-		this.getAttribute(Attribute.MOVEMENT_SPEED)
-				.setBaseValue(
-						mobAttributes.get(MobAttribute.MOVEMENT_SPEED)
-				);
+	public MercuryMob(
+			@NotNull EntityType entityType,
+			@NotNull String name,
+			@NotNull MobAttributes attributes,
+			@NotNull MobBehaviour behaviour
+			) {
+		this(entityType, name, new MercuryMobComponent[]{attributes.toComponent()}, behaviour);
+	}
+
+	public boolean hasComponent(Class<? extends MercuryMobComponent> clazz) {
+		return getComponent(clazz) != null;
+	}
+
+	public <T extends MercuryMobComponent> @Nullable T getComponent(Class<T> clazz) {
+		for (@NotNull MercuryMobComponent itemComponent : components) {
+			if (itemComponent.getClass().equals(clazz)) {
+				if (clazz.isInstance(itemComponent)) {
+					return clazz.cast(itemComponent);
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

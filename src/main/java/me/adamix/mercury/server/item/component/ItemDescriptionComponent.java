@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * <br>
  * Can contain multiple lines
  */
-public record DescriptionComponent(@NotNull String[] lines) implements MercuryItemComponent {
+public record ItemDescriptionComponent(@NotNull String[] lines) implements MercuryItemComponent {
 	public String getLine(int index) {
 		return lines[index];
 	}

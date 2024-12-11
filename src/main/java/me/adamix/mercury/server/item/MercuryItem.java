@@ -3,10 +3,10 @@ package me.adamix.mercury.server.item;
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.common.ColorPallet;
 import me.adamix.mercury.server.item.attribute.ItemAttributeValue;
-import me.adamix.mercury.server.item.component.AttributeComponent;
-import me.adamix.mercury.server.item.component.DescriptionComponent;
+import me.adamix.mercury.server.item.component.ItemAttributeComponent;
+import me.adamix.mercury.server.item.component.ItemDescriptionComponent;
 import me.adamix.mercury.server.item.component.MercuryItemComponent;
-import me.adamix.mercury.server.item.component.RarityComponent;
+import me.adamix.mercury.server.item.component.ItemRarityComponent;
 import me.adamix.mercury.server.item.rarity.ItemRarity;
 import me.adamix.mercury.server.placeholder.PlaceholderManager;
 import me.adamix.mercury.server.player.MercuryPlayer;
@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,19 +73,19 @@ public record MercuryItem(
 		List<Component> loreList = new ArrayList<>();
 
 		// Add description to lore if available
-		DescriptionComponent descriptionComponent = getComponent(DescriptionComponent.class);
-		if (descriptionComponent != null) {
-			for (String line : descriptionComponent.lines()) {
+		ItemDescriptionComponent itemDescriptionComponent = getComponent(ItemDescriptionComponent.class);
+		if (itemDescriptionComponent != null) {
+			for (String line : itemDescriptionComponent.lines()) {
 				Component lineComponent = placeholderManager.parse(line, player);
 				loreList.add(lineComponent);
 			}
 		}
 
 		// Add attributes to lore if available
-		AttributeComponent attributeComponent = getComponent(AttributeComponent.class);
-		if (attributeComponent != null) {
+		ItemAttributeComponent itemAttributeComponent = getComponent(ItemAttributeComponent.class);
+		if (itemAttributeComponent != null) {
 			loreList.add(Component.empty());
-			attributeComponent.attributeMap().forEach((attribute, value) -> {
+			itemAttributeComponent.attributeMap().forEach((attribute, value) -> {
 				Component namePart = Component.text(translation.get(attribute.translationKey()) + ": ")
 						.color(ColorPallet.LIGHT_GRAY.getColor());
 
@@ -103,9 +102,9 @@ public record MercuryItem(
 		}
 
 		// Add rarity to lore if available
-		RarityComponent rarityComponent = getComponent(RarityComponent.class);
-		if (rarityComponent != null) {
-			ItemRarity rarity = rarityComponent.rarity();
+		ItemRarityComponent itemRarityComponent = getComponent(ItemRarityComponent.class);
+		if (itemRarityComponent != null) {
+			ItemRarity rarity = itemRarityComponent.rarity();
 			loreList.add(Component.empty());
 			loreList.add(
 					Component.text(translation.get(rarity.translationKey()).toUpperCase())

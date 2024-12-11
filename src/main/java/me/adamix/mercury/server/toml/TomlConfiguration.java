@@ -1,6 +1,7 @@
 package me.adamix.mercury.server.toml;
 
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.entity.EntityType;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
@@ -162,7 +163,28 @@ public class TomlConfiguration {
 		return Material.fromNamespaceId(value);
 	}
 
+	public @NotNull EntityType getEntityTypeSafe(@NotNull String dottedKey) {
+		mustContain(dottedKey);
+		EntityType entityType = EntityType.fromNamespaceId(getStringSafe(dottedKey));
+		if (entityType == null) {
+			throw new RuntimeException("Invalid entity type id " + dottedKey + " in " + fileName + "! Please specify valid one. eg. 'minecraft:zombie'");
+		}
+		return entityType;
+	}
+
+	public @Nullable EntityType getEntityType(@NotNull String dottedKey) {
+		String value = getString(dottedKey);
+		if (value == null) {
+			return null;
+		}
+		return EntityType.fromNamespaceId(value);
+	}
+
 	public @Nullable TomlTable getTable(@NotNull String dottedKey) {
 		return this.parseResult.getTable(dottedKey);
+	}
+
+	public @Nullable TomlArray getArray(@NotNull String dottedKey) {
+		return this.parseResult.getArray(dottedKey);
 	}
 }

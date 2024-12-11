@@ -7,7 +7,7 @@ import me.adamix.mercury.server.exceptions.PlayerDataNotAvailableException;
 import me.adamix.mercury.server.exceptions.ProfileDataNotAvailableException;
 import me.adamix.mercury.server.inventory.core.MercuryInventory;
 import me.adamix.mercury.server.item.MercuryItem;
-import me.adamix.mercury.server.item.component.AttributeComponent;
+import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import me.adamix.mercury.server.mob.core.MercuryMob;
 import me.adamix.mercury.server.player.data.PlayerData;
 import me.adamix.mercury.server.player.data.PlayerDataManager;
@@ -150,9 +150,9 @@ public class MercuryPlayer extends Player {
 		if (optionalHeldItem.isPresent()) {
 			MercuryItem heldItem = optionalHeldItem.get();
 
-			AttributeComponent attributeComponent = heldItem.getComponent(AttributeComponent.class);
-			if (attributeComponent != null) {
-				attributeComponent.applyToPlayer(this);
+			ItemAttributeComponent itemAttributeComponent = heldItem.getComponent(ItemAttributeComponent.class);
+			if (itemAttributeComponent != null) {
+				itemAttributeComponent.applyToPlayer(this);
 			}
 		}
 	}

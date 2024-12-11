@@ -1,0 +1,16 @@
+id = "mercury:example_mob"
+type = "zombie"
+name = "Example Mob"
+
+[attributes] # Base Value
+damage = 10.0
+movement_sped = 5.0
+
+[ai]
+goals = [
+    {type = "followEntity", range = 3.0},
+    {type = "randomStroll", radius = 5}
+]
+targets = [
+    {type = "closestEntity", range = 32.0, predicate = {type = "instanceof", value = "player"}}
+]

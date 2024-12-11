@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 
-public record AttributeComponent(EnumMap<ItemAttribute, ItemAttributeValue> attributeMap) implements MercuryItemComponent {
+public record ItemAttributeComponent(EnumMap<ItemAttribute, ItemAttributeValue> attributeMap) implements MercuryItemComponent {
 	public @Nullable ItemAttributeValue get(ItemAttribute attribute) {
 		return attributeMap.get(attribute);
 	}

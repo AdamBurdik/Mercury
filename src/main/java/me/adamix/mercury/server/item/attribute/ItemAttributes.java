@@ -2,7 +2,7 @@ package me.adamix.mercury.server.item.attribute;
 
 import lombok.Getter;
 import me.adamix.mercury.server.common.SerializableEntity;
-import me.adamix.mercury.server.item.component.AttributeComponent;
+import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,8 +44,8 @@ public class ItemAttributes implements SerializableEntity {
 		return attributeMap.get(attribute);
 	}
 
-	public AttributeComponent toComponent() {
-		return new AttributeComponent(this.attributeMap);
+	public ItemAttributeComponent toComponent() {
+		return new ItemAttributeComponent(this.attributeMap);
 	}
 
 	@Override

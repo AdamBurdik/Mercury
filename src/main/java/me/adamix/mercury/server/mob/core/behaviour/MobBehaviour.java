@@ -46,4 +46,8 @@ public class MobBehaviour {
 	public void onPlayerAttack() {}
 	public void onDamagedByPlayer() {}
 	public void onDeath() {}
+
+	public static MobBehaviour empty() {
+		return new MobBehaviour();
+	}
 }

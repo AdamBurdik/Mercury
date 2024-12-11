@@ -1,22 +1,31 @@
 package me.adamix.mercury.server.mob.core.attribute;
 
+import me.adamix.mercury.server.mob.core.component.MobAttributeComponent;
+import net.minestom.server.entity.attribute.AttributeOperation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.EnumMap;
 
 public class MobAttributes {
-	private final EnumMap<MobAttribute, Float> attributeMap = new EnumMap<>(MobAttribute.class);
+	private final EnumMap<MobAttribute, Double> attributeMap = new EnumMap<>(MobAttribute.class);
 
-	public MobAttributes() {
-		for (MobAttribute attribute : MobAttribute.values()) {
-			attributeMap.put(attribute, attribute.getDefaultValue());
+	public @NotNull MobAttributes set(@NotNull MobAttribute attribute, @Nullable Double value) {
+		if (value != null) {
+			this.attributeMap.put(attribute, value);
 		}
-	}
-
-	public MobAttributes set(MobAttribute attribute, float value) {
-		attributeMap.put(attribute, value);
 		return this;
 	}
 
-	public float get(MobAttribute attribute) {
+	public boolean has(MobAttribute attribute) {
+		return attributeMap.containsKey(attribute);
+	}
+
+	public @Nullable Double get(MobAttribute attribute) {
 		return attributeMap.get(attribute);
+	}
+
+	public MobAttributeComponent toComponent() {
+		return new MobAttributeComponent(this.attributeMap);
 	}
 }

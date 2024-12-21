@@ -1,8 +1,6 @@
 package me.adamix.mercury.server.mob.core;
 
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.item.attribute.ItemAttribute;
-import me.adamix.mercury.server.item.attribute.ItemAttributes;
 import me.adamix.mercury.server.mob.core.attribute.MobAttribute;
 import me.adamix.mercury.server.mob.core.attribute.MobAttributes;
 import me.adamix.mercury.server.mob.core.behaviour.MobBehaviour;
@@ -17,13 +15,11 @@ import me.adamix.mercury.server.mob.core.wrapper.goal.GoalWrapper;
 import me.adamix.mercury.server.mob.core.wrapper.target.TargetWrapper;
 import me.adamix.mercury.server.toml.TomlConfiguration;
 import me.adamix.mercury.server.utils.FileUtils;
-import me.adamix.mercury.server.utils.TomlUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.metadata.EntityMeta;
 import net.minestom.server.instance.Instance;
-import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,8 +29,6 @@ import org.tomlj.TomlArray;
 import org.tomlj.TomlTable;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -242,13 +236,26 @@ public class MobManager {
 	}
 
 	/**
-	 * Retrieves a game mob by its unique UUID
+	 * Retrieves a mercury mob by its unique UUID
 	 *
 	 * @param uuid unique identifier of the mob
 	 * @return {@link MercuryMob} associated with the specified UUID, or {@code null} if not found
 	 */
 	public @Nullable MercuryMob get(UUID uuid) {
 		return gameMobs.get(uuid);
+	}
+
+	/**
+	 * Retrives a registered mercury mob by its namespace ID
+	 * @param mobID namespace ID of mob
+	 * @return {@link MercuryMob} mercury mob, or {@code null} if not there is no mob with specified ID
+	 */
+	public @Nullable MercuryMob getRegistered(NamespaceID mobID) {
+		RegisteredMob registeredMob = registeredMobs.get(mobID);
+		if (registeredMob == null) {
+			return null;
+		}
+		return registeredMob.get();
 	}
 
 	/**

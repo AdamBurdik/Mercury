@@ -16,6 +16,7 @@ import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
 import me.adamix.mercury.server.player.state.PlayerState;
 import me.adamix.mercury.server.player.stats.Statistics;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.attribute.Attribute;
@@ -43,6 +44,7 @@ public class MercuryPlayer extends Player {
 	private @Nullable ProfileData profileData;
 	private @Nullable PlayerData playerData;
 	private final @NotNull Set<MercuryMob> viewedMobs = new HashSet<>();
+	@Setter
 	private @Nullable UUID dungeonUniqueId;
 	@Setter
 	private boolean inDebug = true;
@@ -93,9 +95,10 @@ public class MercuryPlayer extends Player {
 
 	/**
 	 * Retrieves player data from {@link PlayerDataManager} and save it to player instance
+	 * @param runnable function that will be called after player data is loaded
 	 * @throws PlayerDataNotAvailableException if player data is not available in database
 	 */
-	public void loadPlayerData() {
+	public void loadPlayerData(@Nullable Runnable runnable) {
 		CompletableFuture<PlayerData> completableFuture = Server.getPlayerDataManager().getPlayerData(this.getUuid());
 		if (completableFuture == null) {
 			this.kick("Cannot get player data from database! Please notify admins about this message!");
@@ -111,6 +114,9 @@ public class MercuryPlayer extends Player {
 			}
 			this.playerData = data;
 			this.state = PlayerState.LIMBO;
+			if (runnable != null) {
+				runnable.run();
+			}
 		});
 	}
 
@@ -118,16 +124,26 @@ public class MercuryPlayer extends Player {
 	 * Retrieves profile data from {@link ProfileDataManager} and save it to player instance
 	 *
 	 * @param profileUniqueId unique ID of player profile
+	 * @param runnable function that will be called after profile data is loaded
 	 * @throws ProfileDataNotAvailableException if profile data is not available in database
 	 */
-	public void loadProfileData(UUID profileUniqueId) {
+	public void loadProfileData(UUID profileUniqueId, @Nullable Runnable runnable) {
 		CompletableFuture<ProfileData> completableFuture = Server.getProfileDataManager().getProfileData(profileUniqueId);
 		if (completableFuture == null) {
 			throw new ProfileDataNotAvailableException("Cannot get profile data!");
 		}
 		completableFuture.thenAccept(data -> {
 			this.profileData = data;
+			this.state = PlayerState.PLAY;
 			updateAttributes();
+			if (runnable != null) {
+				MinecraftServer.getSchedulerManager().buildTask(runnable).schedule();
+//				CompletableFuture
+//						.runAsync(() -> {
+//							MinecraftServer.getSchedulerManager().buildTask(runnable).schedule();
+//						}, CompletableFuture.delayedExecutor(5, TimeUnit.SECONDS))
+//						.join();
+			}
 		});
 	}
 
@@ -178,7 +194,6 @@ public class MercuryPlayer extends Player {
 	 * Teleport player to spawn location and change his state
 	 */
 	public void sendToSpawn() {
-		this.state = PlayerState.PLAY;
 		teleport(Server.SPAWN_LOCATION);
 	}
 
@@ -186,7 +201,6 @@ public class MercuryPlayer extends Player {
 	 * Teleport player to limbo location and change his state
 	 */
 	public void sendToLimbo() {
-		this.state = PlayerState.LIMBO;
 		teleport(Server.LIMBO_LOCATION);
 	}
 

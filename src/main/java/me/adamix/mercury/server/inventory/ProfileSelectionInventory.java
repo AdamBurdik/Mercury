@@ -55,11 +55,12 @@ public class ProfileSelectionInventory extends MercuryInventory {
 										.color(TextColor.color(97, 101, 165))
 						);
 
-						clickPlayer.loadProfileData(selectedProfileUniqueId);
-						clickPlayer.removeEffect(PotionEffect.BLINDNESS);
-						clickPlayer.sendToSpawn();
-						clickPlayer.setNoGravity(false);
 						click.close();
+						clickPlayer.loadProfileData(selectedProfileUniqueId, () -> {
+							clickPlayer.removeEffect(PotionEffect.BLINDNESS);
+							clickPlayer.sendToSpawn();
+							clickPlayer.setNoGravity(false);
+						});
 					});
 			i++;
 		}

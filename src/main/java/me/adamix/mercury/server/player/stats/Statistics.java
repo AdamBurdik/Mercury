@@ -1,31 +1,57 @@
 package me.adamix.mercury.server.player.stats;
 
-import me.adamix.mercury.server.common.SerializableEntity;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Statistics implements SerializableEntity {
-	private final Map<String, Float> statisticMap = new HashMap<>();
+public class Statistics {
+	private final EnumMap<StatisticCategory, Map<String, Float>> statisticMap = new EnumMap<>(StatisticCategory.class);
 
-	public void set(@NotNull String name, float value) {
-		statisticMap.put(name, value);
-	}
-
-	public float get(@NotNull String name) {
-		if (!statisticMap.containsKey(name)) {
-			return 0f;
+	public Map<String, Float> getCategoryMap(@NotNull StatisticCategory category) {
+		if (!statisticMap.containsKey(category)) {
+			statisticMap.put(category, new HashMap<>());
 		}
-		return statisticMap.get(name);
+		return statisticMap.get(category);
 	}
 
-	public void increase(@NotNull String name, float amount) {
-		set(name, get(name) + amount);
+	public void set(@NotNull StatisticCategory category, @NotNull String name, float value) {
+		getCategoryMap(category).put(name, value);
 	}
 
-	@Override
-	public Map<String, Object> serialize() {
-		return new HashMap<>(statisticMap);
+	public float get(@NotNull StatisticCategory category, @NotNull String name) {
+		Float value = getCategoryMap(category).get(name);
+		return value != null ? value : 0f;
+	}
+
+	public void increase(@NotNull StatisticCategory category, @NotNull String name, float amount) {
+		this.set(category, name, get(category, name) + amount);
+	}
+
+
+	public @NotNull Map<String, Object> serialize() {
+		Map<String, Object> map = new HashMap<>();
+
+		statisticMap.forEach((category, valueMap) -> {
+			map.put(category.name(), valueMap);
+		});
+
+		return map;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static @NotNull Statistics deserialize(Map<String, Object> map) {
+		Statistics statistics = new Statistics();
+
+		map.forEach((categoryString, valueObject) -> {
+			StatisticCategory category = StatisticCategory.valueOf(categoryString);
+			Map<String, Float> valueMap = (Map<String, Float>) valueObject;
+			valueMap.forEach((name, value) -> {
+				statistics.set(category, name, value);
+			});
+		});
+
+		return statistics;
 	}
 }

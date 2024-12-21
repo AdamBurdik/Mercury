@@ -3,6 +3,7 @@ package me.adamix.mercury.server.command;
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.common.ColorPallet;
 import me.adamix.mercury.server.player.MercuryPlayer;
+import me.adamix.mercury.server.player.stats.StatisticCategory;
 import me.adamix.mercury.server.translation.Translation;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.Command;
@@ -18,7 +19,7 @@ public class PlayTimeCommand extends Command {
 				return;
 			}
 
-			float playtime = player.getPlayerData().getStatistics().get("play_time");
+			float playtime = player.getPlayerData().getStatistics().get(StatisticCategory.GENERAL, "play_time");
 			Duration duration = Duration.ofSeconds((long) playtime);
 
 			Translation translation = Server.getTranslationManager().getTranslation(player.getTranslationId());

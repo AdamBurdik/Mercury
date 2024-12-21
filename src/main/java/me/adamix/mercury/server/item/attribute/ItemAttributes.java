@@ -1,7 +1,6 @@
 package me.adamix.mercury.server.item.attribute;
 
 import lombok.Getter;
-import me.adamix.mercury.server.common.SerializableEntity;
 import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import org.jetbrains.annotations.NotNull;
@@ -10,11 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 
 @Getter
-public class ItemAttributes implements SerializableEntity {
+public class ItemAttributes {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemAttributes.class);
 	private final EnumMap<ItemAttribute, ItemAttributeValue> attributeMap = new EnumMap<>(ItemAttribute.class);
 
@@ -46,15 +43,5 @@ public class ItemAttributes implements SerializableEntity {
 
 	public ItemAttributeComponent toComponent() {
 		return new ItemAttributeComponent(this.attributeMap);
-	}
-
-	@Override
-	public Map<String, Object> serialize() {
-		Map<String, Object> data = new HashMap<>();
-
-		attributeMap.forEach((attribute, value) -> {
-			data.put(attribute.name(), value.serialize());
-		});
-		return data;
 	}
 }

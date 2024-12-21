@@ -6,7 +6,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
-import me.adamix.mercury.server.player.profile.ProfileData;
+import me.adamix.mercury.server.player.stats.StatisticCategory;
 import me.adamix.mercury.server.player.stats.Statistics;
 import org.bson.Document;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +50,10 @@ public class PlayerDataManager {
 
 				return extractPlayerData(document);
 			}
-		});
+		}).exceptionally((e -> {
+			LOGGER.error(String.valueOf(e));
+			throw new RuntimeException(e);
+		}));
 	}
 
 	/**
@@ -66,17 +69,24 @@ public class PlayerDataManager {
 		UUID playerUniqueId = UUID.fromString(playerStringUniqueId);
 
 		Map<String, Object> statisticMap = document.containsKey("statistics") ? document.get("statistics", Document.class) : new HashMap<>();
-		Statistics profileStatistics = new Statistics();
+		Statistics playerStatistics = new Statistics();
 
-		statisticMap.forEach((key, value) -> {
-			if (value instanceof Double doubleValue) {
-				profileStatistics.set(key, doubleValue.floatValue());
+		statisticMap.forEach((categoryKey, categoryValue) -> {
+			if (categoryValue instanceof HashMap<?, ?> rawMap) {
+				@SuppressWarnings("unchecked")
+				HashMap<String, Object> categoryMap = (HashMap<String, Object>) rawMap;
+				categoryMap.forEach((key, value) -> {
+					if (value instanceof Float floatValue) {
+						StatisticCategory statisticCategory = StatisticCategory.valueOf(key.toUpperCase());
+						playerStatistics.set(statisticCategory, key, floatValue);
+					}
+				});
 			}
 		});
 
 		return new PlayerData(
 				playerUniqueId,
-				profileStatistics
+				playerStatistics
 		);
 	}
 
@@ -94,6 +104,9 @@ public class PlayerDataManager {
 					.append("statistics", playerData.getStatistics().serialize());
 
 			playerDataCollection.replaceOne(Filters.eq("playerUniqueId", playerUniqueId.toString()), playerDocument, new ReplaceOptions().upsert(true));
-		});
+		}).exceptionally((e -> {
+			LOGGER.error(String.valueOf(e));
+			throw new RuntimeException(e);
+		}));
 	}
 }

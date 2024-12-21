@@ -101,7 +101,7 @@ public class ItemBlueprintManager {
 
 
 	public void register(MercuryItemBlueprint item) {
-		itemBlueprintMap.put(item.getBlueprintID(), item);
+		itemBlueprintMap.put(item.blueprintID(), item);
 	}
 
 	public @NotNull Optional<MercuryItemBlueprint> get(NamespaceID blueprintID) {

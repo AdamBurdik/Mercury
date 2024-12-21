@@ -9,14 +9,16 @@ import com.mongodb.client.model.ReplaceOptions;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
 import me.adamix.mercury.server.player.stats.Statistics;
-import me.adamix.mercury.server.serialization.MercuryPlayerInventorySerializer;
 import net.minestom.server.MinecraftServer;
 import org.bson.Document;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -52,7 +54,10 @@ public class ProfileDataManager {
 
 				return extractProfileData(document);
 			}
-		});
+		}).exceptionally((e -> {
+			LOGGER.error(String.valueOf(e));
+			return null;
+		}));
 	}
 
 	/**
@@ -77,6 +82,7 @@ public class ProfileDataManager {
 	 * @param document document containing profile data
 	 * @return the {@link ProfileData} containing extracted data
 	 */
+	@SuppressWarnings("unchecked")
 	private ProfileData extractProfileData(Document document) {
 		String playerStringUniqueId = document.getString("playerUniqueId");
 		if (!document.containsKey("playerUniqueId")) {
@@ -95,16 +101,20 @@ public class ProfileDataManager {
 		int maxHealth = document.containsKey("maxHealth") ? document.getInteger("maxHealth") : PlayerDefaults.getMaxHealth();
 		float movementSpeed = document.containsKey("movementSpeed") ? document.getDouble("movementSpeed").floatValue() : PlayerDefaults.getMovementSpeed();
 		float attackSpeed = document.containsKey("attack") ? document.getDouble("attack").floatValue() : PlayerDefaults.getAttackSpeed();
-		GamePlayerInventory inventory = MercuryPlayerInventorySerializer.deserialize(document);
-
-		Map<String, Object> statisticMap = document.containsKey("statistics") ? document.get("statistics", Document.class) : new HashMap<>();
-		Statistics profileStatistics = new Statistics();
-
-		statisticMap.forEach((key, value) -> {
-			if (value instanceof Double doubleValue) {
-				profileStatistics.set(key, doubleValue.floatValue());
-			}
-		});
+		Object inventoryObject = document.get("inventory");
+		GamePlayerInventory inventory;
+		if (inventoryObject != null) {
+			inventory = GamePlayerInventory.deserialize((Map<String, Object>) inventoryObject);
+		} else {
+			inventory = new GamePlayerInventory();
+		}
+		Object statisticsObject = document.get("statistics");
+		Statistics profileStatistics;
+		if (statisticsObject != null) {
+			profileStatistics = Statistics.deserialize((Map<String, Object>) statisticsObject);
+		} else {
+			profileStatistics = new Statistics();
+		}
 
 		return new ProfileData(
 				playerUniqueId,
@@ -136,12 +146,14 @@ public class ProfileDataManager {
 					.append("maxHealth", profileData.getMaxHealth())
 					.append("movementSpeed", profileData.getMovementSpeed())
 					.append("attackSpeed", profileData.getAttackSpeed())
-					.append("inventory", MercuryPlayerInventorySerializer.serialize(profileData.getPlayerInventory()))
-					.append("statistics", profileData.getStatistics().serialize()
-			);
+					.append("inventory", profileData.getPlayerInventory().serialize())
+					.append("statistics", profileData.getStatistics().serialize());
 
 			profileDataCollection.replaceOne(Filters.eq("profileUniqueId", profileUniqueId.toString()), playerDocument, new ReplaceOptions().upsert(true));
-		});
+		}).exceptionally((e -> {
+			LOGGER.error("error", e);
+			return null;
+		}));
 	}
 
 	/**
@@ -165,7 +177,10 @@ public class ProfileDataManager {
 
 				return profileDataList;
 			}
-		});
+		}).exceptionally((e -> {
+			LOGGER.trace(String.valueOf(e));
+			return null;
+		}));
 	}
 
 	/**

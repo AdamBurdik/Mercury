@@ -10,7 +10,7 @@ import java.util.*;
 
 public class GamePlayerInventory {
 	@Getter private final Map<Integer, MercuryItem> items = new HashMap<>();
-	private final Set<Integer> updatedSlots = new HashSet<>();
+	private transient final Set<Integer> updatedSlots = new HashSet<>();
 
 	public GamePlayerInventory() {
 	}
@@ -44,5 +44,41 @@ public class GamePlayerInventory {
 		}
 
 		updatedSlots.clear();
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) return true;
+		if (object == null || getClass() != object.getClass()) return false;
+		GamePlayerInventory inventory = (GamePlayerInventory) object;
+		return Objects.equals(getItems(), inventory.getItems());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getItems(), updatedSlots);
+	}
+
+	public @NotNull Map<String, Object> serialize() {
+		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> itemMap = new HashMap<>();
+		this.items.forEach((slot, item) -> {
+			itemMap.put(String.valueOf(slot), item.serialize());
+		});
+		map.put("items", itemMap);
+		return map;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static @NotNull GamePlayerInventory deserialize(Map<String, Object> map) {
+		GamePlayerInventory inventory = new GamePlayerInventory();
+
+		Map<String, Object> itemMap = (Map<String, Object>) map.get("items");
+		itemMap.forEach((slot, itemObject) -> {
+			MercuryItem mercuryItem = MercuryItem.deserialize((Map<String, Object>) itemObject);
+			inventory.setItem(Integer.parseInt(slot), mercuryItem);
+		});
+
+		return inventory;
 	}
 }

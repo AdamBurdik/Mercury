@@ -5,8 +5,8 @@ import me.adamix.mercury.server.common.ColorPallet;
 import me.adamix.mercury.server.item.attribute.ItemAttributeValue;
 import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import me.adamix.mercury.server.item.component.ItemDescriptionComponent;
-import me.adamix.mercury.server.item.component.MercuryItemComponent;
 import me.adamix.mercury.server.item.component.ItemRarityComponent;
+import me.adamix.mercury.server.item.component.MercuryItemComponent;
 import me.adamix.mercury.server.item.rarity.ItemRarity;
 import me.adamix.mercury.server.placeholder.PlaceholderManager;
 import me.adamix.mercury.server.player.MercuryPlayer;
@@ -23,11 +23,9 @@ import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-public record MercuryItem(
+public record MercuryItem (
 		@NotNull UUID uniqueId,
 		@NotNull NamespaceID blueprintID,
 		@NotNull String name,
@@ -159,5 +157,75 @@ public record MercuryItem(
 			valuePart = valuePart.color(ColorPallet.NEGATIVE_RED.getColor());
 		}
 		return valuePart;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) return true;
+		if (object == null || getClass() != object.getClass()) return false;
+		MercuryItem that = (MercuryItem) object;
+		return Objects.equals(name, that.name)
+				&& Objects.equals(uniqueId, that.uniqueId)
+				&& Objects.equals(material, that.material)
+				&& Objects.equals(blueprintID, that.blueprintID)
+				&& Objects.deepEquals(components, that.components);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(uniqueId, blueprintID, name, material, Arrays.hashCode(components));
+	}
+
+	public @NotNull Map<String, Object> serialize() {
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("uniqueId", this.uniqueId.toString());
+		map.put("blueprintID", this.blueprintID.toString());
+		map.put("name", this.name);
+		map.put("material", this.material.namespace().asString());
+
+		Map<String, Object> componentMap = new HashMap<>();
+		for (@NotNull MercuryItemComponent component : components) {
+			componentMap.put(component.name(), component.serialize());
+		}
+
+		map.put("components", componentMap);
+
+		return map;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public static MercuryItem deserialize(Map<String, Object> map) {
+		UUID uniqueId = UUID.fromString((String) map.get("uniqueId"));
+		NamespaceID blueprintID = NamespaceID.from((String) map.get("blueprintID"));
+		String itemComponent = (String) map.get("name");
+		Material material = Material.fromNamespaceId(NamespaceID.from((String) map.get("material")));
+		Objects.requireNonNull(material);
+		List<MercuryItemComponent> componentList = new ArrayList<>();
+		Map<String, Object> componentMap = (Map<String, Object>) map.get("components");
+		componentMap.forEach((name, value) -> {
+			componentList.add(
+					deserializeComponent(name, (Map<String, Object>) value)
+			);
+		});
+
+		return new MercuryItem(
+				uniqueId,
+				blueprintID,
+				itemComponent,
+				material,
+				componentList.toArray(new MercuryItemComponent[0])
+		);
+	}
+
+	public static @NotNull MercuryItemComponent deserializeComponent(String name, Map<String, Object> map) {
+		return switch (name) {
+			case "itemDescriptionComponent" -> ItemDescriptionComponent.deserialize(map);
+			case "itemAttributeComponent" -> ItemAttributeComponent.deserialize(map);
+			case "itemRarityComponent" -> ItemRarityComponent.deserialize(map);
+			default -> throw new RuntimeException("No component found with name " + name);
+		};
+
 	}
 }

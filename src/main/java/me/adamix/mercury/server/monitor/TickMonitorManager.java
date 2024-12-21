@@ -1,12 +1,14 @@
 package me.adamix.mercury.server.monitor;
 
 import lombok.Getter;
+import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.dungeon.Dungeon;
+import me.adamix.mercury.server.dungeon.DungeonManager;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.adventure.audience.Audiences;
-import net.minestom.server.entity.Player;
 import net.minestom.server.event.server.ServerTickMonitorEvent;
 import net.minestom.server.monitoring.TickMonitor;
 import net.minestom.server.timer.Task;
@@ -35,9 +37,7 @@ public class TickMonitorManager {
 				TaskSchedule.tick(10),
 				TaskSchedule.tick(10)
 		);
-		MinecraftServer.getGlobalEventHandler().addListener(ServerTickMonitorEvent.class, event -> {
-			lastTick = event.getTickMonitor();
-		});
+		MinecraftServer.getGlobalEventHandler().addListener(ServerTickMonitorEvent.class, event -> lastTick = event.getTickMonitor());
 	}
 
 	public void stop() {
@@ -45,7 +45,7 @@ public class TickMonitorManager {
 	}
 
 	private void run() {
-		Collection<Player> players = MinecraftServer.getConnectionManager().getOnlinePlayers();
+		Collection<MercuryPlayer> players = Server.getOnlinePlayers();
 		if (players.isEmpty()) return;
 
 		final Runtime runtime = Runtime.getRuntime();
@@ -60,8 +60,22 @@ public class TickMonitorManager {
 		final Component footer = Component.newline()
 				.append(Component.text("          Mercury          ")
 						.color(TextColor.color(57, 200, 73))
-						.append(Component.newline()));
+						.append(Component.newline())
+				);
 
-		Audiences.players().sendPlayerListHeaderAndFooter(header, footer);
+		DungeonManager dungeonManager = Server.getDungeonManager();
+		for (MercuryPlayer player : players) {
+			Dungeon dungeon = dungeonManager.getDungeon(player.getDungeonUniqueId());
+
+			Component playerFooter = footer;
+			if (dungeon != null) {
+				playerFooter = footer.append(
+						Component.text("Dungeon: " + dungeon.getDungeonID() + "-" + player.getDungeonUniqueId())
+				).append(Component.newline());
+			}
+
+			player.sendPlayerListHeaderAndFooter(header, playerFooter);
+
+		}
 	}
 }

@@ -4,6 +4,7 @@ import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.data.PlayerData;
 import me.adamix.mercury.server.player.state.PlayerState;
+import me.adamix.mercury.server.player.stats.StatisticCategory;
 import me.adamix.mercury.server.task.core.MercuryTask;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.timer.Task;
@@ -18,7 +19,7 @@ public class PlayTimeTask implements MercuryTask {
 			for (MercuryPlayer onlinePlayer : Server.getOnlinePlayers()) {
 				if (onlinePlayer.getState() == PlayerState.PLAY) {
 					PlayerData data = onlinePlayer.getPlayerData();
-					data.getStatistics().increase("play_time", 1);
+					data.getStatistics().increase(StatisticCategory.GENERAL, "play_time", 1);
 				}
 			}
 		},  TaskSchedule.tick(1), TaskSchedule.seconds(1));

@@ -37,19 +37,10 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.34'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
 
-    // Tomlj
     implementation 'org.tomlj:tomlj:1.1.1'
-
-    // Dot Env
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
-
-    // Kyori Adventure
     implementation "net.kyori:adventure-text-minimessage:4.17.0"
-
-    // Jline
     implementation 'org.jline:jline:3.27.1'
-
-    // JDA
     implementation("net.dv8tion:JDA:5.2.1") {
         exclude module: 'opus-java'
     }

@@ -1,0 +1,12 @@
+id = "mercury:test_dungeon"
+spawn_pos = [0.0, 64.0, 0.0, 0.0, 0.0] # x, y, z, yaw, pitch
+instance = "default"
+
+[[spawners]]
+position = [20.0, 65.0, 10.0]
+radius = 2 # down, up, north, south, west, east
+entity_types = ["mercury:rogue_zombie"]
+spawn_interval = 60 # Spawn interval in ticks
+spawn_interval_offset = 10 # Random spawn interval offset
+max_mobs = 150
+mobs_per_spawn = [1, 100] # 1 to 2 per spawn

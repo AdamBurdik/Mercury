@@ -1,11 +1,13 @@
 package me.adamix.mercury.server.dungeon;
 
-import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.dungeon.configuration.DungeonConfiguration;
-import me.adamix.mercury.server.dungeon.instance.DungeonInstance;
+import me.adamix.mercury.server.dungeon.spawner.DungeonSpawner;
 import me.adamix.mercury.server.player.MercuryPlayer;
-import me.adamix.mercury.server.toml.TomlConfiguration;
+import me.adamix.mercury.server.toml.MercuryArray;
+import me.adamix.mercury.server.toml.MercuryConfiguration;
+import me.adamix.mercury.server.toml.MercuryTable;
 import me.adamix.mercury.server.utils.FileUtils;
+import net.minestom.server.coordinate.Pos;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,10 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.*;
 
 public class DungeonManager {
 	private final static Logger LOGGER = LoggerFactory.getLogger(DungeonManager.class);
@@ -25,10 +25,19 @@ public class DungeonManager {
 
 	public @NotNull Dungeon create(@NotNull NamespaceID dungeonID, @NotNull Set<MercuryPlayer> playerSet) {
 		DungeonConfiguration config = configurationMap.get(dungeonID);
-		DungeonInstance dungeonInstance = Server.getDungeonInstanceManager().create(config.instanceID());
+		UUID uuid = UUID.randomUUID();
+		Dungeon dungeon;
+		try {
+			dungeon = new Dungeon(dungeonID, uuid, config, playerSet);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		dungeonMap.put(uuid, dungeon);
 
-		Dungeon dungeon = new Dungeon(dungeonID, dungeonInstance, playerSet);
-		dungeonMap.put(UUID.randomUUID(), dungeon);
+		for (MercuryPlayer mercuryPlayer : playerSet) {
+			mercuryPlayer.setDungeonUniqueId(uuid);
+		}
+
 		return dungeon;
 	}
 
@@ -38,31 +47,74 @@ public class DungeonManager {
 	}
 
 	public void registerAllDungeons() {
-		FileUtils.forEachFile("resources/dungeon/dungeons", FileUtils.isTomlPredicate, this::register);
+		FileUtils.forEachFile("resources/dungeons", FileUtils.isTomlPredicate, this::register);
 	}
 
 	public void register(@NotNull File tomlFile) {
 		if (!tomlFile.exists()) {
-			throw new RuntimeException("Unable to register dungeon instance! File does not exist");
+			throw new RuntimeException("Unable to register dungeon! File does not exist");
 		}
 
-		TomlConfiguration toml = new TomlConfiguration(tomlFile);
+		MercuryConfiguration toml = new MercuryConfiguration(tomlFile);
 
 		NamespaceID dungeonID = toml.getNamespacedIDSafe("id");
-		NamespaceID instanceID = toml.getNamespacedIDSafe("instance_id");
+		Pos spawnPosition = toml.getPosSafe("spawn_pos");
+		String worldName = toml.getStringSafe("instance");
+
+		Set<DungeonSpawner> dungeonSpawnerSet = new HashSet<>();
+		MercuryArray spawnerArray = toml.getArray("spawners");
+
+		if (spawnerArray != null) {
+			for (int i = 0; i < spawnerArray.size(); i++) {
+				MercuryTable spawnerTable = spawnerArray.getTable(i);
+				if (spawnerTable == null) {
+					continue;
+				}
+
+				Pos position = spawnerTable.getPosSafe("position");
+				int radius = spawnerTable.getIntegerSafe("radius");
+				NamespaceID[] entityTypes = spawnerTable.getArraySafe("entity_types").toNamespacedIDArray();
+				int spawnInterval = spawnerTable.getIntegerSafe("spawn_interval");
+				int spawnIntervalOffset = spawnerTable.getIntegerSafe("spawn_interval_offset");
+				int maxMobCount = spawnerTable.getIntegerSafe("max_mobs");
+				int[] mobsPerSpawn = spawnerTable.getArraySafe("mobs_per_spawn").toIntegerArray();
+
+				DungeonSpawner dungeonSpawner = new DungeonSpawner(
+						UUID.randomUUID(),
+						position,
+						radius,
+						entityTypes,
+						spawnInterval,
+						spawnIntervalOffset,
+						maxMobCount,
+						mobsPerSpawn
+				);
+				dungeonSpawnerSet.add(dungeonSpawner);
+			}
+		}
 
 		DungeonConfiguration config = new DungeonConfiguration(
-				instanceID
+				spawnPosition,
+				worldName,
+				dungeonSpawnerSet
 		);
 
 		this.register(dungeonID, config);
+	}
+
+	public Set<NamespaceID> getDungeonIds() {
+		return configurationMap.keySet();
 	}
 
 	public boolean hasDungeon(@NotNull UUID dungeonUniqueId) {
 		return dungeonMap.containsKey(dungeonUniqueId);
 	}
 
-	public @Nullable Dungeon getDungeon(@NotNull UUID dungeonUniqueId) {
+	public @Nullable Dungeon getDungeon(@Nullable UUID dungeonUniqueId) {
+		if (dungeonUniqueId == null) {
+			return null;
+		}
+
 		return dungeonMap.get(dungeonUniqueId);
 	}
 }

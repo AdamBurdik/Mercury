@@ -17,12 +17,12 @@ import me.adamix.mercury.server.command.server.StopCommand;
 import me.adamix.mercury.server.common.ColorPallet;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.dungeon.DungeonManager;
-import me.adamix.mercury.server.dungeon.instance.DungeonInstanceManager;
 import me.adamix.mercury.server.dungeon.room.RoomManager;
 import me.adamix.mercury.server.flag.ServerFlag;
 import me.adamix.mercury.server.inventory.core.InventoryManager;
 import me.adamix.mercury.server.item.ItemManager;
 import me.adamix.mercury.server.item.blueprint.ItemBlueprintManager;
+import me.adamix.mercury.server.listener.entity.EntityMoveListener;
 import me.adamix.mercury.server.listener.player.*;
 import me.adamix.mercury.server.mob.core.MobManager;
 import me.adamix.mercury.server.mob.core.wrapper.AIWrapperManager;
@@ -77,7 +77,6 @@ public class Server {
 	@Getter private static TranslationManager translationManager;
 	@Getter private static PlaceholderManager placeholderManager;
 	@Getter private static TickMonitorManager tickMonitorManager;
-	@Getter private static DungeonInstanceManager dungeonInstanceManager;
 	@Getter private static DungeonManager dungeonManager;
 	@Getter private static RoomManager roomManager;
 	@Getter private static TaskManager taskManager;
@@ -139,7 +138,6 @@ public class Server {
 		translationManager = new TranslationManager();
 		placeholderManager = new PlaceholderManager();
 		tickMonitorManager = new TickMonitorManager();
-		dungeonInstanceManager = new DungeonInstanceManager();
 		dungeonManager = new DungeonManager();
 		roomManager = new RoomManager();
 		taskManager = new TaskManager();
@@ -151,6 +149,11 @@ public class Server {
 	 */
 	private static void init() {
 		LOGGER.info("Initializing mercury server {} ({})", MinecraftServer.VERSION_NAME, MinecraftServer.PROTOCOL_VERSION);
+
+		Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+			System.err.println("Exception in thread " + thread.getName() + ": " + throwable.getMessage());
+			throwable.printStackTrace();
+		});
 
 		minecraftServer = MinecraftServer.init();
 
@@ -214,7 +217,6 @@ public class Server {
 		mobManager.register(NamespaceID.from("mercury", "friendly_zombie"), FriendlyZombie.class);
 
 		// Register dungeon instances and dungeons
-		dungeonInstanceManager.registerAllInstances();
 		dungeonManager.registerAllDungeons();
 
 		// Register event listeners
@@ -224,6 +226,7 @@ public class Server {
 		globalEventHandler.addListener(new PlayerMoveListener());
 		globalEventHandler.addListener(new PlayerChangeHeldSlotListener());
 		globalEventHandler.addListener(new PlayerCommandListener());
+		globalEventHandler.addListener(new EntityMoveListener());
 
 		// Configure default instance
 		InstanceManager instanceManager = MinecraftServer.getInstanceManager();
@@ -252,6 +255,7 @@ public class Server {
 		commandManager.register(new CheckPlayerDataCommand());
 		commandManager.register(new DebugCommand());
 		commandManager.register(new SpawnMobCommand());
+		commandManager.register(new InstanceConverterCommand());
 
 		// Start tasks
 		taskManager.startTask(new PlayTimeTask());

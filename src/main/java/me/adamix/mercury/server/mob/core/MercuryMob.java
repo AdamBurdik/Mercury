@@ -2,14 +2,18 @@ package me.adamix.mercury.server.mob.core;
 
 import lombok.Getter;
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.event.EntityMoveEvent;
 import me.adamix.mercury.server.mob.core.attribute.MobAttributes;
 import me.adamix.mercury.server.mob.core.behaviour.MobBehaviour;
 import me.adamix.mercury.server.mob.core.component.MercuryMobComponent;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import net.kyori.adventure.text.Component;
+import net.minestom.server.coordinate.Pos;
+import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.Metadata;
+import net.minestom.server.event.EventDispatcher;
 import net.minestom.server.network.packet.server.play.EntityMetaDataPacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +27,8 @@ public class MercuryMob extends EntityCreature {
 	private final @NotNull String name;
 	private final @NotNull MercuryMobComponent[] components;
 	private final @Nullable MobBehaviour behaviour;
+	private Pos lastPosition;
+	private Vec motion;
 
 	public MercuryMob(
 			@NotNull EntityType entityType,
@@ -94,5 +100,13 @@ public class MercuryMob extends EntityCreature {
 		);
 
 		player.sendPacket(packet);
+	}
+
+	@Override
+	protected void movementTick() {
+		super.movementTick();
+		this.lastPosition = this.position;
+		this.motion = this.position.sub(this.previousPosition).asVec();
+		EventDispatcher.call(new EntityMoveEvent(this, this.position));
 	}
 }

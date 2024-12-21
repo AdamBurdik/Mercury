@@ -18,6 +18,8 @@ public abstract class MercuryToml {
 	public abstract @Nullable String getString(@NotNull String dottedKey);
 	public abstract @Nullable Boolean getBoolean(@NotNull String dottedKey);
 	public abstract @Nullable Integer getInteger(@NotNull String dottedKey);
+	public abstract @Nullable Float getFloat(@NotNull String dottedKey);
+	public abstract @Nullable Double getDouble(@NotNull String dottedKey);
 	public abstract @Nullable Long getLong(@NotNull String dottedKey);
 	public abstract @Nullable MercuryTable getTable(@NotNull String dottedKey);
 	public abstract @Nullable MercuryArray getArray(@NotNull String dottedKey);

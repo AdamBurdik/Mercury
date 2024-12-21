@@ -1,7 +1,7 @@
 package me.adamix.mercury.server.defaults;
 
 import lombok.Getter;
-import me.adamix.mercury.server.toml.TomlConfiguration;
+import me.adamix.mercury.server.toml.MercuryConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,16 +21,16 @@ public class PlayerDefaults {
 
 
 	public static void load(File file) {
-		TomlConfiguration configuration = new TomlConfiguration(file);
+		MercuryConfiguration configuration = new MercuryConfiguration(file);
 
 		// Get translation id. If not present it won't throw error but use default value from above
 		@Nullable String rawTranslationId = configuration.getString("translation_id");
 		if (rawTranslationId != null) {
 			translationId = rawTranslationId;
 		}
-		health = configuration.getInteger("health");
-		maxHealth = configuration.getInteger("max_health");
-		movementSpeed = configuration.getFloat("movement_speed");
-		attackSpeed = configuration.getFloat("attack_speed");
+		health = configuration.getIntegerSafe("health");
+		maxHealth = configuration.getIntegerSafe("max_health");
+		movementSpeed = configuration.getFloatSafe("movement_speed");
+		attackSpeed = configuration.getFloatSafe("attack_speed");
 	}
 }

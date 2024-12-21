@@ -13,7 +13,7 @@ import me.adamix.mercury.server.mob.core.register.RegisteredMob;
 import me.adamix.mercury.server.mob.core.wrapper.AIWrapperManager;
 import me.adamix.mercury.server.mob.core.wrapper.goal.GoalWrapper;
 import me.adamix.mercury.server.mob.core.wrapper.target.TargetWrapper;
-import me.adamix.mercury.server.toml.TomlConfiguration;
+import me.adamix.mercury.server.toml.MercuryConfiguration;
 import me.adamix.mercury.server.utils.FileUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.coordinate.Pos;
@@ -62,7 +62,7 @@ public class MobManager {
 			throw new RuntimeException("Unable to register item! File does not exist");
 		}
 
-		TomlConfiguration toml = new TomlConfiguration(tomlFile);
+		MercuryConfiguration toml = new MercuryConfiguration(tomlFile);
 
 		@NotNull NamespaceID namespaceID = toml.getNamespacedIDSafe("id");
 		@NotNull EntityType entityType = toml.getEntityTypeSafe("type");
@@ -71,7 +71,7 @@ public class MobManager {
 		List<MercuryMobComponent> componentList = new ArrayList<>();
 
 		// Parse attributes to component
-		TomlTable attributeTable = toml.getTable("attributes");
+		TomlTable attributeTable = toml.getTomlTable("attributes");
 		if (attributeTable != null) {
 			MobAttributes mobAttributes = new MobAttributes();
 			mobAttributes
@@ -88,7 +88,7 @@ public class MobManager {
 		AIWrapperManager wrapperManager = Server.getAiWrapperManager();
 		List<GoalWrapper> goalWrapperList = new ArrayList<>();
 
-		TomlArray goalArray = toml.getArray("ai.goals");
+		TomlArray goalArray = toml.getTomlArray("ai.goals");
 		if (goalArray != null) {
 			for (int i = 0; i < goalArray.size(); i++) {
 				TomlTable goalTable = goalArray.getTable(i);
@@ -117,7 +117,7 @@ public class MobManager {
 
 		// Parse ai targets
 		List<TargetWrapper> targetWrapperList = new ArrayList<>();
-		TomlArray targetArray = toml.getArray("ai.targets");
+		TomlArray targetArray = toml.getTomlArray("ai.targets");
 		if (targetArray != null) {
 			for (int i = 0; i < targetArray.size(); i++) {
 				TomlTable targetTable = targetArray.getTable(i);

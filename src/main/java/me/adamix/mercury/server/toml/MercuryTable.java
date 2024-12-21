@@ -78,6 +78,34 @@ public class MercuryTable extends MercuryToml {
 	}
 
 	@Override
+	public @Nullable Float getFloat(@NotNull String dottedKey) {
+		Double value = tomlTable.getDouble(dottedKey);
+		if (value == null) {
+			return null;
+		}
+		return value.floatValue();
+	}
+
+	public float getFloatSafe(@NotNull String dottedKey) {
+		mustContain(dottedKey);
+		Float value = getFloat(dottedKey);
+		Objects.requireNonNull(value);
+		return value;
+	}
+
+	@Override
+	public @Nullable Double getDouble(@NotNull String dottedKey) {
+		return tomlTable.getDouble(dottedKey);
+	}
+
+	public double getDoubleSafe(@NotNull String dottedKey) {
+		mustContain(dottedKey);
+		Double value = getDouble(dottedKey);
+		Objects.requireNonNull(value);
+		return value;
+	}
+
+	@Override
 	public @Nullable MercuryTable getTable(@NotNull String dottedKey) {
 		return new MercuryTable(getTomlTableSafe(dottedKey), this.name + "." + dottedKey);
 	}

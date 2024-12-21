@@ -5,7 +5,7 @@ import me.adamix.mercury.server.item.attribute.ItemAttributes;
 import me.adamix.mercury.server.item.component.ItemDescriptionComponent;
 import me.adamix.mercury.server.item.component.MercuryItemComponent;
 import me.adamix.mercury.server.item.rarity.ItemRarity;
-import me.adamix.mercury.server.toml.TomlConfiguration;
+import me.adamix.mercury.server.toml.MercuryConfiguration;
 import me.adamix.mercury.server.utils.FileUtils;
 import me.adamix.mercury.server.utils.TomlUtils;
 import net.minestom.server.item.Material;
@@ -41,7 +41,7 @@ public class ItemBlueprintManager {
 			throw new RuntimeException("Unable to register item! File does not exist");
 		}
 
-		TomlConfiguration toml = new TomlConfiguration(tomlFile);
+		MercuryConfiguration toml = new MercuryConfiguration(tomlFile);
 
 		@NotNull NamespaceID namespaceID = toml.getNamespacedIDSafe("id");
 		@NotNull String name = toml.getStringSafe("name");
@@ -60,7 +60,7 @@ public class ItemBlueprintManager {
 		}
 
 		// Parse attributes to component
-		TomlTable attributeTable = toml.getTable("attributes");
+		TomlTable attributeTable = toml.getTomlTable("attributes");
 		if (attributeTable != null) {
 			ItemAttributes itemAttributes = new ItemAttributes();
 			itemAttributes

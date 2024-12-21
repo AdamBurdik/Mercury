@@ -38,7 +38,7 @@ import me.adamix.mercury.server.task.PlayTimeTask;
 import me.adamix.mercury.server.task.SaveDataTask;
 import me.adamix.mercury.server.task.core.TaskManager;
 import me.adamix.mercury.server.terminal.MinestomTerminal;
-import me.adamix.mercury.server.toml.TomlConfiguration;
+import me.adamix.mercury.server.toml.MercuryConfiguration;
 import me.adamix.mercury.server.translation.Translation;
 import me.adamix.mercury.server.translation.TranslationManager;
 import net.minestom.server.MinecraftServer;
@@ -67,7 +67,7 @@ public class Server {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 	private static MinecraftServer minecraftServer;
 	@Getter private static InstanceContainer mainInstance;
-	@Getter private static TomlConfiguration config;
+	@Getter private static MercuryConfiguration config;
 	@Getter private static MobManager mobManager;
 	@Getter private static ItemBlueprintManager itemBlueprintManager;
 	@Getter private static ItemManager itemManager;
@@ -164,7 +164,7 @@ public class Server {
 			return;
 		}
 
-		config = new TomlConfiguration(configFile);
+		config = new MercuryConfiguration(configFile);
 
 		// Load discord bot config
 		File botConfigFile = new File(ServerFlag.BOT_CONFIG_PATH);
@@ -173,7 +173,7 @@ public class Server {
 			return;
 		}
 
-		TomlConfiguration botConfig = new TomlConfiguration(botConfigFile);
+		MercuryConfiguration botConfig = new MercuryConfiguration(botConfigFile);
 
 		connectToMongoDatabase();
 		loadDefaults();

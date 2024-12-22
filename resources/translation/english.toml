@@ -52,6 +52,6 @@ title = "Mercury"
 [scoreboard.active_quest]
 subtitle = "Active Quest"
 
-[quests.example]
+[quests.example_quest]
 name = "Example Quest"
 description = "Walk 100 meters"

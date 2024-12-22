@@ -109,7 +109,6 @@ public class PlayerDataManager {
 	 * @param playerData player data to save
 	 */
 	public void savePlayerData(PlayerData playerData) {
-		LOGGER.info("saving player data! {}", playerData);
 		UUID playerUniqueId = playerData.getPlayerUniqueId();
 
 		CompletableFuture.runAsync(() -> {

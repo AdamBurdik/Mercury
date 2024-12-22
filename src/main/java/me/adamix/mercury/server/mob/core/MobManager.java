@@ -40,6 +40,7 @@ public class MobManager {
 	private final Map<UUID, MercuryMob> gameMobs = new HashMap<>();
 
 	public void registerAllMobs() {
+		registeredMobs.clear();
 		File itemDirectory = new File("resources/mobs/");
 		List<File> fileList = FileUtils.getAllFiles(itemDirectory);
 

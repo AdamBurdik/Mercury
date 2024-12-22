@@ -1,5 +1,7 @@
 package me.adamix.mercury.server.player.profile;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -7,7 +9,8 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
-import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
+import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
+import me.adamix.mercury.server.player.profile.quest.ProfileQuests;
 import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.MinecraftServer;
 import org.bson.Document;
@@ -20,24 +23,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class ProfileDataManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProfileDataManager.class);
 	private final MongoCollection<Document> profileDataCollection;
+	private final Cache<UUID, ProfileData> profileDataCache;
 
 	public ProfileDataManager(MongoDatabase playerDatabase) {
 		this.profileDataCollection = playerDatabase.getCollection("profile_data");
+		this.profileDataCache = Caffeine.newBuilder()
+				.maximumSize(50)
+				.expireAfterWrite(30, TimeUnit.MINUTES)
+				.build();
 	}
 
 	/**
-	 * Retrieves {@link ProfileData} from database using profile ID
+	 * Retrieves {@link ProfileData} from database or cache using profile ID
 	 *
 	 * @param profileUniqueId unique ID of player profile
 	 * @return the {@link ProfileData} containing player profile data
 	 */
 	public @Nullable CompletableFuture<ProfileData> getProfileData(UUID profileUniqueId) {
 		return CompletableFuture.supplyAsync(() -> {
+			ProfileData cachedData = profileDataCache.getIfPresent(profileUniqueId);
+			if (cachedData != null) {
+				return cachedData;
+			}
+
 			FindIterable<Document> playerDocumentIterable = profileDataCollection.find(Filters.eq("profileUniqueId", profileUniqueId.toString()));
 			try (MongoCursor<Document> cursor = playerDocumentIterable.cursor()) {
 				if (cursor.available() < 0) {
@@ -52,10 +66,10 @@ public class ProfileDataManager {
 					return null;
 				}
 
-				return extractProfileData(document);
+				return ProfileData.deserialize(document);
 			}
 		}).exceptionally((e -> {
-			LOGGER.error(String.valueOf(e));
+			LOGGER.error("An error occurred while retrieving profile data", e);
 			return null;
 		}));
 	}
@@ -78,59 +92,7 @@ public class ProfileDataManager {
 	}
 
 	/**
-	 * Extract {@link ProfileData} from {@link Document} object
-	 * @param document document containing profile data
-	 * @return the {@link ProfileData} containing extracted data
-	 */
-	@SuppressWarnings("unchecked")
-	private ProfileData extractProfileData(Document document) {
-		String playerStringUniqueId = document.getString("playerUniqueId");
-		if (!document.containsKey("playerUniqueId")) {
-			throw new RuntimeException("Player profile does not include player uuid!");
-		}
-		UUID playerUniqueId = UUID.fromString(playerStringUniqueId);
-
-		String profileStringUniqueId = document.getString("profileUniqueId");
-		if (!document.containsKey("profileUniqueId")) {
-			throw new RuntimeException("Player profile with uuid " + playerStringUniqueId + " does not include player uuid!");
-		}
-		UUID profileUniqueId = UUID.fromString(profileStringUniqueId);
-
-		String translationId = document.containsKey("translationId") ? document.getString("translationId") : PlayerDefaults.getTranslationId();
-		int health = document.containsKey("health") ? document.getInteger("health") : PlayerDefaults.getHealth();
-		int maxHealth = document.containsKey("maxHealth") ? document.getInteger("maxHealth") : PlayerDefaults.getMaxHealth();
-		float movementSpeed = document.containsKey("movementSpeed") ? document.getDouble("movementSpeed").floatValue() : PlayerDefaults.getMovementSpeed();
-		float attackSpeed = document.containsKey("attack") ? document.getDouble("attack").floatValue() : PlayerDefaults.getAttackSpeed();
-		Object inventoryObject = document.get("inventory");
-		GamePlayerInventory inventory;
-		if (inventoryObject != null) {
-			inventory = GamePlayerInventory.deserialize((Map<String, Object>) inventoryObject);
-		} else {
-			inventory = new GamePlayerInventory();
-		}
-		Object statisticsObject = document.get("statistics");
-		Statistics profileStatistics;
-		if (statisticsObject != null) {
-			profileStatistics = Statistics.deserialize((Map<String, Object>) statisticsObject);
-		} else {
-			profileStatistics = new Statistics();
-		}
-
-		return new ProfileData(
-				playerUniqueId,
-				profileUniqueId,
-				translationId,
-				health,
-				maxHealth,
-				movementSpeed,
-				attackSpeed,
-				inventory,
-				profileStatistics
-		);
-	}
-
-	/**
-	 * Save profile data to database
+	 * Save profile data to database and cache
 	 *
 	 * @param profileData profile data to save
 	 */
@@ -138,20 +100,13 @@ public class ProfileDataManager {
 		UUID profileUniqueId = profileData.getProfileUniqueId();
 
 		CompletableFuture.runAsync(() -> {
-			Document playerDocument = new Document()
-					.append("profileUniqueId", profileUniqueId.toString())
-					.append("playerUniqueId", profileData.getPlayerUniqueId().toString())
-					.append("translationId", profileData.getTranslationId())
-					.append("health", profileData.getHealth())
-					.append("maxHealth", profileData.getMaxHealth())
-					.append("movementSpeed", profileData.getMovementSpeed())
-					.append("attackSpeed", profileData.getAttackSpeed())
-					.append("inventory", profileData.getPlayerInventory().serialize())
-					.append("statistics", profileData.getStatistics().serialize());
+
+			Document playerDocument = new Document(profileData.serialize());
 
 			profileDataCollection.replaceOne(Filters.eq("profileUniqueId", profileUniqueId.toString()), playerDocument, new ReplaceOptions().upsert(true));
+			profileDataCache.put(profileData.getProfileUniqueId(), profileData);
 		}).exceptionally((e -> {
-			LOGGER.error("error", e);
+			LOGGER.error("An error occurred while saving profile data", e);
 			return null;
 		}));
 	}
@@ -170,15 +125,15 @@ public class ProfileDataManager {
 
 				while (cursor.hasNext()) {
 					Document document = cursor.next();
-					profileDataList.add(
-							extractProfileData(document)
-					);
+					ProfileData extractedData = ProfileData.deserialize(document);
+					profileDataList.add(extractedData);
+					profileDataCache.put(extractedData.getProfileUniqueId(), extractedData);
 				}
 
 				return profileDataList;
 			}
 		}).exceptionally((e -> {
-			LOGGER.trace(String.valueOf(e));
+			LOGGER.error("An error occurred while retrieving list of profile data", e);
 			return null;
 		}));
 	}

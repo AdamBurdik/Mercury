@@ -2,12 +2,15 @@ package me.adamix.mercury.server.placeholder;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.player.MercuryPlayer;
+import me.adamix.mercury.server.quest.core.MercuryQuest;
 import me.adamix.mercury.server.translation.Translation;
+import me.adamix.mercury.server.translation.TranslationManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -31,6 +34,28 @@ public class PlaceholderManager {
 
 			Translation translation = Server.getTranslationManager().getTranslation(player.getTranslationId());
 			return translation.get(key);
+		});
+		registerPlayer("active_quest", (args, player) -> {
+			if (!args.hasNext()) {
+				return "Invalid Key";
+			}
+
+			NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getActiveQuest();
+			if (activeQuestID == null) {
+				return "No Active Quest";
+			}
+			MercuryQuest quest = Server.getQuestManager().getRegisteredQuest(activeQuestID);
+			if (quest == null) {
+				return "Invalid Active Quest";
+			}
+			Translation translation = TranslationManager.getTranslation(player);
+
+			Tag.Argument argument = args.pop();
+			return switch (argument.lowerValue()) {
+				case "name" -> translation.get(String.format("quests.%s.name", quest.getQuestID().value()));
+				case "description" -> translation.get(String.format("quests.%s.description", quest.getQuestID().value()));
+				default -> "Invalid Argument";
+			};
 		});
 	}
 

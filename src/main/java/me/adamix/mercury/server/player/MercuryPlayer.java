@@ -11,9 +11,10 @@ import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import me.adamix.mercury.server.mob.core.MercuryMob;
 import me.adamix.mercury.server.player.data.PlayerData;
 import me.adamix.mercury.server.player.data.PlayerDataManager;
-import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
+import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
+import me.adamix.mercury.server.player.sidebar.MercurySidebar;
 import me.adamix.mercury.server.player.state.PlayerState;
 import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.MinecraftServer;
@@ -48,6 +49,7 @@ public class MercuryPlayer extends Player {
 	private @Nullable UUID dungeonUniqueId;
 	@Setter
 	private boolean inDebug = true;
+	private MercurySidebar sidebar;
 
 	public MercuryPlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
 		super(playerConnection, gameProfile);
@@ -135,6 +137,8 @@ public class MercuryPlayer extends Player {
 		completableFuture.thenAccept(data -> {
 			this.profileData = data;
 			this.state = PlayerState.PLAY;
+			this.sidebar = new MercurySidebar();
+			this.sidebar.show(this);
 			updateAttributes();
 			if (runnable != null) {
 				MinecraftServer.getSchedulerManager().buildTask(runnable).schedule();
@@ -294,7 +298,7 @@ public class MercuryPlayer extends Player {
 	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
 	 *
 	 */
-	public @NotNull GamePlayerInventory getGameInventory() {
+	public @NotNull MercuryPlayerInventory getGameInventory() {
 		return getProfileData().getPlayerInventory();
 	}
 

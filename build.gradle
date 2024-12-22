@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'me.adamix.mercury'
-version = '0.2'
+version = '0.3'
 
 repositories {
     mavenCentral()
@@ -44,6 +44,8 @@ dependencies {
     implementation("net.dv8tion:JDA:5.2.1") {
         exclude module: 'opus-java'
     }
+    // Cache
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
 }
 
 java {

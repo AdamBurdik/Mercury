@@ -15,8 +15,11 @@ public class Bot {
 	@Getter
 	private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
 	private static JDA api;
+	@Getter
+	private static boolean isRunning;
 
 	public static void start(@NotNull String botToken) {
+		isRunning = true;
 		api = JDABuilder.createDefault(botToken)
 				.addEventListeners(new SessionListener())
 				.addEventListeners(new ProfileInfoCommand())
@@ -28,4 +31,8 @@ public class Bot {
 		).queue();
 	}
 
+	public static void stop() {
+		isRunning = false;
+		api.shutdownNow();
+	}
 }

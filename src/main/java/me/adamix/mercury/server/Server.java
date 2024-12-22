@@ -9,15 +9,13 @@ import me.adamix.mercury.bot.Bot;
 import me.adamix.mercury.server.command.*;
 import me.adamix.mercury.server.command.debug.*;
 import me.adamix.mercury.server.command.dungeon.EnterDungeonCommand;
-import me.adamix.mercury.server.command.dungeon.GenerateCommand;
-import me.adamix.mercury.server.command.dungeon.RoomBuilderCommand;
 import me.adamix.mercury.server.command.mob.SpawnMobCommand;
+import me.adamix.mercury.server.command.quest.QuestCommand;
 import me.adamix.mercury.server.command.server.PerformanceCommand;
 import me.adamix.mercury.server.command.server.StopCommand;
 import me.adamix.mercury.server.common.ColorPallet;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.dungeon.DungeonManager;
-import me.adamix.mercury.server.dungeon.room.RoomManager;
 import me.adamix.mercury.server.flag.ServerFlag;
 import me.adamix.mercury.server.inventory.core.InventoryManager;
 import me.adamix.mercury.server.item.ItemManager;
@@ -34,7 +32,9 @@ import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.data.PlayerDataManager;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
 import me.adamix.mercury.server.player.provider.GamePlayerProvider;
+import me.adamix.mercury.server.quest.core.QuestManager;
 import me.adamix.mercury.server.task.PlayTimeTask;
+import me.adamix.mercury.server.task.PlayerTickTask;
 import me.adamix.mercury.server.task.SaveDataTask;
 import me.adamix.mercury.server.task.core.TaskManager;
 import me.adamix.mercury.server.terminal.MinestomTerminal;
@@ -43,8 +43,11 @@ import me.adamix.mercury.server.translation.Translation;
 import me.adamix.mercury.server.translation.TranslationManager;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandManager;
+import net.minestom.server.command.builder.Command;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
+import net.minestom.server.event.Event;
+import net.minestom.server.event.EventNode;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.instance.InstanceContainer;
@@ -66,6 +69,7 @@ public class Server {
 	public static final Pos LIMBO_LOCATION = new Pos(0.5f, 0, 0.5f);
 	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 	private static MinecraftServer minecraftServer;
+	private static EventNode<Event> eventNode;
 	@Getter private static InstanceContainer mainInstance;
 	@Getter private static MercuryConfiguration config;
 	@Getter private static MobManager mobManager;
@@ -78,15 +82,19 @@ public class Server {
 	@Getter private static PlaceholderManager placeholderManager;
 	@Getter private static TickMonitorManager tickMonitorManager;
 	@Getter private static DungeonManager dungeonManager;
-	@Getter private static RoomManager roomManager;
 	@Getter private static TaskManager taskManager;
 	@Getter private static AIWrapperManager aiWrapperManager;
+	@Getter private static QuestManager questManager;
 	private static MongoClient mongoClient;
 
 	/**
 	 * Connects to mongo database using credentials from .env
 	 */
 	private static void connectToMongoDatabase() {
+		if (mongoClient != null) {
+			mongoClient.close();
+			mongoClient = null;
+		}
 		Dotenv dotenv = Dotenv.configure().directory(ServerFlag.RESOURCES_PATH).load();
 
 		String mongoUsername = dotenv.get("MONGO_USERNAME");
@@ -106,6 +114,9 @@ public class Server {
 	 * Start discord bot using token from .env
 	 */
 	private static void connectDiscordBot() {
+		if (Bot.isRunning()) {
+			return;
+		}
 		Dotenv dotenv = Dotenv.configure().directory(ServerFlag.RESOURCES_PATH).load();
 
 		String botToken = dotenv.get("DISCORD_BOT_TOKEN");
@@ -139,9 +150,9 @@ public class Server {
 		placeholderManager = new PlaceholderManager();
 		tickMonitorManager = new TickMonitorManager();
 		dungeonManager = new DungeonManager();
-		roomManager = new RoomManager();
 		taskManager = new TaskManager();
 		aiWrapperManager = new AIWrapperManager();
+		questManager = new QuestManager();
 	}
 
 	/**
@@ -157,76 +168,15 @@ public class Server {
 
 		minecraftServer = MinecraftServer.init();
 
-		// Load server config
-		File configFile = new File(ServerFlag.CONFIG_PATH);
-		if (!configFile.exists()) {
-			LOGGER.error("No server.toml file found at {}!", configFile.getAbsolutePath());
-			return;
-		}
-
-		config = new MercuryConfiguration(configFile);
-
-		// Load discord bot config
-		File botConfigFile = new File(ServerFlag.BOT_CONFIG_PATH);
-		if (!configFile.exists()) {
-			LOGGER.error("No bot.toml file found at {}!", configFile.getAbsolutePath());
-			return;
-		}
-
-		MercuryConfiguration botConfig = new MercuryConfiguration(botConfigFile);
-
 		connectToMongoDatabase();
-		loadDefaults();
 		initManagers();
+		reload();
 
 		// Set player provider to custom one
 		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());
 
-		if (botConfig.getBooleanSafe("enabled")) {
-			connectDiscordBot();
-		}
-
-		// Set mojang auth
-		boolean mojangAuth = Boolean.TRUE.equals(config.getBooleanSafe("mojang_auth"));
-		if (mojangAuth) {
-			LOGGER.info("Using mojang authentication.");
-			MojangAuth.init();
-		}
-
-		// Set brand name
-		String brandName = config.getString("brand_name");
-		if (brandName != null) {
-			MinecraftServer.setBrandName(brandName);
-		}
-
-		GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
-
 		// Start tick monitor for tab list
 		tickMonitorManager.start();
-
-		// Load translations
-		translationManager.loadTranslation("english.toml");
-		translationManager.loadTranslation("czech.toml");
-
-		itemBlueprintManager.registerAllItems();
-
-		// Register default entities
-		mobManager.registerAllMobs();
-		// ToDo move to configuration file
-		mobManager.register(NamespaceID.from("mercury", "rogue_zombie"), RogueZombie.class);
-		mobManager.register(NamespaceID.from("mercury", "friendly_zombie"), FriendlyZombie.class);
-
-		// Register dungeon instances and dungeons
-		dungeonManager.registerAllDungeons();
-
-		// Register event listeners
-		globalEventHandler.addListener(new AsyncPlayerConfigurationListener());
-		globalEventHandler.addListener(new PlayerSpawnListener());
-		globalEventHandler.addListener(new PlayerDisconnectListener());
-		globalEventHandler.addListener(new PlayerMoveListener());
-		globalEventHandler.addListener(new PlayerChangeHeldSlotListener());
-		globalEventHandler.addListener(new PlayerCommandListener());
-		globalEventHandler.addListener(new EntityMoveListener());
 
 		// Configure default instance
 		InstanceManager instanceManager = MinecraftServer.getInstanceManager();
@@ -234,32 +184,7 @@ public class Server {
 		mainInstance.setChunkSupplier(LightingChunk::new);
 		mainInstance.setChunkLoader(new AnvilLoader("worlds/main"));
 
-		// Register commands
-		CommandManager commandManager = MinecraftServer.getCommandManager();
-		commandManager.register(new GamemodeCommand());
-		commandManager.register(new ItemCommand());
-		commandManager.register(new ClassCommand());
-		commandManager.register(new TranslationCommand());
-		commandManager.register(new OldTestCommand());
-		commandManager.register(new ColorTestCommand());
-		commandManager.register(new TranslationTestCommand());
-		commandManager.register(new StopCommand());
-		commandManager.register(new PerformanceCommand());
-		commandManager.register(new InventoryTestCommand());
-		commandManager.register(new EntityNameTestCommand());
-		commandManager.register(new DatabaseTestCommand());
-		commandManager.register(new PlayTimeCommand());
-		commandManager.register(new EnterDungeonCommand());
-		commandManager.register(new RoomBuilderCommand());
-		commandManager.register(new GenerateCommand());
-		commandManager.register(new CheckPlayerDataCommand());
-		commandManager.register(new DebugCommand());
-		commandManager.register(new SpawnMobCommand());
-		commandManager.register(new InstanceConverterCommand());
-
-		// Start tasks
-		taskManager.startTask(new PlayTimeTask());
-		taskManager.startTask(new SaveDataTask());
+		registerListeners();
 
 		MinecraftServer.getSchedulerManager().buildShutdownTask(() -> {
 			taskManager.stopAllTasks();
@@ -305,6 +230,128 @@ public class Server {
 
 		MinecraftServer.stopCleanly();
 	}
+
+	/**
+	 * Reload all configurations
+	 * <br>
+	 * Also called on server startup to load configuration
+	 */
+	public static void reload() {
+		File configFile = new File(ServerFlag.CONFIG_PATH);
+		if (!configFile.exists()) {
+			throw new RuntimeException("No server.toml file found at " + configFile.getAbsolutePath());
+		}
+		config = new MercuryConfiguration(configFile);
+
+		// Set mojang auth
+		boolean mojangAuth = Boolean.TRUE.equals(config.getBooleanSafe("mojang_auth"));
+		if (mojangAuth) {
+			LOGGER.info("Using mojang authentication.");
+			MojangAuth.init();
+		}
+
+		// Set brand name
+		String brandName = config.getString("brand_name");
+		if (brandName != null) {
+			MinecraftServer.setBrandName(brandName);
+		}
+
+		if (Bot.isRunning()) {
+			Bot.stop();
+		}
+
+		// Load discord bot config
+		File botConfigFile = new File(ServerFlag.BOT_CONFIG_PATH);
+		if (!configFile.exists()) {
+			throw new RuntimeException("No bot.toml file found at " + configFile.getAbsolutePath());
+		}
+
+		MercuryConfiguration botConfig = new MercuryConfiguration(botConfigFile);
+		if (botConfig.getBooleanSafe("enabled")) {
+			connectDiscordBot();
+		}
+
+		PlayerDefaults.load(Server.file("defaults/player.toml"));
+		dungeonManager.registerAllDungeons();
+		itemBlueprintManager.registerAllItems();
+
+		translationManager.clearTranslations();
+		translationManager.loadTranslation("english.toml");
+		translationManager.loadTranslation("czech.toml");
+
+		// Register default entities
+		mobManager.registerAllMobs();
+		// ToDo move to configuration file
+		mobManager.register(NamespaceID.from("mercury", "rogue_zombie"), RogueZombie.class);
+		mobManager.register(NamespaceID.from("mercury", "friendly_zombie"), FriendlyZombie.class);
+
+		registerCommands();
+
+		taskManager.stopAllTasks();
+		taskManager.startTask(new PlayTimeTask());
+		taskManager.startTask(new SaveDataTask());
+		taskManager.startTask(new PlayerTickTask());
+
+		questManager.init();
+	}
+
+	/**
+	 * Unregister all current listeners
+	 * <br>
+	 * And registers all listeners
+	 */
+	private static void registerListeners() {
+		GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
+
+		if (eventNode != null) {
+			globalEventHandler.removeChild(eventNode);
+			eventNode = null;
+		}
+		eventNode = EventNode.all("main");
+
+		eventNode.addListener(new AsyncPlayerConfigurationListener());
+		eventNode.addListener(new PlayerSpawnListener());
+		eventNode.addListener(new PlayerDisconnectListener());
+		eventNode.addListener(new PlayerMoveListener());
+		eventNode.addListener(new PlayerChangeHeldSlotListener());
+		eventNode.addListener(new PlayerCommandListener());
+		eventNode.addListener(new EntityMoveListener());
+
+		globalEventHandler.addChild(eventNode);
+	}
+
+	/**
+	 * Unregister all currently registered commands
+	 * <br>
+	 * And register all commands
+	 */
+	private static void registerCommands() {
+		CommandManager commandManager = MinecraftServer.getCommandManager();
+		for (@NotNull Command command : commandManager.getCommands()) {
+			commandManager.unregister(command);
+		}
+
+		commandManager.register(new GamemodeCommand());
+		commandManager.register(new ItemCommand());
+		commandManager.register(new ClassCommand());
+		commandManager.register(new TranslationCommand());
+		commandManager.register(new OldTestCommand());
+		commandManager.register(new ColorTestCommand());
+		commandManager.register(new TranslationTestCommand());
+		commandManager.register(new StopCommand());
+		commandManager.register(new PerformanceCommand());
+		commandManager.register(new InventoryTestCommand());
+		commandManager.register(new EntityNameTestCommand());
+		commandManager.register(new DatabaseTestCommand());
+		commandManager.register(new PlayTimeCommand());
+		commandManager.register(new EnterDungeonCommand());
+		commandManager.register(new CheckPlayerDataCommand());
+		commandManager.register(new DebugCommand());
+		commandManager.register(new SpawnMobCommand());
+		commandManager.register(new InstanceConverterCommand());
+		commandManager.register(new QuestCommand());
+	}
+
 
 	/**
 	 * Retrieves collection of online players

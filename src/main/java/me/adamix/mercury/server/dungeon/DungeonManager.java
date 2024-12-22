@@ -47,6 +47,7 @@ public class DungeonManager {
 	}
 
 	public void registerAllDungeons() {
+		configurationMap.clear();
 		FileUtils.forEachFile("resources/dungeons", FileUtils.isTomlPredicate, this::register);
 	}
 

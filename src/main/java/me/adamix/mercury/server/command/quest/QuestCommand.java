@@ -1,0 +1,77 @@
+package me.adamix.mercury.server.command.quest;
+
+import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.common.ColorPallet;
+import me.adamix.mercury.server.player.MercuryPlayer;
+import me.adamix.mercury.server.quest.core.MercuryQuest;
+import me.adamix.mercury.server.quest.core.QuestManager;
+import me.adamix.mercury.server.quest.core.QuestProgress;
+import net.kyori.adventure.text.Component;
+import net.minestom.server.command.builder.Command;
+import net.minestom.server.command.builder.arguments.ArgumentType;
+import net.minestom.server.command.builder.suggestion.SuggestionEntry;
+import net.minestom.server.utils.NamespaceID;
+
+public class QuestCommand extends Command {
+	public QuestCommand() {
+		super("quest");
+
+		setDefaultExecutor((sender, ctx) -> {
+			sender.sendMessage(Component.text("Please specify action!").color(ColorPallet.ERROR.getColor()));
+		});
+
+		var actionArgument = ArgumentType.String("action");
+		actionArgument.setSuggestionCallback((sender, ctx, suggestion) -> {
+			suggestion.addEntry(new SuggestionEntry("start"));
+			suggestion.addEntry(new SuggestionEntry("progress"));
+		});
+		addSyntax((sender, ctx) -> {
+			if (!(sender instanceof MercuryPlayer player)) {
+				return;
+			}
+
+			String action = ctx.get(actionArgument);
+			switch (action) {
+				case "progress":
+					QuestManager questManager = Server.getQuestManager();
+					NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getActiveQuest();
+					if (activeQuestID == null) {
+						sender.sendMessage(Component.text("No active quest!").color(ColorPallet.ERROR.getColor()));
+						break;
+					}
+					MercuryQuest quest = questManager.getRegisteredQuest(activeQuestID);
+					QuestProgress progress = quest.getProgress(player);
+					player.sendMessage(
+							Component.text(progress.getCurrentPercentage() + "%")
+					);
+					break;
+				case "start":
+					sender.sendMessage(Component.text("Please specify quest ID!").color(ColorPallet.ERROR.getColor()));
+					break;
+			}
+
+		}, actionArgument);
+
+		var questIDArgument = ArgumentType.String("questID");
+		questIDArgument.setSuggestionCallback((sender, ctx, suggestion) -> {
+			String action = ctx.get(actionArgument);
+			if (action.equals("start")) {
+				for (NamespaceID registeredQuestId : Server.getQuestManager().getRegisteredQuestIds()) {
+					suggestion.addEntry(new SuggestionEntry(registeredQuestId.asString()));
+				}
+			}
+		});
+
+		addSyntax((sender, ctx) -> {
+			if (!(sender instanceof MercuryPlayer player)) {
+				return;
+			}
+
+			String questIDString = ctx.get(questIDArgument);
+			NamespaceID questID = NamespaceID.from(questIDString);
+
+			Server.getQuestManager().startQuest(questID, player);
+
+		}, actionArgument, questIDArgument);
+	}
+}

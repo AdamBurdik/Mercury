@@ -1,9 +1,10 @@
 package me.adamix.mercury.server.command.debug;
 
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
+import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
+import me.adamix.mercury.server.player.profile.quest.ProfileQuests;
 import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -11,6 +12,7 @@ import net.minestom.server.entity.attribute.Attribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
@@ -46,8 +48,9 @@ public class DatabaseTestCommand extends Command {
 					health,
 					(float) Attribute.MOVEMENT_SPEED.defaultValue(),
 					(float) Attribute.ATTACK_SPEED.defaultValue(),
-					new GamePlayerInventory(),
-					new Statistics()
+					new MercuryPlayerInventory(),
+					new Statistics(),
+					new ProfileQuests(null, new ArrayList<>())
 			);
 
 			ProfileDataManager manager = Server.getProfileDataManager();

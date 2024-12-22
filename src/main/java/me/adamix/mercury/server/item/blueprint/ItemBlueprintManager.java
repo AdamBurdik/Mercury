@@ -23,6 +23,7 @@ public class ItemBlueprintManager {
 	private final Map<NamespaceID, MercuryItemBlueprint> itemBlueprintMap = new HashMap<>();
 
 	public void registerAllItems() {
+		itemBlueprintMap.clear();
 		File itemDirectory = new File("resources/items/");
 		List<File> fileList = FileUtils.getAllFiles(itemDirectory);
 

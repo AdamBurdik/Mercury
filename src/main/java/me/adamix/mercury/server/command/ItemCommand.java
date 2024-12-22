@@ -5,7 +5,7 @@ import me.adamix.mercury.server.common.ColorPallet;
 import me.adamix.mercury.server.item.ItemManager;
 import me.adamix.mercury.server.item.MercuryItem;
 import me.adamix.mercury.server.player.MercuryPlayer;
-import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
+import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -91,7 +91,7 @@ public class ItemCommand extends Command {
 
 					MercuryItem mercuryItem = optionalItem.get();
 
-					GamePlayerInventory inventory = player.getGameInventory();
+					MercuryPlayerInventory inventory = player.getGameInventory();
 					inventory.addItem(mercuryItem);
 					inventory.updatePlayerInventory(player, false);
 			}

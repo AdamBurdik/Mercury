@@ -7,7 +7,7 @@ import me.adamix.mercury.server.item.component.ItemDescriptionComponent;
 import me.adamix.mercury.server.item.component.ItemRarityComponent;
 import me.adamix.mercury.server.item.component.MercuryItemComponent;
 import me.adamix.mercury.server.item.rarity.ItemRarity;
-import me.adamix.mercury.server.player.inventory.GamePlayerInventory;
+import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.junit.jupiter.api.Test;
@@ -47,14 +47,14 @@ public class InventorySerializationTest {
 
 	@Test
 	public void testInventorySerialization() {
-		GamePlayerInventory playerInventory = new GamePlayerInventory();
+		MercuryPlayerInventory playerInventory = new MercuryPlayerInventory();
 
 		for (int i = 0; i < 10; i++) {
 			playerInventory.addItem(getRandomItem());
 		}
 
 		Map<String, Object> serializedInventory = playerInventory.serialize();
-		GamePlayerInventory deserializedInventory = GamePlayerInventory.deserialize(serializedInventory);
+		MercuryPlayerInventory deserializedInventory = MercuryPlayerInventory.deserialize(serializedInventory);
 
 		assertEquals(playerInventory, deserializedInventory);
 

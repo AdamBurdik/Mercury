@@ -46,9 +46,9 @@ public class Statistics {
 
 		map.forEach((categoryString, valueObject) -> {
 			StatisticCategory category = StatisticCategory.valueOf(categoryString);
-			Map<String, Float> valueMap = (Map<String, Float>) valueObject;
+			Map<String, Double> valueMap = (Map<String, Double>) valueObject;
 			valueMap.forEach((name, value) -> {
-				statistics.set(category, name, value);
+				statistics.set(category, name, value.floatValue());
 			});
 		});
 

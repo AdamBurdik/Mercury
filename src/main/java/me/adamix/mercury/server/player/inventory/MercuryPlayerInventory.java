@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class GamePlayerInventory {
+public class MercuryPlayerInventory {
 	@Getter private final Map<Integer, MercuryItem> items = new HashMap<>();
 	private transient final Set<Integer> updatedSlots = new HashSet<>();
 
-	public GamePlayerInventory() {
+	public MercuryPlayerInventory() {
 	}
 
 	public void addItem(MercuryItem mercuryItem) {
@@ -50,7 +50,7 @@ public class GamePlayerInventory {
 	public boolean equals(Object object) {
 		if (this == object) return true;
 		if (object == null || getClass() != object.getClass()) return false;
-		GamePlayerInventory inventory = (GamePlayerInventory) object;
+		MercuryPlayerInventory inventory = (MercuryPlayerInventory) object;
 		return Objects.equals(getItems(), inventory.getItems());
 	}
 
@@ -70,8 +70,8 @@ public class GamePlayerInventory {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static @NotNull GamePlayerInventory deserialize(Map<String, Object> map) {
-		GamePlayerInventory inventory = new GamePlayerInventory();
+	public static @NotNull MercuryPlayerInventory deserialize(Map<String, Object> map) {
+		MercuryPlayerInventory inventory = new MercuryPlayerInventory();
 
 		Map<String, Object> itemMap = (Map<String, Object>) map.get("items");
 		itemMap.forEach((slot, itemObject) -> {

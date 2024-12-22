@@ -1,5 +1,7 @@
 package me.adamix.mercury.server.player.data;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -17,23 +19,34 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerDataManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PlayerDataManager.class);
 	private final MongoCollection<Document> playerDataCollection;
+	private final Cache<UUID, PlayerData> playerDataCache;
 
 	public PlayerDataManager(MongoDatabase playerDatabase) {
 		this.playerDataCollection = playerDatabase.getCollection("player_data");
+		this.playerDataCache = Caffeine.newBuilder()
+				.maximumSize(50)
+				.expireAfterWrite(30, TimeUnit.MINUTES)
+				.build();
 	}
 
 	/**
-	 * Retrieves {@link PlayerData} from database using player ID
+	 * Retrieves {@link PlayerData} from database or cache using player ID
 	 *
 	 * @param playerUniqueId unique ID of player
 	 * @return the {@link PlayerData} containing player data
 	 */
 	public @Nullable CompletableFuture<PlayerData> getPlayerData(UUID playerUniqueId) {
 		return CompletableFuture.supplyAsync(() -> {
+			PlayerData cachedPlayerData = playerDataCache.getIfPresent(playerUniqueId);
+			if (cachedPlayerData != null) {
+				return cachedPlayerData;
+			}
+
 			FindIterable<Document> playerDocumentIterable = playerDataCollection.find(Filters.eq("playerUniqueId", playerUniqueId.toString()));
 			try (MongoCursor<Document> cursor = playerDocumentIterable.cursor()) {
 				if (cursor.available() < 0) {
@@ -91,11 +104,12 @@ public class PlayerDataManager {
 	}
 
 	/**
-	 * Save player data to database
+	 * Save player data to database and cache
 	 *
 	 * @param playerData player data to save
 	 */
 	public void savePlayerData(PlayerData playerData) {
+		LOGGER.info("saving player data! {}", playerData);
 		UUID playerUniqueId = playerData.getPlayerUniqueId();
 
 		CompletableFuture.runAsync(() -> {
@@ -104,6 +118,7 @@ public class PlayerDataManager {
 					.append("statistics", playerData.getStatistics().serialize());
 
 			playerDataCollection.replaceOne(Filters.eq("playerUniqueId", playerUniqueId.toString()), playerDocument, new ReplaceOptions().upsert(true));
+			playerDataCache.put(playerData.getPlayerUniqueId(), playerData);
 		}).exceptionally((e -> {
 			LOGGER.error(String.valueOf(e));
 			throw new RuntimeException(e);

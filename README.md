@@ -1,4 +1,4 @@
-# Mercury v0.2
+# Mercury v0.3
 
 Minecraft RPG dungeons server made using [minestom](https://github.com/minestom/Minestom/).
 
@@ -9,8 +9,8 @@ This is fun project started to learn more about Minestom.
 - [x] Item rarity
 - [x] Player profiles
 - [x] Custom inventory system
-- [ ] Entity management system
-- [ ] Custom mobs with AI and behaviour
+- [x] Entity management system
+- [x] Custom mobs with AI and behaviour
 - [ ] Spells
 - [ ] Party and multiplayer dungeon exploration
 - [ ] Randomly generated dungeon
@@ -22,13 +22,10 @@ This is fun project started to learn more about Minestom.
 - [ ] Website integration
 - [ ] Api
 
-## ToDo
-- Improve current item and mob system
-
 ## How To Run
 1. Clone the repository
 ```bash
-   git clone https://github.com/yourusername/Mercury.git
+   git clone https://github.com/AdamBurdik/Mercury.git
    cd Mercury
 ```
 2. Build the project

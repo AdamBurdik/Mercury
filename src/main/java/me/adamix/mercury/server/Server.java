@@ -10,6 +10,7 @@ import me.adamix.mercury.server.command.*;
 import me.adamix.mercury.server.command.debug.*;
 import me.adamix.mercury.server.command.dungeon.EnterDungeonCommand;
 import me.adamix.mercury.server.command.mob.SpawnMobCommand;
+import me.adamix.mercury.server.command.npc.NPCCommand;
 import me.adamix.mercury.server.command.quest.QuestCommand;
 import me.adamix.mercury.server.command.server.PerformanceCommand;
 import me.adamix.mercury.server.command.server.StopCommand;
@@ -350,6 +351,7 @@ public class Server {
 		commandManager.register(new SpawnMobCommand());
 		commandManager.register(new InstanceConverterCommand());
 		commandManager.register(new QuestCommand());
+		commandManager.register(new NPCCommand());
 	}
 
 

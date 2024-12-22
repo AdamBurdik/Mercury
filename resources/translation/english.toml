@@ -45,3 +45,13 @@ new_profile_name = "Create New Profile"
 new_profile_description = "Click to create new profile"
 confirm_name = "Create New Profile"
 confirm_description = "Confirm creation of new profile"
+
+[scoreboard]
+title = "Mercury"
+
+[scoreboard.active_quest]
+subtitle = "Active Quest"
+
+[quests.example]
+name = "Example Quest"
+description = "Walk 100 meters"

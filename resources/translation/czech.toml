@@ -30,6 +30,28 @@ invalid = "Tento příkaz neexistuje!"
 no_argument_specified = "Prosím, specifikuj argument pro překlad!"
 successfully_set = "Jazyk byl úspěšně nastaven na češtinu!"
 
+[command.playtime]
+your_playtime = "Momentálně máš nahráno: "
+
+[server]
+shutdown = "Vypínání serveru"
+
 [entity.zombie]
 rogue = "Zlotřilý Zombie"
 friendly = "Přátelský Zombie"
+
+[inventory.profile.create]
+new_profile_name = "Vytvořit nový profil"
+new_profile_description = "Klikni pro vytvoření nového profilu"
+confirm_name = "Potvrdit vytvoření nového profilu"
+confirm_description = "Potvrzení vytvoření nového profilu"
+
+[scoreboard]
+title = "Mercury"
+
+[scoreboard.active_quest]
+subtitle = "Aktivní Úkol"
+
+[quests.example]
+name = "Příklad Úkolu"
+description = "Ujdi 100 metrů"

@@ -23,6 +23,10 @@ public class TranslationManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TranslationManager.class);
 	private final Map<String, Translation> translationMap = new HashMap<>();
 
+	public void clearTranslations() {
+		translationMap.clear();
+	}
+
 	/**
 	 * Load and save translation from file
 	 * @param fileName Translation file name including .toml extension

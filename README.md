@@ -12,7 +12,8 @@ This is fun project started to learn more about Minestom.
 - [x] Entity management system
 - [x] Custom mobs with AI and behaviour
 - [ ] Spells
-- [ ] Party and multiplayer dungeon exploration
+- [X] Parties
+- [ ] Multiplayer dungeon exploration
 - [ ] Randomly generated dungeon
 - [x] Translation system
 - [ ] Dungeon mini-games

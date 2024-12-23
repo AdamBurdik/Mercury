@@ -1,6 +1,7 @@
 package me.adamix.mercury.server.player.sidebar;
 
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.party.MercuryParty;
 import me.adamix.mercury.server.placeholder.PlaceholderManager;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.quest.core.MercuryQuest;
@@ -11,6 +12,7 @@ import net.minestom.server.utils.NamespaceID;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class MercurySidebar {
 	private final Sidebar sidebar;
@@ -20,7 +22,7 @@ public class MercurySidebar {
 	}
 
 	private void addQuestTracker(MercuryPlayer player, List<String> lines) {
-		NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getActiveQuest();
+		NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getTrackingQuest();
 		if (activeQuestID == null) {
 			return;
 		}
@@ -32,12 +34,27 @@ public class MercurySidebar {
 		// ToDo Get this from config
 		String[] questTrackerLines = {
 				"",
-				"<#21497b><translation:scoreboard.active_quest.subtitle>",
-				"<white><active_quest:name>",
-				"<light_gray><active_quest:description>"
+				"<#21497b><translation:scoreboard.tracking_quest.subtitle>",
+				"<white><tracking_quest:name>",
+				"<light_gray><tracking_quest:description>"
 		};
 
 		lines.addAll(Arrays.asList(questTrackerLines));
+	}
+
+	private void addParty(MercuryPlayer player, List<String> lines) {
+		UUID partyUniqueId = player.getPartyUniqueId();
+		if (partyUniqueId == null) {
+			return;
+		}
+
+		String[] partyLines = {
+				"",
+				"<blue><party:name>",
+				"<dark_blue><party:description>"
+		};
+
+		lines.addAll(Arrays.asList(partyLines));
 	}
 
 	public void update(MercuryPlayer player) {
@@ -46,6 +63,7 @@ public class MercurySidebar {
 
 		List<String> lineList = new ArrayList<>();
 		addQuestTracker(player, lineList);
+		addParty(player, lineList);
 
 		PlaceholderManager placeholderManager = Server.getPlaceholderManager();
 		int i = 16;

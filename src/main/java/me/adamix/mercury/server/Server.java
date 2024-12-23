@@ -12,6 +12,7 @@ import me.adamix.mercury.server.command.dungeon.EnterDungeonCommand;
 import me.adamix.mercury.server.command.mob.SpawnMobCommand;
 import me.adamix.mercury.server.command.npc.NPCCommand;
 import me.adamix.mercury.server.command.quest.QuestCommand;
+import me.adamix.mercury.server.command.quest.QuestsCommand;
 import me.adamix.mercury.server.command.server.PerformanceCommand;
 import me.adamix.mercury.server.command.server.StopCommand;
 import me.adamix.mercury.server.common.ColorPallet;
@@ -57,11 +58,13 @@ import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.anvil.AnvilLoader;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Server {
@@ -352,6 +355,7 @@ public class Server {
 		commandManager.register(new InstanceConverterCommand());
 		commandManager.register(new QuestCommand());
 		commandManager.register(new NPCCommand());
+		commandManager.register(new QuestsCommand());
 	}
 
 
@@ -362,6 +366,14 @@ public class Server {
 	public static Collection<MercuryPlayer> getOnlinePlayers() {
 		Collection<Player> playerCollection = MinecraftServer.getConnectionManager().getOnlinePlayers();
 		return playerCollection.stream().map(MercuryPlayer::of).collect(Collectors.toList());
+	}
+
+	public static @Nullable MercuryPlayer getOnlinePlayerByUniqueId(@NotNull UUID uniqueId) {
+		Player player = MinecraftServer.getConnectionManager().getOnlinePlayerByUuid(uniqueId);
+		if (player == null) {
+			return null;
+		}
+		return MercuryPlayer.of(player);
 	}
 
 	/**

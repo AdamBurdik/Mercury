@@ -9,10 +9,7 @@ import me.adamix.mercury.server.player.stats.Statistics;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Represents data class to store player profile data which is stored in database
@@ -126,7 +123,7 @@ public class ProfileData {
 		if (questsObject != null) {
 			quests = ProfileQuests.deserialize((Map<String, Object>) questsObject);
 		} else {
-			quests = new ProfileQuests(null, new ArrayList<>());
+			quests = new ProfileQuests(new HashSet<>(), new HashSet<>());
 		}
 
 		return new ProfileData(

@@ -21,7 +21,7 @@ public abstract class MercuryQuest {
 	public abstract void tick(MercuryPlayer player);
 
 	public void finish(MercuryPlayer player) {
-		Server.getQuestManager().finishQuest(player);
+		Server.getQuestManager().finishQuest(player, this.getQuestID());
 		this.end(player);
 	}
 
@@ -38,5 +38,13 @@ public abstract class MercuryQuest {
 
 	public void setProgressStage(MercuryPlayer player, int currentStage) {
 		getProgress(player).setCurrentStage(currentStage);
+	}
+
+	public String translationName() {
+		return "quests." + this.questID.value() + ".name";
+	}
+
+	public String translationDescription() {
+		return "quests." + this.questID.value() + ".description";
 	}
 }

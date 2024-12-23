@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.UUID;
 
@@ -50,7 +51,7 @@ public class DatabaseTestCommand extends Command {
 					(float) Attribute.ATTACK_SPEED.defaultValue(),
 					new MercuryPlayerInventory(),
 					new Statistics(),
-					new ProfileQuests(null, new ArrayList<>())
+					new ProfileQuests(new HashSet<>(), new HashSet<>())
 			);
 
 			ProfileDataManager manager = Server.getProfileDataManager();

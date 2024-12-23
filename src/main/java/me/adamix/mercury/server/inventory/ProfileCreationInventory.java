@@ -15,6 +15,7 @@ import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.utils.NamespaceID;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.UUID;
 
 public class ProfileCreationInventory extends MercuryInventory {
@@ -44,7 +45,7 @@ public class ProfileCreationInventory extends MercuryInventory {
 									PlayerDefaults.getAttackSpeed(),
 									new MercuryPlayerInventory(),
 									new Statistics(),
-									new ProfileQuests(null, new ArrayList<>())
+									new ProfileQuests(new HashSet<>(), new HashSet<>())
 							)
 					);
 					click.close();

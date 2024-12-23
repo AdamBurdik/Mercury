@@ -1,59 +1,72 @@
 package me.adamix.mercury.server.player.profile.quest;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.minestom.server.utils.NamespaceID;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 @Getter
 public class ProfileQuests {
-	@Setter
-	private @Nullable NamespaceID activeQuest;
-	private final List<NamespaceID> completedQuests;
+	private final @NotNull Set<NamespaceID> activeQuests;
+	private final @NotNull Set<NamespaceID> completedQuests;
+	private @Nullable NamespaceID trackingQuest;
 
-	public ProfileQuests(@Nullable NamespaceID activeQuest, List<NamespaceID> completedQuests) {
-		this.activeQuest = activeQuest;
+	public ProfileQuests(@NotNull Set<NamespaceID> activeQuests, @NotNull Set<NamespaceID> completedQuests) {
+		this.activeQuests = activeQuests;
 		this.completedQuests = completedQuests;
 	}
 
-	public void completeCurrentQuest() {
-		completedQuests.add(activeQuest);
-		activeQuest = null;
+	public void completeQuest(@NotNull NamespaceID questID) {
+		activeQuests.remove(questID);
+		completedQuests.add(questID);
+	}
+
+	public void addActiveQuest(@NotNull NamespaceID questID) {
+		this.activeQuests.add(questID);
+	}
+
+	public void setTrackingQuest(@Nullable NamespaceID questID) {
+		this.trackingQuest = questID;
 	}
 
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<>();
 
-		map.put("activeQuestID", this.activeQuest != null ? this.activeQuest : "null");
-		map.put("completedQuestIds", this.completedQuests);
+		map.put("activeQuestIDs", this.activeQuests);
+		map.put("completedQuestIDs", this.completedQuests);
 
 		return map;
 	}
 
 	public static ProfileQuests deserialize(Map<String, Object> map) {
-		NamespaceID activeQuestID = null;
-		Object activeQuestIDObject = map.get("activeQuestID");
-		if (activeQuestIDObject instanceof String activeQuestIDString) {
-			if (!"null".equals(activeQuestIDString)) {
-				activeQuestID = NamespaceID.from(activeQuestIDString);
+		Set<NamespaceID> activeQuestIDs = new HashSet<>();
+		Object activeQuestObject = map.get("activeQuestIDs");
+		if (activeQuestObject instanceof List<?> list) {
+			for (Object item : list) {
+				if (item instanceof NamespaceID ID) {
+					activeQuestIDs.add(ID);
+				}
+				if (item instanceof String stringId) {
+					activeQuestIDs.add(NamespaceID.from(stringId));
+				}
 			}
 		}
 
-		List<NamespaceID> completedQuestIds = new ArrayList<>();
+		Set<NamespaceID> completedQuestIDs = new HashSet<>();
 		Object completedQuestObject = map.get("completedQuestIds");
 		if (completedQuestObject instanceof List<?> list) {
 			for (Object item : list) {
 				if (item instanceof NamespaceID ID) {
-					completedQuestIds.add(ID);
+					completedQuestIDs.add(ID);
 				}
 				if (item instanceof String stringId) {
-					completedQuestIds.add(NamespaceID.from(stringId));
+					completedQuestIDs.add(NamespaceID.from(stringId));
 				}
 			}
 		}
 
-		return new ProfileQuests(activeQuestID, completedQuestIds);
+		return new ProfileQuests(activeQuestIDs, completedQuestIDs);
 	}
 }

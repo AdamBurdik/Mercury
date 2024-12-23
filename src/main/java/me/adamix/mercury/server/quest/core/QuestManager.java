@@ -57,13 +57,14 @@ public class QuestManager {
 
 		ProfileData profileData = player.getProfileData();
 		ProfileQuests profileQuests = profileData.getProfileQuests();
-		profileQuests.setActiveQuest(questID);
+		profileQuests.addActiveQuest(questID);
 		this.activeQuests.put(player.getUuid(), quest);
 		quest.start(player);
+		profileQuests.setTrackingQuest(questID);
 	}
 
-	public void finishQuest(MercuryPlayer player) {
-		player.getProfileData().getProfileQuests().completeCurrentQuest();
+	public void finishQuest(MercuryPlayer player, NamespaceID questID) {
+		player.getProfileData().getProfileQuests().completeQuest(questID);
 		activeQuests.remove(player.getUuid());
 	}
 

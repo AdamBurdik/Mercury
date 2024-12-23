@@ -32,21 +32,25 @@ public class QuestCommand extends Command {
 
 			String action = ctx.get(actionArgument);
 			switch (action) {
+				case "start":
+					sender.sendMessage(Component.text("Please specify quest ID!").color(ColorPallet.ERROR.getColor()));
+					break;
 				case "progress":
 					QuestManager questManager = Server.getQuestManager();
-					NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getActiveQuest();
+					NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getTrackingQuest();
 					if (activeQuestID == null) {
-						sender.sendMessage(Component.text("No active quest!").color(ColorPallet.ERROR.getColor()));
+						sender.sendMessage(Component.text("No tracking quest!").color(ColorPallet.ERROR.getColor()));
 						break;
 					}
 					MercuryQuest quest = questManager.getRegisteredQuest(activeQuestID);
+					if (quest == null) {
+						sender.sendMessage(Component.text("No tracking quest!").color(ColorPallet.ERROR.getColor()));
+						break;
+					}
 					QuestProgress progress = quest.getProgress(player);
 					player.sendMessage(
 							Component.text(progress.getCurrentPercentage() + "%")
 					);
-					break;
-				case "start":
-					sender.sendMessage(Component.text("Please specify quest ID!").color(ColorPallet.ERROR.getColor()));
 					break;
 			}
 

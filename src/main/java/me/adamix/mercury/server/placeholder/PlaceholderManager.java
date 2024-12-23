@@ -1,6 +1,7 @@
 package me.adamix.mercury.server.placeholder;
 
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.party.MercuryParty;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.quest.core.MercuryQuest;
 import me.adamix.mercury.server.translation.Translation;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiFunction;
 
 public class PlaceholderManager {
@@ -35,12 +37,12 @@ public class PlaceholderManager {
 			Translation translation = Server.getTranslationManager().getTranslation(player.getTranslationId());
 			return translation.get(key);
 		});
-		registerPlayer("active_quest", (args, player) -> {
+		registerPlayer("tracking_quest", (args, player) -> {
 			if (!args.hasNext()) {
 				return "Invalid Key";
 			}
 
-			NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getActiveQuest();
+			NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getTrackingQuest();
 			if (activeQuestID == null) {
 				return "No Active Quest";
 			}

@@ -37,7 +37,7 @@ public class ExampleQuest extends MercuryQuest {
 	@Override
 	public void finish(MercuryPlayer player) {
 		player.sendMessage("Example Quest finished!");
-		player.getProfileData().getProfileQuests().completeCurrentQuest();
+		player.getProfileData().getProfileQuests().completeQuest(this.getQuestID());
 		super.finish(player);
 	}
 

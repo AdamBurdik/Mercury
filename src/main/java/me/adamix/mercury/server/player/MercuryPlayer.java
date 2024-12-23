@@ -27,6 +27,7 @@ import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.event.trait.PlayerEvent;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
+import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -49,7 +50,9 @@ public class MercuryPlayer extends Player {
 	private @Nullable UUID dungeonUniqueId;
 	@Setter
 	private boolean inDebug = true;
-	private MercurySidebar sidebar;
+	private @Nullable MercurySidebar sidebar;
+	@Setter
+	private @Nullable UUID partyUniqueId;
 
 	public MercuryPlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
 		super(playerConnection, gameProfile);

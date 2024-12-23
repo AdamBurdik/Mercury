@@ -11,6 +11,7 @@ import me.adamix.mercury.server.command.debug.*;
 import me.adamix.mercury.server.command.dungeon.EnterDungeonCommand;
 import me.adamix.mercury.server.command.mob.SpawnMobCommand;
 import me.adamix.mercury.server.command.npc.NPCCommand;
+import me.adamix.mercury.server.command.party.PartyCommand;
 import me.adamix.mercury.server.command.quest.QuestCommand;
 import me.adamix.mercury.server.command.quest.QuestsCommand;
 import me.adamix.mercury.server.command.server.PerformanceCommand;
@@ -29,6 +30,7 @@ import me.adamix.mercury.server.mob.core.wrapper.AIWrapperManager;
 import me.adamix.mercury.server.mob.zombie.FriendlyZombie;
 import me.adamix.mercury.server.mob.zombie.RogueZombie;
 import me.adamix.mercury.server.monitor.TickMonitorManager;
+import me.adamix.mercury.server.party.PartyManager;
 import me.adamix.mercury.server.placeholder.PlaceholderManager;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.data.PlayerDataManager;
@@ -89,6 +91,7 @@ public class Server {
 	@Getter private static TaskManager taskManager;
 	@Getter private static AIWrapperManager aiWrapperManager;
 	@Getter private static QuestManager questManager;
+	@Getter private static PartyManager partyManager;
 	private static MongoClient mongoClient;
 
 	/**
@@ -157,6 +160,7 @@ public class Server {
 		taskManager = new TaskManager();
 		aiWrapperManager = new AIWrapperManager();
 		questManager = new QuestManager();
+		partyManager = new PartyManager();
 	}
 
 	/**
@@ -356,6 +360,7 @@ public class Server {
 		commandManager.register(new QuestCommand());
 		commandManager.register(new NPCCommand());
 		commandManager.register(new QuestsCommand());
+		commandManager.register(new PartyCommand());
 	}
 
 

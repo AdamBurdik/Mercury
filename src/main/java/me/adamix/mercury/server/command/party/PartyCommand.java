@@ -2,6 +2,7 @@ package me.adamix.mercury.server.command.party;
 
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.common.ColorPallet;
+import me.adamix.mercury.server.inventory.PartyInventory;
 import me.adamix.mercury.server.party.PartyManager;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import net.kyori.adventure.text.Component;
@@ -53,6 +54,7 @@ public class PartyCommand extends Command {
 				case "leave":
 					break;
 				case "info":
+					Server.getInventoryManager().open(new PartyInventory(partyManager.getParty(player.getPartyUniqueId())), player);
 					break;
 			}
 		}, actionArgument);

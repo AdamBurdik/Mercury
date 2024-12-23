@@ -49,7 +49,7 @@ confirm_description = "Potvrzení vytvoření nového profilu"
 [scoreboard]
 title = "Mercury"
 
-[scoreboard.active_quest]
+[scoreboard.tracking_quest]
 subtitle = "Aktivní Úkol"
 
 [quests.example]

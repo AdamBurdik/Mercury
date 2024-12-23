@@ -49,7 +49,7 @@ confirm_description = "Confirm creation of new profile"
 [scoreboard]
 title = "Mercury"
 
-[scoreboard.active_quest]
+[scoreboard.tracking_quest]
 subtitle = "Active Quest"
 
 [quests.example_quest]

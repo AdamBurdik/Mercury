@@ -57,6 +57,10 @@ public class MercurySidebar {
 		lines.addAll(Arrays.asList(partyLines));
 	}
 
+	public void clear() {
+		sidebar.getLines().forEach(line -> sidebar.removeLine(line.getId()));
+	}
+
 	public void update(MercuryPlayer player) {
 		// ToDO Get this from config
 		String title = "<gold><translation:scoreboard.title>";
@@ -66,18 +70,19 @@ public class MercurySidebar {
 		addParty(player, lineList);
 
 		PlaceholderManager placeholderManager = Server.getPlaceholderManager();
-		int i = 16;
-		for (String questTrackerLine : lineList) {
-			sidebar.removeLine("line_" + i);
 
+		this.clear();
+		int i = 16;
+		for (String line : lineList) {
 			sidebar.createLine(
 					new Sidebar.ScoreboardLine(
 							"line_" + i,
-							placeholderManager.parse(questTrackerLine, player),
+							placeholderManager.parse(line, player),
 							i,
 							Sidebar.NumberFormat.blank()
 					)
 			);
+
 			i--;
 		}
 

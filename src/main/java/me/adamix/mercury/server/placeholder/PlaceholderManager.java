@@ -59,6 +59,29 @@ public class PlaceholderManager {
 				default -> "Invalid Argument";
 			};
 		});
+
+		registerPlayer("party", (args, player) -> {
+			if (!args.hasNext()) {
+				return "Invalid Key";
+			}
+
+			UUID partyUniqueId = player.getPartyUniqueId();
+			if (partyUniqueId == null) {
+				return "No Party";
+			}
+
+			MercuryParty party = Server.getPartyManager().getParty(partyUniqueId);
+			if (party == null) {
+				return "No Party";
+			}
+
+			Tag.Argument argument = args.pop();
+			return switch (argument.lowerValue()) {
+				case "name" -> party.getName();
+				case "description" -> party.getDescription();
+				default -> "Invalid Argument";
+			};
+		});
 	}
 
 	public void registerPlayer(@NotNull String name, BiFunction<ArgumentQueue, MercuryPlayer, String> function) {

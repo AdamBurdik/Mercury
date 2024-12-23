@@ -21,6 +21,10 @@ public class ProfileQuests {
 	public void completeQuest(@NotNull NamespaceID questID) {
 		activeQuests.remove(questID);
 		completedQuests.add(questID);
+
+		if (questID.equals(trackingQuest)) {
+			setTrackingQuest(null);
+		}
 	}
 
 	public void addActiveQuest(@NotNull NamespaceID questID) {

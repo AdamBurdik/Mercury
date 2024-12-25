@@ -6,6 +6,7 @@ import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.quest.core.MercuryQuest;
 import me.adamix.mercury.server.quest.core.QuestManager;
 import me.adamix.mercury.server.quest.core.QuestProgress;
+import me.adamix.mercury.server.quest.core.result.QuestResult;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -74,7 +75,16 @@ public class QuestCommand extends Command {
 			String questIDString = ctx.get(questIDArgument);
 			NamespaceID questID = NamespaceID.from(questIDString);
 
-			Server.getQuestManager().startQuest(questID, player);
+			QuestResult result = Server.getQuestManager().startQuest(questID, player);
+			Component component = switch (result) {
+				case QuestResult.QUEST_NOT_FOUND -> Component.text("Quest with ID " + questIDString + " does not exist!")
+						.color(ColorPallet.ERROR.getColor());
+				case QUEST_ALREADY_COMPLETED -> Component.text("You have already completed this quest!")
+						.color(ColorPallet.ERROR.getColor());
+				case SUCCESS -> Component.text("Successfully accepted quest with ID " + questIDString + ".")
+						.color(ColorPallet.SUCCESS.getColor());
+			};
+			sender.sendMessage(component);
 
 		}, actionArgument, questIDArgument);
 	}

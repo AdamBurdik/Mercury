@@ -5,6 +5,7 @@ import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.quest.ProfileQuests;
 import me.adamix.mercury.server.quest.ExampleQuest;
+import me.adamix.mercury.server.quest.core.result.QuestResult;
 import me.adamix.mercury.server.task.QuestTickTask;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.utils.NamespaceID;
@@ -45,27 +46,50 @@ public class QuestManager {
 
 	public void tickQuests() {
 		activeQuests.forEach((playerUniqueId, quest) -> {
-			quest.tick(MercuryPlayer.of(MinecraftServer.getConnectionManager().getOnlinePlayerByUuid(playerUniqueId)));
+			quest.tick(Server.getOnlinePlayerByUniqueId(playerUniqueId));
 		});
 	}
 
-	public void startQuest(NamespaceID questID, MercuryPlayer player) {
+	public boolean exits(NamespaceID questID) {
+		return this.registeredQuests.containsKey(questID);
+	}
+
+	public QuestResult startQuest(NamespaceID questID, MercuryPlayer player) {
 		MercuryQuest quest = getRegisteredQuest(questID);
 		if (quest == null) {
-			return;
+			return QuestResult.QUEST_NOT_FOUND;
 		}
 
 		ProfileData profileData = player.getProfileData();
 		ProfileQuests profileQuests = profileData.getProfileQuests();
+		if (profileQuests.isCompleted(questID)) {
+			return QuestResult.QUEST_ALREADY_COMPLETED;
+		}
+
 		profileQuests.addActiveQuest(questID);
 		this.activeQuests.put(player.getUuid(), quest);
 		quest.start(player);
 		profileQuests.setTrackingQuest(questID);
+		player.updateSidebar();
+
+		return QuestResult.SUCCESS;
 	}
 
-	public void finishQuest(MercuryPlayer player, NamespaceID questID) {
-		player.getProfileData().getProfileQuests().completeQuest(questID);
+	public QuestResult finishQuest(MercuryPlayer player, NamespaceID questID) {
+		if (!exits(questID)) {
+			return QuestResult.QUEST_NOT_FOUND;
+		}
+		ProfileQuests profileQuests = player.getProfileData().getProfileQuests();
+
+		if (profileQuests.isCompleted(questID)) {
+			return QuestResult.QUEST_ALREADY_COMPLETED;
+		}
+
 		activeQuests.remove(player.getUuid());
+		profileQuests.completeQuest(questID);
+		player.updateSidebar();
+
+		return QuestResult.SUCCESS;
 	}
 
 }

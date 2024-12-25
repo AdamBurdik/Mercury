@@ -16,6 +16,7 @@ import net.minestom.server.event.trait.InventoryEvent;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,11 +144,7 @@ public class InventoryManager {
 		return playerInventoryData.containsKey(playerUniqueId);
 	}
 
-	public @NotNull InventoryData getPlayerInventoryData(UUID playerUniqueId) {
-		if (!playerInventoryData.containsKey(playerUniqueId)) {
-			throw new RuntimeException("Player with uuid " + playerUniqueId + " does not have inventory data!");
-		}
-
+	public @Nullable InventoryData getPlayerInventoryData(@NotNull UUID playerUniqueId) {
 		return playerInventoryData.get(playerUniqueId);
 	}
 
@@ -155,11 +152,7 @@ public class InventoryManager {
 		return playerInventoryMap.containsKey(playerUniqueId);
 	}
 
-	public @NotNull MercuryInventory getPlayerInventory(UUID playerUniqueId) {
-		if (!playerInventoryMap.containsKey(playerUniqueId)) {
-			throw new RuntimeException("Player with uuid " + playerUniqueId + " does not have any inventory!");
-		}
-
+	public @Nullable MercuryInventory getPlayerInventory(@NotNull UUID playerUniqueId) {
 		return playerInventoryMap.get(playerUniqueId);
 	}
 }

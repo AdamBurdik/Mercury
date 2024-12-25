@@ -20,7 +20,6 @@ public class PlayerTickTask implements MercuryTask {
 				if (player.getState() == PlayerState.INIT || player.getState() == PlayerState.LIMBO) {
 					continue;
 				}
-				player.getSidebar().update(player);
 			}
 		}, TaskSchedule.tick(1), TaskSchedule.tick(20));
 	}

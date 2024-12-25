@@ -27,7 +27,6 @@ import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.event.trait.PlayerEvent;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
-import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -61,9 +60,9 @@ public class MercuryPlayer extends Player {
 	/**
 	 * Retrieves player data.
 	 *
-	 * @return the {@link PlayerData} associated with the player
+	 * @return the {@link PlayerData} associated with the player.
 	 * @throws PlayerDataNotAvailableException if the player is in the initialization state
-	 *                                         or the player data has not been loaded yet
+	 *                                         or the player data has not been loaded yet.
 	 */
 	public @NotNull PlayerData getPlayerData() {
 		if (state == PlayerState.INIT) {
@@ -77,9 +76,9 @@ public class MercuryPlayer extends Player {
 	}
 
 	/**
-	 * Retrieves player dat
-	 * @return the {@link PlayerData} associated with player currently selected profile
-	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
+	 * Retrieves player data.
+	 * @return the {@link PlayerData} associated with player currently selected profile.
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet.
 	 */
 	public @NotNull ProfileData getProfileData() {
 		if (state == PlayerState.INIT) {
@@ -99,9 +98,9 @@ public class MercuryPlayer extends Player {
 	}
 
 	/**
-	 * Retrieves player data from {@link PlayerDataManager} and save it to player instance
-	 * @param runnable function that will be called after player data is loaded
-	 * @throws PlayerDataNotAvailableException if player data is not available in database
+	 * Retrieves player data from {@link PlayerDataManager} and save it to player instance.
+	 * @param runnable function that will be called after player data is loaded.
+	 * @throws PlayerDataNotAvailableException if player data is not available in database.
 	 */
 	public void loadPlayerData(@Nullable Runnable runnable) {
 		CompletableFuture<PlayerData> completableFuture = Server.getPlayerDataManager().getPlayerData(this.getUuid());
@@ -126,11 +125,11 @@ public class MercuryPlayer extends Player {
 	}
 
 	/**
-	 * Retrieves profile data from {@link ProfileDataManager} and save it to player instance
+	 * Retrieves profile data from {@link ProfileDataManager} and save it to player instance.
 	 *
-	 * @param profileUniqueId unique ID of player profile
-	 * @param runnable function that will be called after profile data is loaded
-	 * @throws ProfileDataNotAvailableException if profile data is not available in database
+	 * @param profileUniqueId unique ID of player profile.
+	 * @param runnable function that will be called after profile data is loaded.
+	 * @throws ProfileDataNotAvailableException if profile data is not available in database.
 	 */
 	public void loadProfileData(UUID profileUniqueId, @Nullable Runnable runnable) {
 		CompletableFuture<ProfileData> completableFuture = Server.getProfileDataManager().getProfileData(profileUniqueId);
@@ -155,8 +154,19 @@ public class MercuryPlayer extends Player {
 	}
 
 	/**
-	 * Updates player attributes based on equipped items
-	 * @param heldSlot slot of item player is currently holding
+	 * Updates player attributes based on the equipped items and currently held item.
+	 * <br>
+	 * <br>
+	 * The process includes:
+	 * <br>
+	 * - Clearing existing attribute modifiers.
+	 * <br>
+	 * - Resetting default attributes (e.g., movement speed).
+	 * <br>
+	 * - Applying attribute modifiers from item currently held in specified slot.
+	 *
+	 * @param heldSlot the inventory slot index of the item the player is currently holding.
+	 *                 If the slot contains no item, only default attributes are applied.
 	 */
 	public void updateAttributes(int heldSlot) {
 		// Clear attributes
@@ -164,7 +174,7 @@ public class MercuryPlayer extends Player {
 			attribute.clearModifiers();
 		}
 
-		// Set default attributes (movement speed)
+		// Set default attributes
 		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(getProfileData().getMovementSpeed());
 
 
@@ -180,8 +190,23 @@ public class MercuryPlayer extends Player {
 		}
 	}
 
+	/**
+	 * Updates player attributes based on item they are currently holding.
+	 * <br>
+	 * This is a convenience method that delegates to {@link #updateAttributes(int)}
+	 * using the slot index of item the player is currently holding.
+	 */
 	public void updateAttributes() {
 		this.updateAttributes(getHeldSlot());
+	}
+
+	/**
+	 * Updates player sidebar, if it is present
+	 */
+	public void updateSidebar() {
+		if (this.sidebar != null) {
+			this.sidebar.update(this);
+		}
 	}
 
 	/**
@@ -191,6 +216,13 @@ public class MercuryPlayer extends Player {
 		this.profileData = null;
 	}
 
+	/**
+	 * Teleports player to specified position in same instance.
+	 * <br>
+	 * And closes current inventory
+	 * @param position position where teleport player to
+	 * @return {@link CompletableFuture} lambda that is called after teleportation
+	 */
 	@Override
 	public @NotNull CompletableFuture<Void> teleport(@NotNull Pos position) {
 		closeInventory();
@@ -198,14 +230,14 @@ public class MercuryPlayer extends Player {
 	}
 
 	/**
-	 * Teleport player to spawn location and change his state
+	 * Teleports player to spawn location
 	 */
 	public void sendToSpawn() {
 		teleport(Server.SPAWN_LOCATION);
 	}
 
 	/**
-	 * Teleport player to limbo location and change his state
+	 * Teleports player to limbo location
 	 */
 	public void sendToLimbo() {
 		teleport(Server.LIMBO_LOCATION);

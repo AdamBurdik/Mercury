@@ -54,8 +54,9 @@ public class TickMonitorManager {
 		this.tickTime = MathUtils.round(tickMonitor.getTickTime(), 2);
 
 		final Component header = Component.newline()
-				.append(Component.text("RAM USAGE: " + ramUsage + " MB", NamedTextColor.GRAY).append(Component.newline())
-						.append(Component.text("TICK TIME: " + tickTime + "ms", NamedTextColor.GRAY))).append(Component.newline());
+				.append(Component.text("RAM USAGE: " + ramUsage + " MB", NamedTextColor.GRAY)).appendNewline()
+				.append(Component.text("TICK TIME: " + tickTime + "ms", NamedTextColor.GRAY)).appendNewline()
+				.append(Component.text("TPS: " + Math.min(20, 1000 / tickTime), NamedTextColor.GRAY)).appendNewline();
 
 		final Component footer = Component.newline()
 				.append(Component.text("          Mercury          ")

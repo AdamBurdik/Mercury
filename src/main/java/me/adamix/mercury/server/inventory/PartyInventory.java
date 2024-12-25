@@ -7,9 +7,14 @@ import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.server.inventory.core.context.OpenContext;
 import me.adamix.mercury.server.party.MercuryParty;
 import me.adamix.mercury.server.player.MercuryPlayer;
+import me.adamix.mercury.server.player.skin.PlayerSkinProvider;
 import net.kyori.adventure.text.Component;
+import net.minestom.server.component.DataComponent;
+import net.minestom.server.entity.PlayerSkin;
+import net.minestom.server.item.ItemComponent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.minestom.server.item.component.HeadProfile;
 
 import java.util.Set;
 import java.util.UUID;
@@ -58,6 +63,12 @@ public class PartyInventory extends MercuryInventory {
 				description = Component.text("member").color(ColorPallet.LIGHT_GRAY.getColor());
 			}
 
+			PlayerSkin playerSkin = PlayerSkinProvider.getByUniqueId(memberUniqueId);
+			HeadProfile headProfile = HeadProfile.EMPTY;
+			if (playerSkin != null) {
+				headProfile = new HeadProfile(playerSkin);
+			}
+
 			ctx.slot(
 					19 + i,
 					ItemStack.of(Material.PLAYER_HEAD)
@@ -65,6 +76,7 @@ public class PartyInventory extends MercuryInventory {
 									Component.text(player.getUsername())
 							)
 							.withLore(description)
+							.with(ItemComponent.PROFILE, headProfile)
 			).cancelOnClick();
 
 			i++;

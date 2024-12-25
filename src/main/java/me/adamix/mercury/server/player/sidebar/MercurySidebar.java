@@ -36,7 +36,7 @@ public class MercurySidebar {
 				"",
 				"<#21497b><translation:scoreboard.tracking_quest.subtitle>",
 				"<white><tracking_quest:name>",
-				"<light_gray><tracking_quest:description>"
+				"<gray><tracking_quest:description>"
 		};
 
 		lines.addAll(Arrays.asList(questTrackerLines));

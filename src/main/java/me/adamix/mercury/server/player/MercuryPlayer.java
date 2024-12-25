@@ -139,6 +139,7 @@ public class MercuryPlayer extends Player {
 		completableFuture.thenAccept(data -> {
 			this.profileData = data;
 			this.state = PlayerState.PLAY;
+			this.getGameInventory().updatePlayerInventory(this, true);
 			this.sidebar = new MercurySidebar();
 			this.sidebar.show(this);
 			updateAttributes();

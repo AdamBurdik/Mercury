@@ -10,7 +10,7 @@ import net.minestom.server.utils.NamespaceID;
 
 @Getter
 public class ExampleQuest extends MercuryQuest {
-	private final QuestData<Float> playerStartDistance = new QuestData<>();
+	private final QuestData<Double> playerStartDistance = new QuestData<>();
 	private final int targetWalked;
 
 	public ExampleQuest(int targetWalked) {
@@ -26,8 +26,8 @@ public class ExampleQuest extends MercuryQuest {
 
 	@Override
 	public void tick(MercuryPlayer player) {
-		float currentDistance = player.getProfileData().getStatistics().get(StatisticCategory.GENERAL, "walked");
-		float startingDistance = playerStartDistance.get(player);
+		double currentDistance = player.getProfileData().getStatistics().get(StatisticCategory.GENERAL, "walked");
+		double startingDistance = playerStartDistance.get(player);
 		if (currentDistance - startingDistance >= targetWalked) {
 			this.finish(player);
 		}

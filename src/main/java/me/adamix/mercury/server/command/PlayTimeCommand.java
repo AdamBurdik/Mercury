@@ -19,7 +19,7 @@ public class PlayTimeCommand extends Command {
 				return;
 			}
 
-			float playtime = player.getPlayerData().getStatistics().get(StatisticCategory.GENERAL, "play_time");
+			double playtime = player.getPlayerData().getStatistics().get(StatisticCategory.GENERAL, "play_time");
 			Duration duration = Duration.ofSeconds((long) playtime);
 
 			Translation translation = Server.getTranslationManager().getTranslation(player.getTranslationId());

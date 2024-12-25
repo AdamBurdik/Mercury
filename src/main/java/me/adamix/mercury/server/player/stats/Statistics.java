@@ -7,22 +7,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Statistics {
-	private final EnumMap<StatisticCategory, Map<String, Float>> statisticMap = new EnumMap<>(StatisticCategory.class);
+	private final EnumMap<StatisticCategory, Map<String, Double>> statisticMap = new EnumMap<>(StatisticCategory.class);
 
-	public Map<String, Float> getCategoryMap(@NotNull StatisticCategory category) {
+	public Map<String, Double> getCategoryMap(@NotNull StatisticCategory category) {
 		if (!statisticMap.containsKey(category)) {
 			statisticMap.put(category, new HashMap<>());
 		}
 		return statisticMap.get(category);
 	}
 
-	public void set(@NotNull StatisticCategory category, @NotNull String name, float value) {
+	public void set(@NotNull StatisticCategory category, @NotNull String name, double value) {
 		getCategoryMap(category).put(name, value);
 	}
 
-	public float get(@NotNull StatisticCategory category, @NotNull String name) {
-		Float value = getCategoryMap(category).get(name);
-		return value != null ? value : 0f;
+	public double get(@NotNull StatisticCategory category, @NotNull String name) {
+		Double value = getCategoryMap(category).get(name);
+		return value != null ? value : 0;
 	}
 
 	public void increase(@NotNull StatisticCategory category, @NotNull String name, float amount) {

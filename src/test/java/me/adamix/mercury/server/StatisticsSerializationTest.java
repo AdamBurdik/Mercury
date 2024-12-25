@@ -11,9 +11,9 @@ public class StatisticsSerializationTest {
 	@Test
 	public void testStatisticsSerialization() {
 		Statistics statistics = new Statistics();
-		statistics.set(StatisticCategory.GENERAL, "test1", 69f);
-		statistics.set(StatisticCategory.ITEMS_CRAFTED, "test2", -50f);
-		statistics.set(StatisticCategory.DEATHS, "test3", 420f);
+		statistics.set(StatisticCategory.GENERAL, "test1", 69);
+		statistics.set(StatisticCategory.ITEMS_CRAFTED, "test2", -50);
+		statistics.set(StatisticCategory.DEATHS, "test3", 420);
 
 		Map<String, Object> serializedStatistics = statistics.serialize();
 

@@ -27,6 +27,10 @@ public class ProfileQuests {
 		}
 	}
 
+	public boolean isCompleted(@NotNull NamespaceID questID) {
+		return this.completedQuests.contains(questID);
+	}
+
 	public void addActiveQuest(@NotNull NamespaceID questID) {
 		this.activeQuests.add(questID);
 	}
@@ -35,23 +39,28 @@ public class ProfileQuests {
 		this.trackingQuest = questID;
 	}
 
+	private List<String> toStringList(Set<NamespaceID> namespaceIDSet) {
+		List<String> activeQuestList = new ArrayList<>();
+		for (NamespaceID activeQuest : namespaceIDSet) {
+			activeQuestList.add(activeQuest.asString());
+		}
+		return activeQuestList;
+	}
+
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<>();
 
-		map.put("activeQuestIDs", this.activeQuests);
-		map.put("completedQuestIDs", this.completedQuests);
+		map.put("activeQuests", toStringList(this.activeQuests));
+		map.put("completedQuests", toStringList(this.completedQuests));
 
 		return map;
 	}
 
 	public static ProfileQuests deserialize(Map<String, Object> map) {
 		Set<NamespaceID> activeQuestIDs = new HashSet<>();
-		Object activeQuestObject = map.get("activeQuestIDs");
+		Object activeQuestObject = map.get("activeQuests");
 		if (activeQuestObject instanceof List<?> list) {
 			for (Object item : list) {
-				if (item instanceof NamespaceID ID) {
-					activeQuestIDs.add(ID);
-				}
 				if (item instanceof String stringId) {
 					activeQuestIDs.add(NamespaceID.from(stringId));
 				}
@@ -59,12 +68,9 @@ public class ProfileQuests {
 		}
 
 		Set<NamespaceID> completedQuestIDs = new HashSet<>();
-		Object completedQuestObject = map.get("completedQuestIds");
+		Object completedQuestObject = map.get("completedQuests");
 		if (completedQuestObject instanceof List<?> list) {
 			for (Object item : list) {
-				if (item instanceof NamespaceID ID) {
-					completedQuestIDs.add(ID);
-				}
 				if (item instanceof String stringId) {
 					completedQuestIDs.add(NamespaceID.from(stringId));
 				}

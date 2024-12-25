@@ -64,7 +64,7 @@ public record ItemAttributeComponent(EnumMap<ItemAttribute, ItemAttributeValue> 
 			ItemAttribute itemAttribute = ItemAttribute.valueOf(name);
 
 			Map<String, Object> valueMap = (Map<String, Object>) attributeValue;
-			itemAttributes.set(itemAttribute, (float) valueMap.get("value"), AttributeOperation.valueOf((String) valueMap.get("operation")));
+			itemAttributes.set(itemAttribute, (double) valueMap.get("value"), AttributeOperation.valueOf((String) valueMap.get("operation")));
 		});
 
 		return itemAttributes.toComponent();

@@ -26,7 +26,7 @@ public class ItemAttributes {
 		return this;
 	}
 
-	public @NotNull ItemAttributes set(@NotNull ItemAttribute attribute, float value, @NotNull AttributeOperation operation) {
+	public @NotNull ItemAttributes set(@NotNull ItemAttribute attribute, double value, @NotNull AttributeOperation operation) {
 		if (operation == AttributeOperation.MULTIPLY_TOTAL) {
 			LOGGER.warn("AttributeOperation.MULTIPLY_TOTAL is not supported at the moment! Item information will be displayed incorrectly.");
 		}

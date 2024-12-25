@@ -14,6 +14,7 @@ import me.adamix.mercury.server.player.profile.quest.ProfileQuests;
 import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.MinecraftServer;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecConfigurationException;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +104,12 @@ public class ProfileDataManager {
 
 			Document playerDocument = new Document(profileData.serialize());
 
-			profileDataCollection.replaceOne(Filters.eq("profileUniqueId", profileUniqueId.toString()), playerDocument, new ReplaceOptions().upsert(true));
+			try {
+				profileDataCollection.replaceOne(Filters.eq("profileUniqueId", profileUniqueId.toString()), playerDocument, new ReplaceOptions().upsert(true));
+			} catch (CodecConfigurationException e) {
+				LOGGER.error("Data: {}", playerDocument);
+				throw new RuntimeException(e);
+			}
 			profileDataCache.put(profileData.getProfileUniqueId(), profileData);
 		}).exceptionally((e -> {
 			LOGGER.error("An error occurred while saving profile data", e);

@@ -78,7 +78,7 @@ public class ProfileData {
 		map.put("maxHealth", this.maxHealth);
 		map.put("movementSpeed", this.movementSpeed);
 		map.put("attackSpeed", this.attackSpeed);
-		map.put("playerInventory", this.playerInventory.serialize());
+		map.put("inventory", this.playerInventory.serialize());
 		map.put("statistics", this.statistics.serialize());
 		map.put("quests", this.profileQuests.serialize());
 

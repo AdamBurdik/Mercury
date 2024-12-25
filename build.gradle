@@ -46,6 +46,7 @@ dependencies {
     }
     // Cache
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
+    implementation("de.articdive:jnoise-pipeline:4.1.0")
 }
 
 java {
@@ -57,7 +58,7 @@ java {
 tasks {
     jar {
         manifest {
-            attributes["Main-Class"] = "me.adamix.mercury.Server" // Change this to your main class
+            attributes["Main-Class"] = "me.adamix.mercury.server.Server"
         }
     }
 
@@ -66,9 +67,10 @@ tasks {
     }
     shadowJar {
         mergeServiceFiles()
-        archiveClassifier.set("") // Prevent the -all suffix on the shadowjar file.
+        archiveClassifier.set("")
     }
 }
+
 
 test {
     useJUnitPlatform()

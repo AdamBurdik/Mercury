@@ -3,11 +3,10 @@ package me.adamix.mercury.server.quest.core;
 import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.profile.ProfileData;
-import me.adamix.mercury.server.player.profile.quest.ProfileQuests;
+import me.adamix.mercury.server.player.quest.PlayerQuests;
 import me.adamix.mercury.server.quest.ExampleQuest;
 import me.adamix.mercury.server.quest.core.result.QuestResult;
 import me.adamix.mercury.server.task.QuestTickTask;
-import net.minestom.server.MinecraftServer;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -61,15 +60,15 @@ public class QuestManager {
 		}
 
 		ProfileData profileData = player.getProfileData();
-		ProfileQuests profileQuests = profileData.getProfileQuests();
-		if (profileQuests.isCompleted(questID)) {
+		PlayerQuests playerQuests = profileData.getPlayerQuests();
+		if (playerQuests.isCompleted(questID)) {
 			return QuestResult.QUEST_ALREADY_COMPLETED;
 		}
 
-		profileQuests.addActiveQuest(questID);
+		playerQuests.addActiveQuest(questID);
 		this.activeQuests.put(player.getUuid(), quest);
 		quest.start(player);
-		profileQuests.setTrackingQuest(questID);
+		playerQuests.setTrackingQuest(questID);
 		player.updateSidebar();
 
 		return QuestResult.SUCCESS;
@@ -79,14 +78,14 @@ public class QuestManager {
 		if (!exits(questID)) {
 			return QuestResult.QUEST_NOT_FOUND;
 		}
-		ProfileQuests profileQuests = player.getProfileData().getProfileQuests();
+		PlayerQuests playerQuests = player.getProfileData().getPlayerQuests();
 
-		if (profileQuests.isCompleted(questID)) {
+		if (playerQuests.isCompleted(questID)) {
 			return QuestResult.QUEST_ALREADY_COMPLETED;
 		}
 
 		activeQuests.remove(player.getUuid());
-		profileQuests.completeQuest(questID);
+		playerQuests.completeQuest(questID);
 		player.updateSidebar();
 
 		return QuestResult.SUCCESS;

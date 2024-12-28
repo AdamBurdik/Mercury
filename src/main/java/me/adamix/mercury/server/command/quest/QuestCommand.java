@@ -38,7 +38,7 @@ public class QuestCommand extends Command {
 					break;
 				case "progress":
 					QuestManager questManager = Server.getQuestManager();
-					NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getTrackingQuest();
+					NamespaceID activeQuestID = player.getProfileData().getPlayerQuests().getTrackingQuest();
 					if (activeQuestID == null) {
 						sender.sendMessage(Component.text("No tracking quest!").color(ColorPallet.ERROR.getColor()));
 						break;

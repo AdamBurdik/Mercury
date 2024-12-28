@@ -26,6 +26,9 @@ public class ExampleQuest extends MercuryQuest {
 
 	@Override
 	public void tick(MercuryPlayer player) {
+		if (!playerStartDistance.containsKey(player)) {
+			return;
+		}
 		double currentDistance = player.getProfileData().getStatistics().get(StatisticCategory.GENERAL, "walked");
 		double startingDistance = playerStartDistance.get(player);
 		if (currentDistance - startingDistance >= targetWalked) {
@@ -37,7 +40,7 @@ public class ExampleQuest extends MercuryQuest {
 	@Override
 	public void finish(MercuryPlayer player) {
 		player.sendMessage("Example Quest finished!");
-		player.getProfileData().getProfileQuests().completeQuest(this.getQuestID());
+		player.getProfileData().getPlayerQuests().completeQuest(this.getQuestID());
 		super.finish(player);
 	}
 

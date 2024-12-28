@@ -42,7 +42,7 @@ public class PlaceholderManager {
 				return "Invalid Key";
 			}
 
-			NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getTrackingQuest();
+			NamespaceID activeQuestID = player.getProfileData().getPlayerQuests().getTrackingQuest();
 			if (activeQuestID == null) {
 				return "No Active Quest";
 			}

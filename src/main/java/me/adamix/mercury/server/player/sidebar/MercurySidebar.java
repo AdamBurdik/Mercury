@@ -1,7 +1,6 @@
 package me.adamix.mercury.server.player.sidebar;
 
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.party.MercuryParty;
 import me.adamix.mercury.server.placeholder.PlaceholderManager;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.quest.core.MercuryQuest;
@@ -22,7 +21,7 @@ public class MercurySidebar {
 	}
 
 	private void addQuestTracker(MercuryPlayer player, List<String> lines) {
-		NamespaceID activeQuestID = player.getProfileData().getProfileQuests().getTrackingQuest();
+		NamespaceID activeQuestID = player.getProfileData().getPlayerQuests().getTrackingQuest();
 		if (activeQuestID == null) {
 			return;
 		}

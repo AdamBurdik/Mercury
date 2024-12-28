@@ -9,6 +9,8 @@ import me.adamix.mercury.server.inventory.core.MercuryInventory;
 import me.adamix.mercury.server.item.MercuryItem;
 import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import me.adamix.mercury.server.mob.core.MercuryMob;
+import me.adamix.mercury.server.player.attribute.PlayerAttribute;
+import me.adamix.mercury.server.player.attribute.PlayerAttributes;
 import me.adamix.mercury.server.player.data.PlayerData;
 import me.adamix.mercury.server.player.data.PlayerDataManager;
 import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
@@ -176,7 +178,7 @@ public class MercuryPlayer extends Player {
 		}
 
 		// Set default attributes
-		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(getProfileData().getMovementSpeed());
+		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(getProfileData().getAttributes().get(PlayerAttribute.MOVEMENT_SPEED));
 
 
 		// Handle currently holding item
@@ -244,6 +246,10 @@ public class MercuryPlayer extends Player {
 		teleport(Server.LIMBO_LOCATION);
 	}
 
+	public @NotNull PlayerAttributes getPlayerAttributes() {
+		return getProfileData().getAttributes();
+	}
+
 	/**
 	 * Changes the player health, kill it if {@code health} is &lt;= 0 and is not dead yet.
 	 *
@@ -258,8 +264,8 @@ public class MercuryPlayer extends Player {
 
 		ProfileData profileData = getProfileData();
 
-		profileData.setHealth((int) health);
-		if (profileData.getHealth() < 0 && !isDead) {
+		getPlayerAttributes().set(PlayerAttribute.HEALTH, (double) health);
+		if (getPlayerAttributes().get(PlayerAttribute.HEALTH) < 0 && !isDead) {
 			kill();
 		}
 	}
@@ -271,7 +277,7 @@ public class MercuryPlayer extends Player {
 	 */
 	@Override
 	public float getHealth() {
-		return getProfileData().getHealth();
+		return getPlayerAttributes().get(PlayerAttribute.HEALTH).floatValue();
 	}
 
 	/**
@@ -280,7 +286,7 @@ public class MercuryPlayer extends Player {
 	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
 	 */
 	public int getMaxHealth() {
-		return getProfileData().getMaxHealth();
+		return getPlayerAttributes().get(PlayerAttribute.MAX_HEALTH).intValue();
 	}
 
 	/**
@@ -289,7 +295,7 @@ public class MercuryPlayer extends Player {
 	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
 	 */
 	public void setMovementSpeed(float movementSpeed) {
-		getProfileData().setMovementSpeed(movementSpeed);
+		getPlayerAttributes().set(PlayerAttribute.MOVEMENT_SPEED, (double) movementSpeed);
 		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(movementSpeed);
 	}
 
@@ -302,7 +308,7 @@ public class MercuryPlayer extends Player {
 	public void modifyMovementSpeed(float amount, AttributeOperation operation) {
 		AttributeInstance attribute = getAttribute(Attribute.MOVEMENT_SPEED);
 		attribute.addModifier(new AttributeModifier("movement_speed", amount, operation));
-		getProfileData().setMovementSpeed((float) attribute.getValue());
+		getPlayerAttributes().set(PlayerAttribute.MOVEMENT_SPEED, attribute.getValue());
 	}
 
 	/**
@@ -312,7 +318,7 @@ public class MercuryPlayer extends Player {
 	 *
 	 */
 	public float getMovementSpeed() {
-		return getProfileData().getMovementSpeed();
+		return getPlayerAttributes().get(PlayerAttribute.MOVEMENT_SPEED).floatValue();
 	}
 
 	/**

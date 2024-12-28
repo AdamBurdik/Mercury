@@ -3,8 +3,10 @@ package me.adamix.mercury.server.player.profile;
 import lombok.Getter;
 import lombok.Setter;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
+import me.adamix.mercury.server.player.attribute.PlayerAttribute;
+import me.adamix.mercury.server.player.attribute.PlayerAttributes;
 import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
-import me.adamix.mercury.server.player.profile.quest.ProfileQuests;
+import me.adamix.mercury.server.player.quest.PlayerQuests;
 import me.adamix.mercury.server.player.stats.Statistics;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
@@ -20,13 +22,10 @@ public class ProfileData {
 	private final @NotNull UUID playerUniqueId;
 	private final @NotNull UUID profileUniqueId;
 	@Setter private @NotNull String translationId;
-	private int health;
-	@Setter private int maxHealth;
-	@Setter private float movementSpeed;
-	@Setter private float attackSpeed;
+	private final @NotNull PlayerAttributes attributes;
 	private final @NotNull MercuryPlayerInventory playerInventory;
 	private final @NotNull Statistics statistics;
-	private final @NotNull ProfileQuests profileQuests;
+	private final @NotNull PlayerQuests playerQuests;
 
 	/**
 	 * Constructs a new ProfileData instance all the required fields
@@ -39,33 +38,18 @@ public class ProfileData {
 			@NotNull UUID playerUniqueId,
 			@NotNull UUID profileUniqueId,
 			@NotNull String translationId,
-			int health,
-			int maxHeath,
-			float movementSpeed,
-			float attackSpeed,
+			@NotNull PlayerAttributes attributes,
 			@NotNull MercuryPlayerInventory playerInventory,
 			@NotNull Statistics statistics,
-			@NotNull ProfileQuests profileQuests
+			@NotNull PlayerQuests playerQuests
 	) {
 		this.playerUniqueId = playerUniqueId;
 		this.profileUniqueId = profileUniqueId;
 		this.translationId = translationId;
-		this.health = health;
-		this.maxHealth = maxHeath;
-		this.movementSpeed = movementSpeed;
-		this.attackSpeed = attackSpeed;
+		this.attributes = attributes;
 		this.playerInventory = playerInventory;
 		this.statistics = statistics;
-		this.profileQuests = profileQuests;
-	}
-
-	/**
-	 * Sets the current health of player
-	 * Health cannot be above maxHealth or below zero
-	 * @param health
-	 */
-	public void setHealth(int health) {
-		this.health = Math.max(0, Math.min(health, maxHealth));
+		this.playerQuests = playerQuests;
 	}
 
 	public @NotNull Map<String, Object> serialize() {
@@ -74,13 +58,10 @@ public class ProfileData {
 		map.put("profileUniqueId", this.profileUniqueId.toString());
 		map.put("playerUniqueId", this.playerUniqueId.toString());
 		map.put("translationId", this.translationId);
-		map.put("health", this.health);
-		map.put("maxHealth", this.maxHealth);
-		map.put("movementSpeed", this.movementSpeed);
-		map.put("attackSpeed", this.attackSpeed);
+		map.put("attributes", this.attributes.serialize());
 		map.put("inventory", this.playerInventory.serialize());
 		map.put("statistics", this.statistics.serialize());
-		map.put("quests", this.profileQuests.serialize());
+		map.put("quests", this.playerQuests.serialize());
 
 		return map;
 	}
@@ -100,10 +81,13 @@ public class ProfileData {
 		UUID profileUniqueId = UUID.fromString(profileStringUniqueId);
 
 		String translationId = document.containsKey("translationId") ? document.getString("translationId") : PlayerDefaults.getTranslationId();
-		int health = document.containsKey("health") ? document.getInteger("health") : PlayerDefaults.getHealth();
-		int maxHealth = document.containsKey("maxHealth") ? document.getInteger("maxHealth") : PlayerDefaults.getMaxHealth();
-		float movementSpeed = document.containsKey("movementSpeed") ? document.getDouble("movementSpeed").floatValue() : PlayerDefaults.getMovementSpeed();
-		float attackSpeed = document.containsKey("attack") ? document.getDouble("attack").floatValue() : PlayerDefaults.getAttackSpeed();
+		Object attributesObject = document.get("attributes");
+		PlayerAttributes attributes;
+		if (attributesObject != null) {
+			attributes = PlayerAttributes.deserialize(((Map<String, Object>) attributesObject));
+		} else {
+			attributes = new PlayerAttributes();
+		}
 		Object inventoryObject = document.get("inventory");
 		MercuryPlayerInventory inventory;
 		if (inventoryObject != null) {
@@ -119,21 +103,18 @@ public class ProfileData {
 			profileStatistics = new Statistics();
 		}
 		Object questsObject = document.get("quests");
-		ProfileQuests quests;
+		PlayerQuests quests;
 		if (questsObject != null) {
-			quests = ProfileQuests.deserialize((Map<String, Object>) questsObject);
+			quests = PlayerQuests.deserialize((Map<String, Object>) questsObject);
 		} else {
-			quests = new ProfileQuests(new HashSet<>(), new HashSet<>());
+			quests = new PlayerQuests(new HashSet<>(), new HashSet<>());
 		}
 
 		return new ProfileData(
 				playerUniqueId,
 				profileUniqueId,
 				translationId,
-				health,
-				maxHealth,
-				movementSpeed,
-				attackSpeed,
+				attributes,
 				inventory,
 				profileStatistics,
 				quests

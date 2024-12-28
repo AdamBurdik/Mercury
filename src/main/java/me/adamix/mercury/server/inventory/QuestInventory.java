@@ -31,7 +31,7 @@ public class QuestInventory extends MercuryInventory {
 		QuestManager questManager = Server.getQuestManager();
 		Translation translation = TranslationManager.getTranslation(player);
 
-		Set<NamespaceID> activeQuests = player.getProfileData().getProfileQuests().getActiveQuests();
+		Set<NamespaceID> activeQuests = player.getProfileData().getPlayerQuests().getActiveQuests();
 		int i = 0;
 		for (NamespaceID activeQuestID : activeQuests) {
 			MercuryQuest quest = questManager.getRegisteredQuest(activeQuestID);
@@ -49,7 +49,7 @@ public class QuestInventory extends MercuryInventory {
 						click.setCancelled(true);
 						MercuryPlayer clickedPlayer = click.getPlayer();
 						String questID = click.getItemStack().getTag(Tag.String("questID"));
-						clickedPlayer.getProfileData().getProfileQuests().setTrackingQuest(NamespaceID.from(questID));
+						clickedPlayer.getProfileData().getPlayerQuests().setTrackingQuest(NamespaceID.from(questID));
 					});
 
 			i++;

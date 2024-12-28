@@ -7,14 +7,14 @@ import me.adamix.mercury.server.inventory.core.context.CloseContext;
 import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.server.inventory.core.context.OpenContext;
 import me.adamix.mercury.server.player.MercuryPlayer;
+import me.adamix.mercury.server.player.attribute.PlayerAttributes;
 import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
-import me.adamix.mercury.server.player.profile.quest.ProfileQuests;
+import me.adamix.mercury.server.player.quest.PlayerQuests;
 import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.utils.NamespaceID;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -39,13 +39,10 @@ public class ProfileCreationInventory extends MercuryInventory {
 									clickPlayer.getUuid(),
 									UUID.randomUUID(),
 									PlayerDefaults.getTranslationId(),
-									PlayerDefaults.getHealth(),
-									PlayerDefaults.getMaxHealth(),
-									PlayerDefaults.getMovementSpeed(),
-									PlayerDefaults.getAttackSpeed(),
+									new PlayerAttributes().setDefaults(),
 									new MercuryPlayerInventory(),
 									new Statistics(),
-									new ProfileQuests(new HashSet<>(), new HashSet<>())
+									new PlayerQuests(new HashSet<>(), new HashSet<>())
 							)
 					);
 					click.close();

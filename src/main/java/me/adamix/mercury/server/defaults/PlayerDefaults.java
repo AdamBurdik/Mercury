@@ -14,10 +14,11 @@ import java.io.File;
  */
 public class PlayerDefaults {
 	@Getter private static @NotNull String translationId = "en";
+	@Getter private static int damage = 1;
 	@Getter private static int health = 100;
 	@Getter private static int maxHealth = 100;
-	@Getter private static float movementSpeed = 0.1f;
-	@Getter private static float attackSpeed = 0.1f;
+	@Getter private static double movementSpeed = 0.1f;
+	@Getter private static double attackSpeed = 0.1f;
 
 
 	public static void load(File file) {
@@ -28,9 +29,10 @@ public class PlayerDefaults {
 		if (rawTranslationId != null) {
 			translationId = rawTranslationId;
 		}
+		damage = configuration.getIntegerSafe("damage");
 		health = configuration.getIntegerSafe("health");
 		maxHealth = configuration.getIntegerSafe("max_health");
-		movementSpeed = configuration.getFloatSafe("movement_speed");
-		attackSpeed = configuration.getFloatSafe("attack_speed");
+		movementSpeed = configuration.getDoubleSafe("movement_speed");
+		attackSpeed = configuration.getDoubleSafe("attack_speed");
 	}
 }

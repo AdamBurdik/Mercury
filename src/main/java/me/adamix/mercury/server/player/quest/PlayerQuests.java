@@ -1,4 +1,4 @@
-package me.adamix.mercury.server.player.profile.quest;
+package me.adamix.mercury.server.player.quest;
 
 import lombok.Getter;
 import net.minestom.server.utils.NamespaceID;
@@ -8,12 +8,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 @Getter
-public class ProfileQuests {
+public class PlayerQuests {
 	private final @NotNull Set<NamespaceID> activeQuests;
 	private final @NotNull Set<NamespaceID> completedQuests;
 	private @Nullable NamespaceID trackingQuest;
 
-	public ProfileQuests(@NotNull Set<NamespaceID> activeQuests, @NotNull Set<NamespaceID> completedQuests) {
+	public PlayerQuests(@NotNull Set<NamespaceID> activeQuests, @NotNull Set<NamespaceID> completedQuests) {
 		this.activeQuests = activeQuests;
 		this.completedQuests = completedQuests;
 	}
@@ -56,7 +56,7 @@ public class ProfileQuests {
 		return map;
 	}
 
-	public static ProfileQuests deserialize(Map<String, Object> map) {
+	public static PlayerQuests deserialize(Map<String, Object> map) {
 		Set<NamespaceID> activeQuestIDs = new HashSet<>();
 		Object activeQuestObject = map.get("activeQuests");
 		if (activeQuestObject instanceof List<?> list) {
@@ -77,6 +77,6 @@ public class ProfileQuests {
 			}
 		}
 
-		return new ProfileQuests(activeQuestIDs, completedQuestIDs);
+		return new PlayerQuests(activeQuestIDs, completedQuestIDs);
 	}
 }

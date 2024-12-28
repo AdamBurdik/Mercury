@@ -8,9 +8,13 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
+import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.exceptions.PlayerDataNotAvailableException;
+import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.stats.StatisticCategory;
 import me.adamix.mercury.server.player.stats.Statistics;
 import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +38,21 @@ public class PlayerDataManager {
 				.build();
 	}
 
+	public @Nullable PlayerData getPlayerData(@NotNull UUID playerUniqueId) {
+		return playerDataCache.getIfPresent(playerUniqueId);
+	}
+
+	public boolean hasPlayerData(@NotNull UUID playerUniqueId) {
+		return getPlayerData(playerUniqueId) != null;
+	}
+
 	/**
-	 * Retrieves {@link PlayerData} from database or cache using player ID
+	 * Retrieves {@link PlayerData} from cache, if not present fetches from database
 	 *
 	 * @param playerUniqueId unique ID of player
 	 * @return the {@link PlayerData} containing player data
 	 */
-	public @Nullable CompletableFuture<PlayerData> getPlayerData(UUID playerUniqueId) {
+	public @Nullable CompletableFuture<PlayerData> fetchPlayerData(UUID playerUniqueId) {
 		return CompletableFuture.supplyAsync(() -> {
 			PlayerData cachedPlayerData = playerDataCache.getIfPresent(playerUniqueId);
 			if (cachedPlayerData != null) {
@@ -122,5 +134,35 @@ public class PlayerDataManager {
 			LOGGER.error(String.valueOf(e));
 			throw new RuntimeException(e);
 		}));
+	}
+
+	/**
+	 * Loads player data and sets it to the player instance. <br>
+	 * If the data is unavailable, the player will be kicked from the server.
+	 *
+	 * @param player   the player whose data is being loaded.
+	 * @param runnable the function that will be called after the player data is loaded.
+	 * @throws PlayerDataNotAvailableException if player data is not available in the database.
+	 *                                         The player will be kicked as a result.
+	 */
+	public void loadPlayerData(@NotNull MercuryPlayer player, @Nullable Runnable runnable) {
+		CompletableFuture<PlayerData> completableFuture = Server.getPlayerDataManager().fetchPlayerData(player.getUuid());
+		if (completableFuture == null) {
+			player.kick("Cannot get player data from database! Please notify admins about this message!");
+			throw new PlayerDataNotAvailableException("Cannot get player data of " + player.getUsername() + "!");
+		}
+		completableFuture.thenAccept(data -> {
+			if (data == null) {
+				data = new PlayerData(
+						player.getUuid(),
+						new Statistics()
+				);
+				Server.getPlayerDataManager().savePlayerData(data);
+			}
+			player.setPlayerData(data);
+			if (runnable != null) {
+				runnable.run();
+			}
+		});
 	}
 }

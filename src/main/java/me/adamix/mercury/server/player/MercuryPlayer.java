@@ -3,7 +3,6 @@ package me.adamix.mercury.server.player;
 import lombok.Getter;
 import lombok.Setter;
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.exceptions.PlayerDataNotAvailableException;
 import me.adamix.mercury.server.exceptions.ProfileDataNotAvailableException;
 import me.adamix.mercury.server.inventory.core.MercuryInventory;
 import me.adamix.mercury.server.item.MercuryItem;
@@ -12,14 +11,10 @@ import me.adamix.mercury.server.mob.core.MercuryMob;
 import me.adamix.mercury.server.player.attribute.PlayerAttribute;
 import me.adamix.mercury.server.player.attribute.PlayerAttributes;
 import me.adamix.mercury.server.player.data.PlayerData;
-import me.adamix.mercury.server.player.data.PlayerDataManager;
 import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
-import me.adamix.mercury.server.player.profile.ProfileDataManager;
 import me.adamix.mercury.server.player.sidebar.MercurySidebar;
 import me.adamix.mercury.server.player.state.PlayerState;
-import me.adamix.mercury.server.player.stats.Statistics;
-import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.attribute.Attribute;
@@ -51,6 +46,7 @@ public class MercuryPlayer extends Player {
 	private @Nullable UUID dungeonUniqueId;
 	@Setter
 	private boolean inDebug = true;
+	@Setter
 	private @Nullable MercurySidebar sidebar;
 	@Setter
 	private @Nullable UUID partyUniqueId;
@@ -60,100 +56,27 @@ public class MercuryPlayer extends Player {
 	}
 
 	/**
-	 * Retrieves player data.
-	 *
-	 * @return the {@link PlayerData} associated with the player.
-	 * @throws PlayerDataNotAvailableException if the player is in the initialization state
-	 *                                         or the player data has not been loaded yet.
+	 * Sets player data. <br>
+	 * Called after player joins the server. <br>
+	 * Sets player state to limbo
+	 * @param playerData data to set
 	 */
-	public @NotNull PlayerData getPlayerData() {
-		if (state == PlayerState.INIT) {
-			throw new PlayerDataNotAvailableException("Cannot get player data in initialization state!");
-		}
-		if (playerData == null) {
-			throw new PlayerDataNotAvailableException("Player data is not loaded yet!");
-		}
-
-		return playerData;
+	public void setPlayerData(@NotNull PlayerData playerData) {
+		this.playerData = playerData;
+		this.state = PlayerState.LIMBO;
 	}
 
 	/**
-	 * Retrieves player data.
-	 * @return the {@link PlayerData} associated with player currently selected profile.
-	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet.
+	 * Sets profile data. <br>
+	 * Called after player chooses profile. <br>
+	 * Sets player state to play, if profile data is present
+	 * @param profileData data to set, may be null
 	 */
-	public @NotNull ProfileData getProfileData() {
-		if (state == PlayerState.INIT) {
-			LOGGER.error("Cannot get profile data when player is in initialization state!");
-			throw new ProfileDataNotAvailableException("Cannot get profile data when player is in initialization state!");
-		}
-		if (state == PlayerState.LIMBO) {
-			LOGGER.error("Cannot get profile data when player is in limbo state!");
-			throw new ProfileDataNotAvailableException("Cannot get profile data when player is in limbo state!");
-		}
-		if (profileData == null) {
-			LOGGER.error("Profile data is not loaded yet!");
-			throw new ProfileDataNotAvailableException("Profile data is not loaded yet!");
-		}
-
-		return profileData;
-	}
-
-	/**
-	 * Retrieves player data from {@link PlayerDataManager} and save it to player instance.
-	 * @param runnable function that will be called after player data is loaded.
-	 * @throws PlayerDataNotAvailableException if player data is not available in database.
-	 */
-	public void loadPlayerData(@Nullable Runnable runnable) {
-		CompletableFuture<PlayerData> completableFuture = Server.getPlayerDataManager().getPlayerData(this.getUuid());
-		if (completableFuture == null) {
-			this.kick("Cannot get player data from database! Please notify admins about this message!");
-			throw new PlayerDataNotAvailableException("Cannot get player data of " + this.getUsername() + "!");
-		}
-		completableFuture.thenAccept(data -> {
-			if (data == null) {
-				data = new PlayerData(
-						getUuid(),
-						new Statistics()
-				);
-				Server.getPlayerDataManager().savePlayerData(data);
-			}
-			this.playerData = data;
-			this.state = PlayerState.LIMBO;
-			if (runnable != null) {
-				runnable.run();
-			}
-		});
-	}
-
-	/**
-	 * Retrieves profile data from {@link ProfileDataManager} and save it to player instance.
-	 *
-	 * @param profileUniqueId unique ID of player profile.
-	 * @param runnable function that will be called after profile data is loaded.
-	 * @throws ProfileDataNotAvailableException if profile data is not available in database.
-	 */
-	public void loadProfileData(UUID profileUniqueId, @Nullable Runnable runnable) {
-		CompletableFuture<ProfileData> completableFuture = Server.getProfileDataManager().getProfileData(profileUniqueId);
-		if (completableFuture == null) {
-			throw new ProfileDataNotAvailableException("Cannot get profile data!");
-		}
-		completableFuture.thenAccept(data -> {
-			this.profileData = data;
+	public void setProfileData(@Nullable ProfileData profileData) {
+		this.profileData = profileData;
+		if (profileData != null) {
 			this.state = PlayerState.PLAY;
-			this.getGameInventory().updatePlayerInventory(this, true);
-			this.sidebar = new MercurySidebar();
-			this.sidebar.show(this);
-			updateAttributes();
-			if (runnable != null) {
-				MinecraftServer.getSchedulerManager().buildTask(runnable).schedule();
-//				CompletableFuture
-//						.runAsync(() -> {
-//							MinecraftServer.getSchedulerManager().buildTask(runnable).schedule();
-//						}, CompletableFuture.delayedExecutor(5, TimeUnit.SECONDS))
-//						.join();
-			}
-		});
+		}
 	}
 
 	/**

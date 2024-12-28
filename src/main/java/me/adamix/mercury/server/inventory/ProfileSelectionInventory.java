@@ -1,5 +1,6 @@
 package me.adamix.mercury.server.inventory;
 
+import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.inventory.core.MercuryInventory;
 import me.adamix.mercury.server.inventory.core.context.CloseContext;
 import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
@@ -56,7 +57,7 @@ public class ProfileSelectionInventory extends MercuryInventory {
 						);
 
 						click.close();
-						clickPlayer.loadProfileData(selectedProfileUniqueId, () -> {
+						Server.getProfileDataManager().loadProfileData(clickPlayer, selectedProfileUniqueId, () -> {
 							clickPlayer.removeEffect(PotionEffect.BLINDNESS);
 							clickPlayer.sendToSpawn();
 							clickPlayer.setNoGravity(false);

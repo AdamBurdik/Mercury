@@ -22,7 +22,7 @@ public class ProfileInfoCommand extends ListenerAdapter {
 
 		event.deferReply().queue();
 
-		Server.getProfileDataManager().getProfileData(uuid).thenAccept((profileData) -> {
+		Server.getProfileDataManager().fetchProfileData(uuid).thenAccept((profileData) -> {
 			EmbedBuilder embed = new EmbedBuilder();
 			embed.setTitle(String.format("Profile Information (%s)", profileData.getProfileUniqueId()));
 			embed.setColor(Color.GREEN);

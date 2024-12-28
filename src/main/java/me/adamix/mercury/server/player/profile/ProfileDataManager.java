@@ -8,9 +8,15 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
+import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.exceptions.ProfileDataNotAvailableException;
+import me.adamix.mercury.server.player.MercuryPlayer;
+import me.adamix.mercury.server.player.sidebar.MercurySidebar;
+import me.adamix.mercury.server.player.state.PlayerState;
 import net.minestom.server.MinecraftServer;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecConfigurationException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,17 +41,24 @@ public class ProfileDataManager {
 				.build();
 	}
 
+	public @Nullable ProfileData getProfileData(@NotNull UUID profileUniqueId) {
+		return profileDataCache.getIfPresent(profileUniqueId);
+	}
+
+	public boolean hasProfileData(@NotNull UUID profileUniqueId) {
+		return getProfileData(profileUniqueId) != null;
+	}
+
 	/**
-	 * Retrieves {@link ProfileData} from database or cache using profile ID
+	 * Retrieves {@link ProfileData} from cache, if not present fetches from database
 	 *
 	 * @param profileUniqueId unique ID of player profile
 	 * @return the {@link ProfileData} containing player profile data
 	 */
-	public @Nullable CompletableFuture<ProfileData> getProfileData(UUID profileUniqueId) {
+	public @Nullable CompletableFuture<ProfileData> fetchProfileData(UUID profileUniqueId) {
 		return CompletableFuture.supplyAsync(() -> {
-			ProfileData cachedData = profileDataCache.getIfPresent(profileUniqueId);
-			if (cachedData != null) {
-				return cachedData;
+			if (hasProfileData(profileUniqueId)) {
+				return getProfileData(profileUniqueId);
 			}
 
 			FindIterable<Document> playerDocumentIterable = profileDataCollection.find(Filters.eq("profileUniqueId", profileUniqueId.toString()));
@@ -75,9 +88,9 @@ public class ProfileDataManager {
 	 * @param profileUniqueId unique ID of player profile
 	 * @param consumer consumer which will be called synchronously
 	 */
-	public void getProfileDataSync(UUID profileUniqueId, Consumer<ProfileData> consumer) {
+	public void fetchProfileDataSync(UUID profileUniqueId, Consumer<ProfileData> consumer) {
 		MinecraftServer.getSchedulerManager().buildTask(() -> {
-			CompletableFuture<ProfileData> profileData = getProfileData(profileUniqueId);
+			CompletableFuture<ProfileData> profileData = fetchProfileData(profileUniqueId);
 			if (profileData == null) {
 				consumer.accept(null);
 			} else {
@@ -155,4 +168,33 @@ public class ProfileDataManager {
 		}).schedule();
 	}
 
+	/**
+	 * Loads profile data and sets it to the player instance. <br>
+	 *
+	 * @param profileUniqueId unique ID of player profile.
+	 * @param runnable function that will be called after profile data is loaded.
+	 * @throws ProfileDataNotAvailableException if profile data is not available in database.
+	 */
+	public void loadProfileData(@NotNull MercuryPlayer player, @NotNull UUID profileUniqueId, @Nullable Runnable runnable) {
+		CompletableFuture<ProfileData> completableFuture = Server.getProfileDataManager().fetchProfileData(profileUniqueId);
+		if (completableFuture == null) {
+			throw new ProfileDataNotAvailableException("Cannot get profile data of " + player.getUsername() + "! ProfileId: " + profileUniqueId);
+		}
+		completableFuture.thenAccept(data -> {
+			player.setProfileData(data);
+			player.getGameInventory().updatePlayerInventory(player, true);
+			MercurySidebar sidebar = new MercurySidebar();
+			player.setSidebar(sidebar);
+			sidebar.show(player);
+			player.updateAttributes();
+			if (runnable != null) {
+				MinecraftServer.getSchedulerManager().buildTask(runnable).schedule();
+//				CompletableFuture
+//						.runAsync(() -> {
+//							MinecraftServer.getSchedulerManager().buildTask(runnable).schedule();
+//						}, CompletableFuture.delayedExecutor(5, TimeUnit.SECONDS))
+//						.join();
+			}
+		});
+	}
 }

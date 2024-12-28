@@ -21,7 +21,7 @@ public class PlayerSpawnListener implements EventListener<PlayerSpawnEvent> {
 		}
 
 		MercuryPlayer player = MercuryPlayer.of(event);
-		player.loadPlayerData(() -> {
+		Server.getPlayerDataManager().loadPlayerData(player, () -> {
 			Component message = Component.newline()
 					.append(
 							Component.text("Welcome to the server!")

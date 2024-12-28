@@ -2,9 +2,7 @@ package me.adamix.mercury.server.item.component;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents description component in item lore
@@ -19,6 +17,19 @@ public record ItemDescriptionComponent(@NotNull String[] lines) implements Mercu
 	@Override
 	public String name() {
 		return "itemDescriptionComponent";
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) return true;
+		if (object == null || getClass() != object.getClass()) return false;
+		ItemDescriptionComponent that = (ItemDescriptionComponent) object;
+		return Objects.deepEquals(lines, that.lines);
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(lines);
 	}
 
 	@Override

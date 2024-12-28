@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public record ItemAttributeComponent(EnumMap<ItemAttribute, ItemAttributeValue> attributeMap) implements MercuryItemComponent {
 	public @Nullable ItemAttributeValue get(ItemAttribute attribute) {
@@ -39,6 +40,19 @@ public record ItemAttributeComponent(EnumMap<ItemAttribute, ItemAttributeValue> 
 	@Override
 	public String name() {
 		return "itemAttributeComponent";
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) return true;
+		if (object == null || getClass() != object.getClass()) return false;
+		ItemAttributeComponent that = (ItemAttributeComponent) object;
+		return Objects.equals(attributeMap, that.attributeMap);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(attributeMap);
 	}
 
 	@Override

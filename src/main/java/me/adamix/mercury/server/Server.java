@@ -350,7 +350,6 @@ public class Server {
 		commandManager.register(new PerformanceCommand());
 		commandManager.register(new InventoryTestCommand());
 		commandManager.register(new EntityNameTestCommand());
-		commandManager.register(new DatabaseTestCommand());
 		commandManager.register(new PlayTimeCommand());
 		commandManager.register(new EnterDungeonCommand());
 		commandManager.register(new CheckPlayerDataCommand());

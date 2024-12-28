@@ -3,8 +3,10 @@ package me.adamix.mercury.server;
 import me.adamix.mercury.server.player.stats.StatisticCategory;
 import me.adamix.mercury.server.player.stats.Statistics;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StatisticsSerializationTest {
 

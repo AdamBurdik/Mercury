@@ -190,7 +190,6 @@ public record MercuryItem (
 		}
 
 		map.put("components", componentMap);
-
 		return map;
 
 	}

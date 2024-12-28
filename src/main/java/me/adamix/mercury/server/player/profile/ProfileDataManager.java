@@ -8,10 +8,6 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
-import me.adamix.mercury.server.defaults.PlayerDefaults;
-import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
-import me.adamix.mercury.server.player.profile.quest.ProfileQuests;
-import me.adamix.mercury.server.player.stats.Statistics;
 import net.minestom.server.MinecraftServer;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecConfigurationException;
@@ -21,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;

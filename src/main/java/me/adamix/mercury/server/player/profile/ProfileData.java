@@ -3,7 +3,6 @@ package me.adamix.mercury.server.player.profile;
 import lombok.Getter;
 import lombok.Setter;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
-import me.adamix.mercury.server.player.attribute.PlayerAttribute;
 import me.adamix.mercury.server.player.attribute.PlayerAttributes;
 import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import me.adamix.mercury.server.player.quest.PlayerQuests;
@@ -11,7 +10,10 @@ import me.adamix.mercury.server.player.stats.Statistics;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Represents data class to store player profile data which is stored in database

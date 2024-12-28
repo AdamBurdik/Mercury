@@ -23,7 +23,6 @@ public class InventorySerializationTest {
 	private static final String[] names = {"Example Item", "Test Item", "Really Good Item"};
 	private static final Material[] materials = {Material.STONE, Material.DIAMOND, Material.DIAMOND_SWORD};
 
-
 	private MercuryItem getRandomItem() {
 		Random random = new Random();
 
@@ -57,6 +56,5 @@ public class InventorySerializationTest {
 		MercuryPlayerInventory deserializedInventory = MercuryPlayerInventory.deserialize(serializedInventory);
 
 		assertEquals(playerInventory, deserializedInventory);
-
 	}
 }

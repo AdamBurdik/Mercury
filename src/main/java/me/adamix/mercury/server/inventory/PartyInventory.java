@@ -9,7 +9,6 @@ import me.adamix.mercury.server.party.MercuryParty;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.skin.PlayerSkinProvider;
 import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponent;
 import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.item.ItemComponent;
 import net.minestom.server.item.ItemStack;

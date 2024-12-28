@@ -1,7 +1,6 @@
 package me.adamix.mercury.server.mob.core.attribute;
 
 import me.adamix.mercury.server.mob.core.component.MobAttributeComponent;
-import net.minestom.server.entity.attribute.AttributeOperation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

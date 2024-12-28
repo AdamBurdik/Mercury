@@ -1,7 +1,6 @@
 package me.adamix.mercury.server.player.attribute;
 
 import me.adamix.mercury.server.defaults.PlayerDefaults;
-import me.adamix.mercury.server.player.stats.StatisticCategory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

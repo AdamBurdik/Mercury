@@ -10,17 +10,13 @@ import me.adamix.mercury.server.item.rarity.ItemRarity;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ItemSerializationTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ItemSerializationTest.class);
 
 	@Test
 	public void testItemSerialization() {
@@ -42,7 +38,6 @@ public class ItemSerializationTest {
 		);
 
 		Map<String, Object> serializedItem = mercuryItem.serialize();
-
 		MercuryItem deserializedItem = MercuryItem.deserialize(serializedItem);
 
 		assertEquals(mercuryItem, deserializedItem);

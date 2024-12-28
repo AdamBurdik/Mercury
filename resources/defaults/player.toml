@@ -3,3 +3,4 @@ health = 100
 max_health = 100
 movement_speed = 0.1
 attack_speed = 0.1
+damage = 1

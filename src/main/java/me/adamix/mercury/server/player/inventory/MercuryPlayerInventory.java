@@ -56,7 +56,7 @@ public class MercuryPlayerInventory {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getItems(), updatedSlots);
+		return Objects.hash(getItems());
 	}
 
 	public @NotNull Map<String, Object> serialize() {

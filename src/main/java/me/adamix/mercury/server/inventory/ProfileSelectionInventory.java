@@ -7,6 +7,7 @@ import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.server.inventory.core.context.OpenContext;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.profile.ProfileData;
+import me.adamix.mercury.server.player.state.PlayerState;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.item.ItemStack;
@@ -50,6 +51,7 @@ public class ProfileSelectionInventory extends MercuryInventory {
 						UUID selectedProfileUniqueId = click.getItemStack().getTag(Tag.UUID("profile_uuid"));
 
 						MercuryPlayer clickPlayer = click.getPlayer();
+						clickPlayer.setState(PlayerState.PLAY);
 
 						clickPlayer.sendMessage(
 								Component.text("You selected profile with id: " + selectedProfileUniqueId)

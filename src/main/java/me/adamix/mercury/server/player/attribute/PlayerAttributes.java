@@ -12,14 +12,16 @@ import java.util.Objects;
 public class PlayerAttributes {
 	private final EnumMap<PlayerAttribute, Double> attributeMap = new EnumMap<>(PlayerAttribute.class);
 
-	public @NotNull PlayerAttributes setDefaults() {
+	public PlayerAttributes() {
+		setDefaults();
+	}
+
+	public void setDefaults() {
 		set(PlayerAttribute.DAMAGE, (double) PlayerDefaults.getDamage());
 		set(PlayerAttribute.HEALTH, (double) PlayerDefaults.getHealth());
 		set(PlayerAttribute.MAX_HEALTH, (double) PlayerDefaults.getMaxHealth());
 		set(PlayerAttribute.ATTACK_SPEED, PlayerDefaults.getAttackSpeed());
 		set(PlayerAttribute.MOVEMENT_SPEED, PlayerDefaults.getMovementSpeed());
-
-		return this;
 	}
 
 	public @NotNull PlayerAttributes set(@NotNull PlayerAttribute attribute, @Nullable Double value) {

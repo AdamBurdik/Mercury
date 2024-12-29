@@ -23,7 +23,6 @@ import java.util.UUID;
 public class ProfileData {
 	private final @NotNull UUID playerUniqueId;
 	private final @NotNull UUID profileUniqueId;
-	@Setter private @NotNull String translationId;
 	private final @NotNull PlayerAttributes attributes;
 	private final @NotNull MercuryPlayerInventory playerInventory;
 	private final @NotNull Statistics statistics;
@@ -39,7 +38,6 @@ public class ProfileData {
 	public ProfileData(
 			@NotNull UUID playerUniqueId,
 			@NotNull UUID profileUniqueId,
-			@NotNull String translationId,
 			@NotNull PlayerAttributes attributes,
 			@NotNull MercuryPlayerInventory playerInventory,
 			@NotNull Statistics statistics,
@@ -47,7 +45,6 @@ public class ProfileData {
 	) {
 		this.playerUniqueId = playerUniqueId;
 		this.profileUniqueId = profileUniqueId;
-		this.translationId = translationId;
 		this.attributes = attributes;
 		this.playerInventory = playerInventory;
 		this.statistics = statistics;
@@ -59,7 +56,6 @@ public class ProfileData {
 
 		map.put("profileUniqueId", this.profileUniqueId.toString());
 		map.put("playerUniqueId", this.playerUniqueId.toString());
-		map.put("translationId", this.translationId);
 		map.put("attributes", this.attributes.serialize());
 		map.put("inventory", this.playerInventory.serialize());
 		map.put("statistics", this.statistics.serialize());
@@ -82,7 +78,6 @@ public class ProfileData {
 		}
 		UUID profileUniqueId = UUID.fromString(profileStringUniqueId);
 
-		String translationId = document.containsKey("translationId") ? document.getString("translationId") : PlayerDefaults.getTranslationId();
 		Object attributesObject = document.get("attributes");
 		PlayerAttributes attributes;
 		if (attributesObject != null) {
@@ -115,7 +110,6 @@ public class ProfileData {
 		return new ProfileData(
 				playerUniqueId,
 				profileUniqueId,
-				translationId,
 				attributes,
 				inventory,
 				profileStatistics,

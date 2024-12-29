@@ -21,11 +21,10 @@ public class SaveDataTask implements MercuryTask {
 		task = MinecraftServer.getSchedulerManager().scheduleTask(() -> {
 			LOGGER.info("Saving data");
 			for (MercuryPlayer onlinePlayer : Server.getOnlinePlayers()) {
-				if (onlinePlayer.hasPlayerData()) {
+				if (onlinePlayer.getState().isPlayable()) {
 					PlayerData playerData = onlinePlayer.getPlayerData();
 					Server.getPlayerDataManager().savePlayerData(playerData);
-				}
-				if (onlinePlayer.hasProfileData()) {
+
 					ProfileData profileData = onlinePlayer.getProfileData();
 					Server.getProfileDataManager().saveProfileData(profileData);
 				}

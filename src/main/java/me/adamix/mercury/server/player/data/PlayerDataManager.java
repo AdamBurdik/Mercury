@@ -9,6 +9,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.exceptions.PlayerDataNotAvailableException;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.stats.StatisticCategory;
@@ -73,46 +74,12 @@ public class PlayerDataManager {
 					return null;
 				}
 
-				return extractPlayerData(document);
+				return PlayerData.deserialize(document);
 			}
 		}).exceptionally((e -> {
 			LOGGER.error(String.valueOf(e));
 			throw new RuntimeException(e);
 		}));
-	}
-
-	/**
-	 * Extract {@link PlayerData} from {@link Document} object
-	 * @param document document containing player data
-	 * @return the {@link PlayerData} containing extracted data
-	 */
-	private PlayerData extractPlayerData(Document document) {
-		String playerStringUniqueId = document.getString("playerUniqueId");
-		if (!document.containsKey("playerUniqueId")) {
-			throw new RuntimeException("Player data does not include player uuid!");
-		}
-		UUID playerUniqueId = UUID.fromString(playerStringUniqueId);
-
-		Map<String, Object> statisticMap = document.containsKey("statistics") ? document.get("statistics", Document.class) : new HashMap<>();
-		Statistics playerStatistics = new Statistics();
-
-		statisticMap.forEach((categoryKey, categoryValue) -> {
-			if (categoryValue instanceof HashMap<?, ?> rawMap) {
-				@SuppressWarnings("unchecked")
-				HashMap<String, Object> categoryMap = (HashMap<String, Object>) rawMap;
-				categoryMap.forEach((key, value) -> {
-					if (value instanceof Float floatValue) {
-						StatisticCategory statisticCategory = StatisticCategory.valueOf(key.toUpperCase());
-						playerStatistics.set(statisticCategory, key, floatValue);
-					}
-				});
-			}
-		});
-
-		return new PlayerData(
-				playerUniqueId,
-				playerStatistics
-		);
 	}
 
 	/**
@@ -155,6 +122,7 @@ public class PlayerDataManager {
 			if (data == null) {
 				data = new PlayerData(
 						player.getUuid(),
+						PlayerDefaults.getTranslationId(),
 						new Statistics()
 				);
 				Server.getPlayerDataManager().savePlayerData(data);

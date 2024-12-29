@@ -33,8 +33,12 @@ public class PlayerAttributes {
 		return attributeMap.containsKey(attribute);
 	}
 
-	public @Nullable Double get(@NotNull PlayerAttribute attribute) {
-		return attributeMap.get(attribute);
+	public double get(@NotNull PlayerAttribute attribute) {
+		Double value = attributeMap.get(attribute);
+		if (value != null) {
+			return value;
+		}
+		throw new RuntimeException("Player attribute " + attribute.name() + " is not available!");
 	}
 
 	public Map<String, Object> serialize() {

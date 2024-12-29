@@ -15,7 +15,7 @@ public class ClassCommand extends Command {
 		setDefaultExecutor((sender, ctx) -> {
 
 			if (sender instanceof MercuryPlayer player) {
-				player.clearProfileData();
+				player.setProfileData(null);
 
 				player.setNoGravity(true);
 				player.setGameMode(GameMode.CREATIVE);

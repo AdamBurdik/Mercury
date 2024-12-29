@@ -35,7 +35,7 @@ import me.adamix.mercury.server.placeholder.PlaceholderManager;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.data.PlayerDataManager;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
-import me.adamix.mercury.server.player.provider.GamePlayerProvider;
+import me.adamix.mercury.server.player.provider.MercuryPlayerProvider;
 import me.adamix.mercury.server.quest.core.QuestManager;
 import me.adamix.mercury.server.task.PlayTimeTask;
 import me.adamix.mercury.server.task.PlayerTickTask;
@@ -170,8 +170,7 @@ public class Server {
 		LOGGER.info("Initializing mercury server {} ({})", MinecraftServer.VERSION_NAME, MinecraftServer.PROTOCOL_VERSION);
 
 		Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-			System.err.println("Exception in thread " + thread.getName() + ": " + throwable.getMessage());
-			throwable.printStackTrace();
+			LOGGER.error("Uncaught exception in thread " + thread.getName(), throwable);
 		});
 
 		minecraftServer = MinecraftServer.init();
@@ -181,7 +180,7 @@ public class Server {
 		reload();
 
 		// Set player provider to custom one
-		MinecraftServer.getConnectionManager().setPlayerProvider(new GamePlayerProvider());
+		MinecraftServer.getConnectionManager().setPlayerProvider(new MercuryPlayerProvider());
 
 		// Start tick monitor for tab list
 		tickMonitorManager.start();

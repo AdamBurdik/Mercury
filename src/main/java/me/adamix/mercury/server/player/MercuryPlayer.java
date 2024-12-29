@@ -3,6 +3,7 @@ package me.adamix.mercury.server.player;
 import lombok.Getter;
 import lombok.Setter;
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.exceptions.PlayerDataNotAvailableException;
 import me.adamix.mercury.server.exceptions.ProfileDataNotAvailableException;
 import me.adamix.mercury.server.inventory.core.MercuryInventory;
 import me.adamix.mercury.server.item.MercuryItem;
@@ -19,8 +20,6 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.attribute.AttributeInstance;
-import net.minestom.server.entity.attribute.AttributeModifier;
-import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.event.trait.PlayerEvent;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
@@ -36,94 +35,64 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Getter
+@Setter
 public class MercuryPlayer extends Player {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MercuryPlayer.class);
-	private @NotNull PlayerState state = PlayerState.INIT;
-	private @Nullable ProfileData profileData;
+	private PlayerState state = PlayerState.INIT;
 	private @Nullable PlayerData playerData;
+	private @Nullable ProfileData profileData;
+
 	private final @NotNull Set<MercuryMob> viewedMobs = new HashSet<>();
-	@Setter
 	private @Nullable UUID dungeonUniqueId;
-	@Setter
 	private boolean inDebug = true;
-	@Setter
 	private @Nullable MercurySidebar sidebar;
-	@Setter
 	private @Nullable UUID partyUniqueId;
 
-	public MercuryPlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
+	public MercuryPlayer(
+			@NotNull PlayerConnection playerConnection,
+			@NotNull GameProfile gameProfile
+	) {
 		super(playerConnection, gameProfile);
 	}
 
 	/**
-	 * Sets player data. <br>
-	 * Called after player joins the server. <br>
-	 * Sets player state to limbo
-	 * @param playerData data to set
-	 */
-	public void setPlayerData(@NotNull PlayerData playerData) {
-		this.playerData = playerData;
-		this.state = PlayerState.LIMBO;
-	}
-
-	/**
-	 * Sets profile data. <br>
-	 * Called after player chooses profile. <br>
-	 * Sets player state to play, if profile data is present
-	 * @param profileData data to set, may be null
-	 */
-	public void setProfileData(@Nullable ProfileData profileData) {
-		this.profileData = profileData;
-		if (profileData != null) {
-			this.state = PlayerState.PLAY;
-		}
-	}
-
-	/**
-	 * Updates player attributes based on the equipped items and currently held item.
-	 * <br>
-	 * <br>
-	 * The process includes:
-	 * <br>
-	 * - Clearing existing attribute modifiers.
-	 * <br>
-	 * - Resetting default attributes (e.g., movement speed).
-	 * <br>
-	 * - Applying attribute modifiers from item currently held in specified slot.
+	 * Retrieves player data.
 	 *
-	 * @param heldSlot the inventory slot index of the item the player is currently holding.
-	 *                 If the slot contains no item, only default attributes are applied.
+	 * @return the {@link PlayerData} associated with the player.
+	 * @throws PlayerDataNotAvailableException if the player is in the initialization state
+	 *                                         or the player data has not been loaded yet.
 	 */
-	public void updateAttributes(int heldSlot) {
-		// Clear attributes
-		for (AttributeInstance attribute : getAttributes()) {
-			attribute.clearModifiers();
+	public @NotNull PlayerData getPlayerData() {
+		if (state == PlayerState.INIT) {
+			throw new PlayerDataNotAvailableException("Cannot get player data in initialization state!");
+		}
+		if (playerData == null) {
+			throw new PlayerDataNotAvailableException("Player data is not loaded yet!");
 		}
 
-		// Set default attributes
-		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(getProfileData().getAttributes().get(PlayerAttribute.MOVEMENT_SPEED));
-
-
-		// Handle currently holding item
-		Optional<MercuryItem> optionalHeldItem = getGameInventory().get(heldSlot);
-		if (optionalHeldItem.isPresent()) {
-			MercuryItem heldItem = optionalHeldItem.get();
-
-			ItemAttributeComponent itemAttributeComponent = heldItem.getComponent(ItemAttributeComponent.class);
-			if (itemAttributeComponent != null) {
-				itemAttributeComponent.applyToPlayer(this);
-			}
-		}
+		return playerData;
 	}
 
 	/**
-	 * Updates player attributes based on item they are currently holding.
-	 * <br>
-	 * This is a convenience method that delegates to {@link #updateAttributes(int)}
-	 * using the slot index of item the player is currently holding.
+	 * Retrieves player data.
+	 * @return the {@link PlayerData} associated with player currently selected profile.
+	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet.
 	 */
-	public void updateAttributes() {
-		this.updateAttributes(getHeldSlot());
+	public @NotNull ProfileData getProfileData() {
+		if (state == PlayerState.INIT) {
+			LOGGER.error("Cannot get profile data when player is in initialization state! ({}={})", this.getUsername(), this.getUuid());
+			throw new ProfileDataNotAvailableException("Cannot get profile data when player is in initialization state!");
+		}
+		if (state == PlayerState.LIMBO) {
+			LOGGER.error("Cannot get profile data when player is in limbo state! ({}={})", this.getUsername(), this.getUuid());
+			throw new ProfileDataNotAvailableException("Cannot get profile data when player is in limbo state!");
+		}
+		if (profileData == null) {
+			LOGGER.error("Profile data is not loaded yet! ({}={})", this.getUsername(), this.getUuid());
+			throw new ProfileDataNotAvailableException("Profile data is not loaded yet!");
+		}
+
+		return profileData;
 	}
 
 	/**
@@ -133,13 +102,6 @@ public class MercuryPlayer extends Player {
 		if (this.sidebar != null) {
 			this.sidebar.update(this);
 		}
-	}
-
-	/**
-	 * Clear current player profile data
-	 */
-	public void clearProfileData() {
-		this.profileData = null;
 	}
 
 	/**
@@ -169,79 +131,12 @@ public class MercuryPlayer extends Player {
 		teleport(Server.LIMBO_LOCATION);
 	}
 
+	/**
+	 * Retrieves player attributes from profile data manager
+	 * @return {@link PlayerAttributes}, may be null if profile data is not available
+	 */
 	public @NotNull PlayerAttributes getPlayerAttributes() {
 		return getProfileData().getAttributes();
-	}
-
-	/**
-	 * Changes the player health, kill it if {@code health} is &lt;= 0 and is not dead yet.
-	 *
-	 * @param health the new player health
-	 * @throws ProfileDataNotAvailableException if the player is in limbo state or the profile data has not been loaded yet
-	 */
-	@Override
-	public void setHealth(float health) {
-		if (state == PlayerState.INIT) {
-			return;
-		}
-
-		ProfileData profileData = getProfileData();
-
-		getPlayerAttributes().set(PlayerAttribute.HEALTH, (double) health);
-		if (getPlayerAttributes().get(PlayerAttribute.HEALTH) < 0 && !isDead) {
-			kill();
-		}
-	}
-
-	/**
-	 * Retrieves player current health
-	 * @return The player current health, or -1 if profile data is null
-	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
-	 */
-	@Override
-	public float getHealth() {
-		return getPlayerAttributes().get(PlayerAttribute.HEALTH).floatValue();
-	}
-
-	/**
-	 * Retrieves player max health
-	 * @return The player max health, or -1 if profile data is null
-	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
-	 */
-	public int getMaxHealth() {
-		return getPlayerAttributes().get(PlayerAttribute.MAX_HEALTH).intValue();
-	}
-
-	/**
-	 * Changes the player movement speed and edit attribute value
-	 * @param movementSpeed new movement speed value
-	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
-	 */
-	public void setMovementSpeed(float movementSpeed) {
-		getPlayerAttributes().set(PlayerAttribute.MOVEMENT_SPEED, (double) movementSpeed);
-		getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(movementSpeed);
-	}
-
-	/**
-	 * Adjusts the player movement speed by specific amount and operation
-	 * @param amount - Amount to modify movement speed by
-	 * @param operation - Attribute operation to apply (Add, Multiply Base or Multiply Total)
-	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
-	 */
-	public void modifyMovementSpeed(float amount, AttributeOperation operation) {
-		AttributeInstance attribute = getAttribute(Attribute.MOVEMENT_SPEED);
-		attribute.addModifier(new AttributeModifier("movement_speed", amount, operation));
-		getPlayerAttributes().set(PlayerAttribute.MOVEMENT_SPEED, attribute.getValue());
-	}
-
-	/**
-	 * Retrieves player current movement speed
-	 * @return The player current movement speed, or -1 if profile data is null
-	 * @throws ProfileDataNotAvailableException if the player is in initialization or limbo state or the profile data has not been loaded yet
-	 *
-	 */
-	public float getMovementSpeed() {
-		return getPlayerAttributes().get(PlayerAttribute.MOVEMENT_SPEED).floatValue();
 	}
 
 	/**
@@ -251,10 +146,7 @@ public class MercuryPlayer extends Player {
 
 	 */
 	public @Nullable String getTranslationId() {
-		if (!hasProfileData()) {
-			return null;
-		}
-		return getProfileData().getTranslationId();
+		return getPlayerData().getTranslationId();
 	}
 
 	/**
@@ -268,26 +160,6 @@ public class MercuryPlayer extends Player {
 	}
 
 	/**
-	 * Shows {@link MercuryMob game mob} to player and update its name
-	 * @param mob mob to show
-	 */
-	public void show(MercuryMob mob) {
-		mob.addViewer(this);
-		this.viewedMobs.add(mob);
-
-		mob.updateName(this);
-	}
-
-	/**
-	 * Hides {@link MercuryMob game mob} from player
-	 * @param mob mob to hide
-	 */
-	public void hide(MercuryMob mob) {
-		mob.removeViewer(this);
-		this.viewedMobs.remove(mob);
-	}
-
-	/**
 	 * Opens the specified game inventory
 	 * @param inventory inventory to open
 	 */
@@ -295,16 +167,55 @@ public class MercuryPlayer extends Player {
 		Server.getInventoryManager().open(inventory, this);
 	}
 
-	public boolean hasPlayerData() {
-		return this.playerData != null;
+	/**
+	 * Updates player attributes based on the equipped items and currently held item.
+	 * <br>
+	 * <br>
+	 * The process includes:
+	 * <br>
+	 * - Clearing existing attribute modifiers.
+	 * <br>
+	 * - Resetting default attributes (e.g., movement speed).
+	 * <br>
+	 * - Applying attribute modifiers from item currently held in specified slot.
+	 *
+	 * @param heldSlot the inventory slot index of the item the player is currently holding.
+	 *                 If the slot contains no item, only default attributes are applied.
+	 */
+	public void updateAttributes(int heldSlot) {
+		// Clear attributes
+		for (AttributeInstance attribute : this.getAttributes()) {
+			attribute.clearModifiers();
+		}
+
+		// Set default attributes
+		this.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(this.getProfileData().getAttributes().get(PlayerAttribute.MOVEMENT_SPEED));
+
+
+		// Handle currently holding item
+		Optional<MercuryItem> optionalHeldItem = this.getGameInventory().get(heldSlot);
+		if (optionalHeldItem.isPresent()) {
+			MercuryItem heldItem = optionalHeldItem.get();
+
+			ItemAttributeComponent itemAttributeComponent = heldItem.getComponent(ItemAttributeComponent.class);
+			if (itemAttributeComponent != null) {
+				itemAttributeComponent.applyToPlayer(this);
+			}
+		}
 	}
 
-	public boolean hasProfileData() {
-		return this.profileData != null;
+	/**
+	 * Updates player attributes based on item they are currently holding.
+	 * <br>
+	 * This is a convenience method that delegates to {@link #updateAttributes(int)}
+	 * using the slot index of item the player is currently holding.
+	 */
+	public void updateAttributes() {
+		updateAttributes(this.getHeldSlot());
 	}
 
 	public static @NotNull MercuryPlayer of(@NotNull PlayerEvent event) {
-		return (MercuryPlayer) event.getPlayer();
+		return of(event.getPlayer());
 	}
 
 	public static @NotNull MercuryPlayer of(@NotNull Player player) {

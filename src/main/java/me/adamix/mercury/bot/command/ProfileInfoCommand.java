@@ -28,9 +28,8 @@ public class ProfileInfoCommand extends ListenerAdapter {
 			embed.setColor(Color.GREEN);
 			embed.addField("General",
 					String.format(
-							"> **UUID:** %s \n> **Translation:** %s",
-							profileData.getPlayerUniqueId(),
-							profileData.getTranslationId()
+							"> **UUID:** %s",
+							profileData.getPlayerUniqueId()
 					), true);
 			embed.addField("Attributes",
 					String.format(

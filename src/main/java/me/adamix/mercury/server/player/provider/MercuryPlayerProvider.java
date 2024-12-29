@@ -7,7 +7,7 @@ import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
-public class GamePlayerProvider implements PlayerProvider {
+public class MercuryPlayerProvider implements PlayerProvider {
 
 	@Override
 	public @NotNull Player createPlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {

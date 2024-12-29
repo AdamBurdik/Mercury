@@ -12,12 +12,9 @@ public class PlayerMoveListener implements EventListener<PlayerMoveEvent> {
 	@Override
 	public @NotNull Result run(@NotNull PlayerMoveEvent event) {
 		MercuryPlayer player = MercuryPlayer.of(event);
-		if (player.getState() == PlayerState.INIT) {
+		if (!player.getState().isPlayable()) {
 			event.setCancelled(true);
 			return Result.SUCCESS;
-		}
-		if (player.getState() == PlayerState.LIMBO) {
-			event.setCancelled(true);
 		}
 		if (player.getState() == PlayerState.PLAY) {
 			// Setting Y to 0 because walked distance should ignore jumping

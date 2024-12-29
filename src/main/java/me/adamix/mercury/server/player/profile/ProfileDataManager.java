@@ -12,6 +12,7 @@ import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.exceptions.ProfileDataNotAvailableException;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.sidebar.MercurySidebar;
+import me.adamix.mercury.server.player.state.PlayerState;
 import net.minestom.server.MinecraftServer;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecConfigurationException;
@@ -181,6 +182,7 @@ public class ProfileDataManager {
 		}
 		completableFuture.thenAccept(data -> {
 			player.setProfileData(data);
+			player.setState(PlayerState.PLAY);
 			player.getGameInventory().updatePlayerInventory(player, true);
 			MercurySidebar sidebar = new MercurySidebar();
 			player.setSidebar(sidebar);

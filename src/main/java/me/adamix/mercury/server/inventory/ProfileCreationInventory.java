@@ -38,7 +38,7 @@ public class ProfileCreationInventory extends MercuryInventory {
 							new ProfileData(
 									clickPlayer.getUuid(),
 									UUID.randomUUID(),
-									new PlayerAttributes().setDefaults(),
+									new PlayerAttributes(),
 									new MercuryPlayerInventory(),
 									new Statistics(),
 									new PlayerQuests(new HashSet<>(), new HashSet<>())

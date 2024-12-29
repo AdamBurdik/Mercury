@@ -1,8 +1,11 @@
 package me.adamix.mercury.server.task;
 
+import me.adamix.mercury.server.common.ColorPallet;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import me.adamix.mercury.server.player.state.PlayerState;
 import me.adamix.mercury.server.task.core.MercuryTask;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.timer.Task;
@@ -17,11 +20,18 @@ public class PlayerTickTask implements MercuryTask {
 		task = MinecraftServer.getSchedulerManager().scheduleTask(() -> {
 			for (@NotNull Player onlinePlayer : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
 				MercuryPlayer player = MercuryPlayer.of(onlinePlayer);
-				if (player.getState() == PlayerState.INIT || player.getState() == PlayerState.LIMBO) {
+				if (player.getState() == PlayerState.PRE_INIT) {
+					player.sendActionBar(
+							Component.text("Data is loading... please wait")
+									.color(TextColor.color(ColorPallet.AQUA.getColor()))
+					);
+				}
+
+				if (!player.getState().isPlayable()) {
 					continue;
 				}
 			}
-		}, TaskSchedule.tick(1), TaskSchedule.tick(20));
+		}, TaskSchedule.tick(1), TaskSchedule.tick(5));
 	}
 
 	@Override

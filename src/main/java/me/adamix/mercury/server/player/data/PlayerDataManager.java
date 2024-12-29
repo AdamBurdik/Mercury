@@ -12,6 +12,7 @@ import me.adamix.mercury.server.Server;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
 import me.adamix.mercury.server.exceptions.PlayerDataNotAvailableException;
 import me.adamix.mercury.server.player.MercuryPlayer;
+import me.adamix.mercury.server.player.state.PlayerState;
 import me.adamix.mercury.server.player.stats.StatisticCategory;
 import me.adamix.mercury.server.player.stats.Statistics;
 import org.bson.Document;
@@ -128,6 +129,7 @@ public class PlayerDataManager {
 				Server.getPlayerDataManager().savePlayerData(data);
 			}
 			player.setPlayerData(data);
+			player.setState(PlayerState.INIT);
 			if (runnable != null) {
 				runnable.run();
 			}

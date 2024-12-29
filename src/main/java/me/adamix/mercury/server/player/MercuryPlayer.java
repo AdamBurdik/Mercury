@@ -38,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
 @Setter
 public class MercuryPlayer extends Player {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MercuryPlayer.class);
-	private PlayerState state = PlayerState.INIT;
+	private PlayerState state = PlayerState.PRE_INIT;
 	private @Nullable PlayerData playerData;
 	private @Nullable ProfileData profileData;
 

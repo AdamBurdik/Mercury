@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class QuestProgress {
+public class QuestProgress implements Cloneable {
 	private int stageCount;
 	private int currentStage;
 
@@ -22,7 +22,8 @@ public class QuestProgress {
 		return (float) (100 * currentStage) / stageCount;
 	}
 
-	public QuestProgress clone() {
-		return new QuestProgress(stageCount, currentStage);
+	@Override
+	protected QuestProgress clone() {
+		return new QuestProgress(this.stageCount, this.currentStage);
 	}
 }

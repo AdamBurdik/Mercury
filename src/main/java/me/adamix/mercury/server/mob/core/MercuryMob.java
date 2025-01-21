@@ -13,8 +13,10 @@ import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.Metadata;
+import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventDispatcher;
 import net.minestom.server.network.packet.server.play.EntityMetaDataPacket;
+import net.minestom.server.utils.chunk.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,7 +84,16 @@ public class MercuryMob extends EntityCreature {
 	}
 
 	/**
-	 * Updates entity entity for specific player, supports placeholders
+	 * Updates entity name for all viewers
+	 */
+	public void updateName() {
+		for (Player player : this.getViewers()) {
+			this.updateName(MercuryPlayer.of(player));
+		}
+	}
+
+	/**
+	 * Updates entity name for specific player
 	 * @param player player to update name for
 	 */
 	public void updateName(MercuryPlayer player) {

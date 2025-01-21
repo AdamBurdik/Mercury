@@ -58,6 +58,7 @@ public class MobManager {
 	 * Registers a mob with unique ID from toml configuration
 	 * @param tomlFile toml file containing mob configuration
 	 */
+	// ToDo Make this method shorter
 	public void register(File tomlFile) {
 		if (!tomlFile.exists()) {
 			throw new RuntimeException("Unable to register item! File does not exist");
@@ -199,6 +200,7 @@ public class MobManager {
 
 		this.gameMobs.put(mob.getUuid(), mob);
 		mob.setInstance(instance, position);
+		mob.updateName();
 
 		// Apply behaviour to mob
 		MobBehaviour behaviour = mob.getBehaviour();

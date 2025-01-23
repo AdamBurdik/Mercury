@@ -26,6 +26,6 @@ public enum MercuryAttribute implements Translatable {
 
 	@Override
 	public @NotNull String translationKey() {
-		return "attribute." + this.name();
+		return "attribute." + this.name().toLowerCase();
 	}
 }

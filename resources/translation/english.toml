@@ -11,11 +11,14 @@ legendary = "Legendary"
 mythical = "Mythical"
 unique = "Unique"
 
-[item.attribute]
+[attribute]
 damage = "Damage"
 attack_speed = "Attack Speed"
 movement_speed = "Movement Speed"
 max_health = "Max Health"
+
+[item]
+dps = "Damage Per Second"
 
 [item.name]
 test_item = "Test Item"

@@ -11,7 +11,7 @@ legendary = "Legendární"
 mythical = "Mythické"
 unique = "Unikátní"
 
-[item.attribute]
+[attribute]
 damage = "Poškození"
 attack_speed = "Rychlost útoku"
 movement_speed = "Rychlost pohybu"

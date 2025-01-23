@@ -1,6 +1,7 @@
 package me.adamix.mercury.server.item;
 
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.attribute.MercuryAttribute;
 import me.adamix.mercury.server.attribute.MercuryAttributeValue;
 import me.adamix.mercury.server.common.ColorPallet;
 import me.adamix.mercury.server.item.component.ItemAttributeComponent;
@@ -79,11 +80,32 @@ public record MercuryItem (
 			}
 		}
 
-		// Add attributes to lore if available
 		ItemAttributeComponent itemAttributeComponent = getComponent(ItemAttributeComponent.class);
 		if (itemAttributeComponent != null) {
+			// Add DPS to lore if available
+			MercuryAttributeValue damage = itemAttributeComponent.get(MercuryAttribute.DAMAGE);
+			MercuryAttributeValue attackSpeed = itemAttributeComponent.get(MercuryAttribute.ATTACK_SPEED);
+			if (damage != null && attackSpeed != null) {
+				loreList.add(Component.empty());
+				loreList.add(
+						Component.text(translation.get("item.dps") + ": ")
+								.color(ColorPallet.GOLD.getColor())
+								.decoration(TextDecoration.ITALIC, false)
+								.append(Component.text(damage.value() * attackSpeed.value())
+												.color(ColorPallet.GOLD.getColor())
+												.decoration(TextDecoration.BOLD, true)
+										)
+
+				);
+			}
+
+			// Add attributes to lore if available
 			loreList.add(Component.empty());
 			itemAttributeComponent.attributeMap().forEach((attribute, value) -> {
+				if (attribute == MercuryAttribute.DAMAGE || attribute == MercuryAttribute.ATTACK_SPEED) {
+					return;
+				}
+
 				Component namePart = Component.text(translation.get(attribute.translationKey()) + ": ")
 						.color(ColorPallet.LIGHT_GRAY.getColor());
 

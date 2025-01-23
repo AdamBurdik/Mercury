@@ -15,11 +15,10 @@ import java.io.File;
 public class PlayerDefaults {
 	@Getter private static @NotNull String translationId = "en";
 	@Getter private static int damage = 1;
-	@Getter private static int health = 100;
+	@Getter private static long health = 100;
 	@Getter private static int maxHealth = 100;
 	@Getter private static double movementSpeed = 0.1f;
 	@Getter private static double attackSpeed = 0.1f;
-
 
 	public static void load(File file) {
 		MercuryConfiguration configuration = new MercuryConfiguration(file);
@@ -30,7 +29,7 @@ public class PlayerDefaults {
 			translationId = rawTranslationId;
 		}
 		damage = configuration.getIntegerSafe("damage");
-		health = configuration.getIntegerSafe("health");
+		health = configuration.getLongSafe("health");
 		maxHealth = configuration.getIntegerSafe("max_health");
 		movementSpeed = configuration.getDoubleSafe("movement_speed");
 		attackSpeed = configuration.getDoubleSafe("attack_speed");

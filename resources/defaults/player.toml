@@ -2,5 +2,5 @@ translation_id = "en"
 health = 100
 max_health = 100
 movement_speed = 0.1
-attack_speed = 0.1
+attack_speed = 1.0
 damage = 1

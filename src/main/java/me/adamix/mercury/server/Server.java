@@ -23,6 +23,7 @@ import me.adamix.mercury.server.flag.ServerFlag;
 import me.adamix.mercury.server.inventory.core.InventoryManager;
 import me.adamix.mercury.server.item.ItemManager;
 import me.adamix.mercury.server.item.blueprint.ItemBlueprintManager;
+import me.adamix.mercury.server.listener.entity.EntityAttackListener;
 import me.adamix.mercury.server.listener.entity.EntityMoveListener;
 import me.adamix.mercury.server.listener.player.*;
 import me.adamix.mercury.server.mob.core.MobManager;
@@ -323,6 +324,7 @@ public class Server {
 		eventNode.addListener(new PlayerChangeHeldSlotListener());
 		eventNode.addListener(new PlayerCommandListener());
 		eventNode.addListener(new EntityMoveListener());
+		eventNode.addListener(new EntityAttackListener());
 
 		globalEventHandler.addChild(eventNode);
 	}
@@ -359,6 +361,7 @@ public class Server {
 		commandManager.register(new NPCCommand());
 		commandManager.register(new QuestsCommand());
 		commandManager.register(new PartyCommand());
+		commandManager.register(new PlayerAttributeCommand());
 	}
 
 

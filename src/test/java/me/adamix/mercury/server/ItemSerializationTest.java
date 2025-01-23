@@ -1,12 +1,14 @@
 package me.adamix.mercury.server;
 
+import me.adamix.mercury.server.attribute.AttributeContainer;
+import me.adamix.mercury.server.attribute.MercuryAttribute;
 import me.adamix.mercury.server.item.MercuryItem;
-import me.adamix.mercury.server.item.attribute.ItemAttribute;
-import me.adamix.mercury.server.item.attribute.ItemAttributes;
+import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import me.adamix.mercury.server.item.component.ItemDescriptionComponent;
 import me.adamix.mercury.server.item.component.ItemRarityComponent;
 import me.adamix.mercury.server.item.component.MercuryItemComponent;
 import me.adamix.mercury.server.item.rarity.ItemRarity;
+import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.junit.jupiter.api.Test;
@@ -20,10 +22,10 @@ public class ItemSerializationTest {
 
 	@Test
 	public void testItemSerialization() {
-		ItemAttributes itemAttributes = new ItemAttributes();
-		itemAttributes.set(ItemAttribute.DAMAGE, 69f);
-		itemAttributes.set(ItemAttribute.ATTACK_SPEED, 420f);
-		itemAttributes.set(ItemAttribute.MOVEMENT_SPEED, -5f);
+		AttributeContainer attributeContainer = new AttributeContainer();
+		attributeContainer.set(MercuryAttribute.DAMAGE, 69d, AttributeOperation.ADD_VALUE);
+		attributeContainer.set(MercuryAttribute.ATTACK_SPEED, 420d, AttributeOperation.ADD_VALUE);
+		attributeContainer.set(MercuryAttribute.MOVEMENT_SPEED, -5d, AttributeOperation.ADD_VALUE);
 
 		MercuryItem mercuryItem = new MercuryItem(
 				UUID.randomUUID(),
@@ -33,7 +35,7 @@ public class ItemSerializationTest {
 				new MercuryItemComponent[]{
 						new ItemRarityComponent(ItemRarity.LEGENDARY),
 						new ItemDescriptionComponent(new String[]{"Line1", "Line2", "Line3"}),
-						itemAttributes.toComponent()
+						new ItemAttributeComponent(attributeContainer.getAttributeMap())
 				}
 		);
 

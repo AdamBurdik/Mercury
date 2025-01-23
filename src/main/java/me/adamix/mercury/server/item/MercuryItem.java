@@ -1,8 +1,8 @@
 package me.adamix.mercury.server.item;
 
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.attribute.MercuryAttributeValue;
 import me.adamix.mercury.server.common.ColorPallet;
-import me.adamix.mercury.server.item.attribute.ItemAttributeValue;
 import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import me.adamix.mercury.server.item.component.ItemDescriptionComponent;
 import me.adamix.mercury.server.item.component.ItemRarityComponent;
@@ -143,7 +143,7 @@ public record MercuryItem (
 				.withTag(uniqueIdTag, this.uniqueId);
 	}
 
-	private @NotNull Component formatAttribute(ItemAttributeValue value, String sign, boolean isPositive) {
+	private @NotNull Component formatAttribute(MercuryAttributeValue value, String sign, boolean isPositive) {
 		AttributeOperation operation = value.operation();
 		Component valuePart = switch (operation) {
 			case ADD_VALUE -> Component.text(sign + (int) value.value());

@@ -7,7 +7,7 @@ import me.adamix.mercury.server.inventory.core.context.CloseContext;
 import me.adamix.mercury.server.inventory.core.context.InventoryConfig;
 import me.adamix.mercury.server.inventory.core.context.OpenContext;
 import me.adamix.mercury.server.player.MercuryPlayer;
-import me.adamix.mercury.server.player.attribute.PlayerAttributes;
+import me.adamix.mercury.server.player.attribute.PlayerAttributeContainer;
 import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
 import me.adamix.mercury.server.player.profile.ProfileDataManager;
@@ -38,10 +38,13 @@ public class ProfileCreationInventory extends MercuryInventory {
 							new ProfileData(
 									clickPlayer.getUuid(),
 									UUID.randomUUID(),
-									new PlayerAttributes(),
+									new PlayerAttributeContainer(),
 									new MercuryPlayerInventory(),
 									new Statistics(),
-									new PlayerQuests(new HashSet<>(), new HashSet<>())
+									new PlayerQuests(new HashSet<>(), new HashSet<>()),
+									PlayerDefaults.getHealth(),
+									0,
+									0L
 							)
 					);
 					click.close();

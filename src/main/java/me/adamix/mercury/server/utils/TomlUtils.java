@@ -1,12 +1,12 @@
 package me.adamix.mercury.server.utils;
 
-import me.adamix.mercury.server.item.attribute.ItemAttributeValue;
+import me.adamix.mercury.server.attribute.MercuryAttributeValue;
 import net.minestom.server.entity.attribute.AttributeOperation;
 import org.jetbrains.annotations.Nullable;
 import org.tomlj.TomlTable;
 
 public class TomlUtils {
-	public static @Nullable ItemAttributeValue parseItemAttribute(TomlTable table, String fileName) {
+	public static @Nullable MercuryAttributeValue parseAttribute(TomlTable table, String fileName) {
 		if (!table.contains(fileName)) {
 			return null;
 		}
@@ -14,7 +14,7 @@ public class TomlUtils {
 		Object attributeObject = table.get(fileName);
 
 		if (attributeObject instanceof Number number) {
-			return new ItemAttributeValue(number.floatValue(), AttributeOperation.ADD_VALUE);
+			return new MercuryAttributeValue(number.floatValue(), AttributeOperation.ADD_VALUE);
 		} else if (attributeObject instanceof TomlTable attributeTable) {
 			Double doubleValue = attributeTable.getDouble("value");
 			if (doubleValue == null) {
@@ -33,7 +33,7 @@ public class TomlUtils {
 				return null;
 			}
 
-			return new ItemAttributeValue((float) value, operation);
+			return new MercuryAttributeValue((float) value, operation);
 		}
 
 		return null;

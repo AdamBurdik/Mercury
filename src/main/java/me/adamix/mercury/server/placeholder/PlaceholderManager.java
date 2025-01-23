@@ -1,9 +1,10 @@
 package me.adamix.mercury.server.placeholder;
 
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.attribute.MercuryAttribute;
+import me.adamix.mercury.server.mob.core.MercuryMob;
 import me.adamix.mercury.server.party.MercuryParty;
 import me.adamix.mercury.server.player.MercuryPlayer;
-import me.adamix.mercury.server.player.attribute.PlayerAttribute;
 import me.adamix.mercury.server.quest.core.MercuryQuest;
 import me.adamix.mercury.server.translation.Translation;
 import me.adamix.mercury.server.translation.TranslationManager;
@@ -22,11 +23,15 @@ import java.util.function.BiFunction;
 
 public class PlaceholderManager {
 	private final Map<String, BiFunction<ArgumentQueue, MercuryPlayer, String>> playerPlaceholderMap = new HashMap<>();
+	private final Map<String, BiFunction<ArgumentQueue, MercuryMob, String>> mobPlaceholderMap = new HashMap<>();
 
 	public PlaceholderManager() {
-		registerPlayer("player_health", (args, player) -> String.valueOf(player.getPlayerAttributes().get(PlayerAttribute.HEALTH)));
+		registerPlayer("player_health", (args, player) -> String.valueOf(player.getProfileData().getHealth()));
 		registerPlayer("player_name", (args, player) -> player.getUsername());
-		registerPlayer("player_max_health", (args, player) -> String.valueOf(player.getPlayerAttributes().get(PlayerAttribute.MAX_HEALTH)));
+		registerPlayer("player_max_health", (args, player) -> String.valueOf(
+					player.getPlayerAttributes().get(MercuryAttribute.MAX_HEALTH)
+				)
+		);
 		registerPlayer("translation", (args, player) -> {
 			if (!args.hasNext()) {
 				return "Invalid Key";
@@ -60,7 +65,6 @@ public class PlaceholderManager {
 				default -> "Invalid Argument";
 			};
 		});
-
 		registerPlayer("party", (args, player) -> {
 			if (!args.hasNext()) {
 				return "Invalid Key";
@@ -83,10 +87,26 @@ public class PlaceholderManager {
 				default -> "Invalid Argument";
 			};
 		});
+		registerMob("entity", (args, mob) -> {
+			if (!args.hasNext()) {
+				return "Invalid Key";
+			}
+
+			Tag.Argument argument = args.pop();
+			return switch (argument.lowerValue()) {
+				case "health" -> String.valueOf(mob.getCurrentHealth());
+				case "max_health" -> String.valueOf(mob.getMaxHealth());
+				default -> "Invalid Argument";
+			};
+		});
 	}
 
 	public void registerPlayer(@NotNull String name, BiFunction<ArgumentQueue, MercuryPlayer, String> function) {
 		playerPlaceholderMap.put(name, function);
+	}
+
+	public void registerMob(@NotNull String name, BiFunction<ArgumentQueue, MercuryMob, String> function) {
+		mobPlaceholderMap.put(name, function);
 	}
 
 	private TagResolver getTagResolver(MercuryPlayer player) {
@@ -99,7 +119,24 @@ public class PlaceholderManager {
 		return builder.build();
 	}
 
+	private TagResolver getTagResolverMob(MercuryPlayer player, MercuryMob mob) {
+		TagResolver.Builder builder = TagResolver.builder();
+
+		mobPlaceholderMap.forEach((name, function) -> {
+			builder.tag(name, (args, context) -> Tag.preProcessParsed(function.apply(args, mob)));
+		});
+		playerPlaceholderMap.forEach((name, function) -> {
+			builder.tag(name, (args, context) -> Tag.preProcessParsed(function.apply(args, player)));
+		});
+
+		return builder.build();
+	}
+
 	public Component parse(String text, MercuryPlayer player) {
 		return MiniMessage.miniMessage().deserialize(text, getTagResolver(player));
+	}
+
+	public Component parse(String text, MercuryPlayer player, MercuryMob mob) {
+		return MiniMessage.miniMessage().deserialize(text, getTagResolverMob(player, mob));
 	}
 }

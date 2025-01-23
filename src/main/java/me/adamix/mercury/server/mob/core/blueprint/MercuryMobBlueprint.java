@@ -15,7 +15,8 @@ public record MercuryMobBlueprint(
 		@NotNull String name,
 		@NotNull MercuryMobComponent[] components,
 		@NotNull GoalWrapper[] goalWrappers,
-		@NotNull TargetWrapper[] targetWrappers
+		@NotNull TargetWrapper[] targetWrappers,
+		long health
 ) {
 	public MercuryMob build() {
 		MobBehaviour mobBehaviour = new MobBehaviour();
@@ -24,7 +25,8 @@ public record MercuryMobBlueprint(
 				this.entityType,
 				this.name,
 				this.components,
-				mobBehaviour
+				mobBehaviour,
+				this.health
 		);
 
 		for (@NotNull GoalWrapper goalWrapper : goalWrappers) {

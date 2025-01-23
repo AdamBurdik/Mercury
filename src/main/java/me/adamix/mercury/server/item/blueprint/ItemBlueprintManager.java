@@ -1,7 +1,8 @@
 package me.adamix.mercury.server.item.blueprint;
 
-import me.adamix.mercury.server.item.attribute.ItemAttribute;
-import me.adamix.mercury.server.item.attribute.ItemAttributes;
+import me.adamix.mercury.server.attribute.AttributeContainer;
+import me.adamix.mercury.server.attribute.MercuryAttribute;
+import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import me.adamix.mercury.server.item.component.ItemDescriptionComponent;
 import me.adamix.mercury.server.item.component.MercuryItemComponent;
 import me.adamix.mercury.server.item.rarity.ItemRarity;
@@ -63,14 +64,14 @@ public class ItemBlueprintManager {
 		// Parse attributes to component
 		TomlTable attributeTable = toml.getTomlTable("attributes");
 		if (attributeTable != null) {
-			ItemAttributes itemAttributes = new ItemAttributes();
-			itemAttributes
-					.set(ItemAttribute.DAMAGE, TomlUtils.parseItemAttribute(attributeTable, "damage"))
-					.set(ItemAttribute.MOVEMENT_SPEED, TomlUtils.parseItemAttribute(attributeTable, "movement_speed"))
-					.set(ItemAttribute.ATTACK_SPEED, TomlUtils.parseItemAttribute(attributeTable, "attack_speed"))
-					.set(ItemAttribute.MAX_HEALTH, TomlUtils.parseItemAttribute(attributeTable, "max_health"));
+			AttributeContainer attributeContainer = new AttributeContainer();
+			attributeContainer
+					.set(MercuryAttribute.DAMAGE, TomlUtils.parseAttribute(attributeTable, "damage"))
+					.set(MercuryAttribute.MOVEMENT_SPEED, TomlUtils.parseAttribute(attributeTable, "movement_speed"))
+					.set(MercuryAttribute.ATTACK_SPEED, TomlUtils.parseAttribute(attributeTable, "attack_speed"))
+					.set(MercuryAttribute.MAX_HEALTH, TomlUtils.parseAttribute(attributeTable, "max_health"));
 			componentList.add(
-					itemAttributes.toComponent()
+					new ItemAttributeComponent(attributeContainer.getAttributeMap())
 			);
 		}
 

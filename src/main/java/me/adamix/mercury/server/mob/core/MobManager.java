@@ -1,8 +1,8 @@
 package me.adamix.mercury.server.mob.core;
 
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.mob.core.attribute.MobAttribute;
-import me.adamix.mercury.server.mob.core.attribute.MobAttributes;
+import me.adamix.mercury.server.attribute.MercuryAttribute;
+import me.adamix.mercury.server.mob.core.attribute.MobAttributeContainer;
 import me.adamix.mercury.server.mob.core.behaviour.MobBehaviour;
 import me.adamix.mercury.server.mob.core.blueprint.MercuryMobBlueprint;
 import me.adamix.mercury.server.mob.core.component.MercuryMobComponent;
@@ -69,20 +69,21 @@ public class MobManager {
 		@NotNull NamespaceID namespaceID = toml.getNamespacedIDSafe("id");
 		@NotNull EntityType entityType = toml.getEntityTypeSafe("type");
 		@NotNull String name = toml.getStringSafe("name");
+		long health = toml.getLongSafe("health");
 
 		List<MercuryMobComponent> componentList = new ArrayList<>();
 
 		// Parse attributes to component
 		TomlTable attributeTable = toml.getTomlTable("attributes");
 		if (attributeTable != null) {
-			MobAttributes mobAttributes = new MobAttributes();
-			mobAttributes
-					.set(MobAttribute.DAMAGE, attributeTable.getDouble("damage"))
-					.set(MobAttribute.MOVEMENT_SPEED, attributeTable.getDouble("movement_speed"))
-					.set(MobAttribute.ATTACK_SPEED, attributeTable.getDouble("attack_speed"))
-					.set(MobAttribute.MAX_HEALTH, attributeTable.getDouble("max_health"));
+			MobAttributeContainer mobAttributeContainer = new MobAttributeContainer();
+			mobAttributeContainer
+					.set(MercuryAttribute.DAMAGE, attributeTable.getDouble("damage"))
+					.set(MercuryAttribute.MOVEMENT_SPEED, attributeTable.getDouble("movement_speed"))
+					.set(MercuryAttribute.ATTACK_SPEED, attributeTable.getDouble("attack_speed"))
+					.set(MercuryAttribute.MAX_HEALTH, attributeTable.getDouble("max_health"));
 			componentList.add(
-					mobAttributes.toComponent()
+					mobAttributeContainer.toComponent()
 			);
 		}
 
@@ -152,8 +153,8 @@ public class MobManager {
 				name,
 				componentList.toArray(new MercuryMobComponent[0]),
 				goalWrapperList.toArray(new GoalWrapper[0]),
-				targetWrapperList.toArray(new TargetWrapper[0])
-
+				targetWrapperList.toArray(new TargetWrapper[0]),
+				health
 		);
 		this.register(namespaceID, new ConfigRegisteredMob(mobBlueprint));
 

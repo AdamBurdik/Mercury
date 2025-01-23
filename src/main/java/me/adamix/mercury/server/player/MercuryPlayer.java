@@ -9,8 +9,7 @@ import me.adamix.mercury.server.inventory.core.MercuryInventory;
 import me.adamix.mercury.server.item.MercuryItem;
 import me.adamix.mercury.server.item.component.ItemAttributeComponent;
 import me.adamix.mercury.server.mob.core.MercuryMob;
-import me.adamix.mercury.server.player.attribute.PlayerAttribute;
-import me.adamix.mercury.server.player.attribute.PlayerAttributes;
+import me.adamix.mercury.server.player.attribute.PlayerAttributeContainer;
 import me.adamix.mercury.server.player.data.PlayerData;
 import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import me.adamix.mercury.server.player.profile.ProfileData;
@@ -18,7 +17,6 @@ import me.adamix.mercury.server.player.sidebar.MercurySidebar;
 import me.adamix.mercury.server.player.state.PlayerState;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
-import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.attribute.AttributeInstance;
 import net.minestom.server.event.trait.PlayerEvent;
 import net.minestom.server.network.player.GameProfile;
@@ -133,9 +131,9 @@ public class MercuryPlayer extends Player {
 
 	/**
 	 * Retrieves player attributes from profile data manager
-	 * @return {@link PlayerAttributes}, may be null if profile data is not available
+	 * @return {@link PlayerAttributeContainer}, may be null if profile data is not available
 	 */
-	public @NotNull PlayerAttributes getPlayerAttributes() {
+	public @NotNull PlayerAttributeContainer getPlayerAttributes() {
 		return getProfileData().getAttributes();
 	}
 
@@ -187,15 +185,16 @@ public class MercuryPlayer extends Player {
 		for (AttributeInstance attribute : this.getAttributes()) {
 			attribute.clearModifiers();
 		}
+		getPlayerAttributes().setDefaults();
 
-		// Set default attributes
-		this.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(this.getProfileData().getAttributes().get(PlayerAttribute.MOVEMENT_SPEED));
-
+		PlayerAttributeContainer attributes = getPlayerAttributes();
+		attributes.apply(this);
 
 		// Handle currently holding item
 		Optional<MercuryItem> optionalHeldItem = this.getGameInventory().get(heldSlot);
 		if (optionalHeldItem.isPresent()) {
 			MercuryItem heldItem = optionalHeldItem.get();
+
 
 			ItemAttributeComponent itemAttributeComponent = heldItem.getComponent(ItemAttributeComponent.class);
 			if (itemAttributeComponent != null) {

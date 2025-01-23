@@ -2,10 +2,12 @@ package me.adamix.mercury.server.mob.core;
 
 import lombok.Getter;
 import me.adamix.mercury.server.Server;
+import me.adamix.mercury.server.attribute.MercuryAttribute;
 import me.adamix.mercury.server.event.EntityMoveEvent;
-import me.adamix.mercury.server.mob.core.attribute.MobAttributes;
+import me.adamix.mercury.server.mob.core.attribute.MobAttributeContainer;
 import me.adamix.mercury.server.mob.core.behaviour.MobBehaviour;
 import me.adamix.mercury.server.mob.core.component.MercuryMobComponent;
+import me.adamix.mercury.server.mob.core.component.MobAttributeComponent;
 import me.adamix.mercury.server.player.MercuryPlayer;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
@@ -16,7 +18,6 @@ import net.minestom.server.entity.Metadata;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventDispatcher;
 import net.minestom.server.network.packet.server.play.EntityMetaDataPacket;
-import net.minestom.server.utils.chunk.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,7 @@ public class MercuryMob extends EntityCreature {
 	private final @NotNull String name;
 	private final @NotNull MercuryMobComponent[] components;
 	private final @Nullable MobBehaviour behaviour;
+	private long currentHealth;
 	private Pos lastPosition;
 	private Vec motion;
 
@@ -36,22 +38,25 @@ public class MercuryMob extends EntityCreature {
 			@NotNull EntityType entityType,
 			@NotNull String name,
 			@NotNull MercuryMobComponent[] components,
-			@Nullable MobBehaviour behaviour
+			@Nullable MobBehaviour behaviour,
+			long currentHealth
 		) {
 		super(entityType);
 		this.entityType = entityType;
 		this.name = name;
 		this.components = components;
 		this.behaviour = behaviour;
+		this.currentHealth = currentHealth;
 	}
 
 	public MercuryMob(
 			@NotNull EntityType entityType,
 			@NotNull String name,
-			@NotNull MobAttributes attributes,
-			@NotNull MobBehaviour behaviour
+			@NotNull MobAttributeContainer attributes,
+			@NotNull MobBehaviour behaviour,
+			long currentHealth
 			) {
-		this(entityType, name, new MercuryMobComponent[]{attributes.toComponent()}, behaviour);
+		this(entityType, name, new MercuryMobComponent[]{attributes.toComponent()}, behaviour, currentHealth);
 	}
 
 	public boolean hasComponent(Class<? extends MercuryMobComponent> clazz) {
@@ -97,7 +102,7 @@ public class MercuryMob extends EntityCreature {
 	 * @param player player to update name for
 	 */
 	public void updateName(MercuryPlayer player) {
-		Component component = Server.getPlaceholderManager().parse(this.name, player);
+		Component component = Server.getPlaceholderManager().parse(this.name, player, this);
 
 		// Create copy of original immutable metadata map
 		EntityMetaDataPacket metaDataPacket = this.getMetadataPacket();
@@ -113,11 +118,29 @@ public class MercuryMob extends EntityCreature {
 		player.sendPacket(packet);
 	}
 
+	@SuppressWarnings("UnstableApiUsage")
 	@Override
 	protected void movementTick() {
 		super.movementTick();
 		this.lastPosition = this.position;
 		this.motion = this.position.sub(this.previousPosition).asVec();
 		EventDispatcher.call(new EntityMoveEvent(this, this.position));
+	}
+
+	public double getMaxHealth() {
+		MobAttributeComponent component = getComponent(MobAttributeComponent.class);
+		if (component == null) {
+			return 0;
+		}
+
+		Double maxHealthValue = component.get(MercuryAttribute.MAX_HEALTH);
+		return maxHealthValue != null ? maxHealthValue.floatValue() : 0f;
+	}
+
+	public void damage(long amount) {
+		this.currentHealth -= amount;
+		if (currentHealth < 0) {
+			this.kill();
+		}
 	}
 }

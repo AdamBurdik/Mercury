@@ -1,15 +1,15 @@
 package me.adamix.mercury.server.mob.zombie;
 
+import me.adamix.mercury.server.attribute.MercuryAttribute;
 import me.adamix.mercury.server.mob.core.MercuryMob;
-import me.adamix.mercury.server.mob.core.attribute.MobAttribute;
-import me.adamix.mercury.server.mob.core.attribute.MobAttributes;
+import me.adamix.mercury.server.mob.core.attribute.MobAttributeContainer;
 import me.adamix.mercury.server.mob.core.behaviour.MobBehaviour;
+import me.adamix.mercury.server.mob.core.goal.RandomStrollGoal;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.ai.goal.MeleeAttackGoal;
-import net.minestom.server.entity.ai.goal.RandomStrollGoal;
 import net.minestom.server.entity.ai.target.ClosestEntityTarget;
 import net.minestom.server.entity.ai.target.LastEntityDamagerTarget;
 import net.minestom.server.utils.time.TimeUnit;
@@ -19,10 +19,12 @@ import java.util.List;
 public class RogueZombie extends MercuryMob {
 	public RogueZombie() {
 		super(EntityType.ZOMBIE,
-				"<dark_green><translation:entity.zombie.rogue>, Hello <player_name>!",
-				new MobAttributes()
-						.set(MobAttribute.MOVEMENT_SPEED, 0.21),
-				new Behaviour()
+				"<dark_green><translation:entity.zombie.rogue> <entity:health>/<entity:max_health>!",
+				new MobAttributeContainer()
+						.set(MercuryAttribute.MOVEMENT_SPEED, 0.21)
+						.set(MercuryAttribute.MAX_HEALTH, 100d),
+				new Behaviour(),
+				100
 		);
 	}
 

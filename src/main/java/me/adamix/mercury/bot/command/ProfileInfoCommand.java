@@ -1,7 +1,7 @@
 package me.adamix.mercury.bot.command;
 
 import me.adamix.mercury.server.Server;
-import me.adamix.mercury.server.player.attribute.PlayerAttribute;
+import me.adamix.mercury.server.attribute.MercuryAttribute;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -34,10 +34,9 @@ public class ProfileInfoCommand extends ListenerAdapter {
 			embed.addField("Attributes",
 					String.format(
 							"> **Heatlh:** %s\n> **MaxHealth:** %s\n> **Speed:** %s\n> **AttackSpeed:** %s",
-							profileData.getAttributes().get(PlayerAttribute.HEALTH),
-							profileData.getAttributes().get(PlayerAttribute.MAX_HEALTH),
-							profileData.getAttributes().get(PlayerAttribute.MOVEMENT_SPEED),
-							profileData.getAttributes().get(PlayerAttribute.ATTACK_SPEED)
+							profileData.getAttributes().get(MercuryAttribute.MAX_HEALTH),
+							profileData.getAttributes().get(MercuryAttribute.MOVEMENT_SPEED),
+							profileData.getAttributes().get(MercuryAttribute.ATTACK_SPEED)
 					), true);
 			event.getHook().sendMessageEmbeds(embed.build()).queue();
 		});

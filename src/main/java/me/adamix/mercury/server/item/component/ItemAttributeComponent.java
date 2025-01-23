@@ -1,9 +1,10 @@
 package me.adamix.mercury.server.item.component;
 
-import me.adamix.mercury.server.item.attribute.ItemAttribute;
-import me.adamix.mercury.server.item.attribute.ItemAttributeValue;
-import me.adamix.mercury.server.item.attribute.ItemAttributes;
+import me.adamix.mercury.server.attribute.AttributeContainer;
+import me.adamix.mercury.server.attribute.MercuryAttribute;
+import me.adamix.mercury.server.attribute.MercuryAttributeValue;
 import me.adamix.mercury.server.player.MercuryPlayer;
+import me.adamix.mercury.server.player.attribute.PlayerAttributeContainer;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.attribute.AttributeModifier;
 import net.minestom.server.entity.attribute.AttributeOperation;
@@ -15,12 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public record ItemAttributeComponent(EnumMap<ItemAttribute, ItemAttributeValue> attributeMap) implements MercuryItemComponent {
-	public @Nullable ItemAttributeValue get(ItemAttribute attribute) {
+public record ItemAttributeComponent(EnumMap<MercuryAttribute, MercuryAttributeValue> attributeMap) implements MercuryItemComponent {
+	public @Nullable MercuryAttributeValue get(MercuryAttribute attribute) {
 		return attributeMap.get(attribute);
 	}
 
 	public void applyToPlayer(MercuryPlayer player) {
+		// Apply default ones
 		attributeMap.forEach((attribute, value) -> {
 			Attribute defaultAttribute = attribute.getDefaultAttribute();
 			if (defaultAttribute != null) {
@@ -35,6 +37,19 @@ public record ItemAttributeComponent(EnumMap<ItemAttribute, ItemAttributeValue> 
 						);
 			}
 		});
+		// Apply custom ones
+		PlayerAttributeContainer playerAttribute = player.getProfileData().getAttributes();
+
+		// Damage
+		if (attributeMap.containsKey(MercuryAttribute.DAMAGE)) {
+			MercuryAttributeValue damageAttribute = attributeMap.get(MercuryAttribute.DAMAGE);
+			playerAttribute.modify(MercuryAttribute.DAMAGE, damageAttribute.value(), damageAttribute.operation());
+		}
+		// Attack Speed
+		if (attributeMap.containsKey(MercuryAttribute.ATTACK_SPEED)) {
+			MercuryAttributeValue attackSpeedAttribute = attributeMap.get(MercuryAttribute.ATTACK_SPEED);
+			playerAttribute.modify(MercuryAttribute.ATTACK_SPEED, attackSpeedAttribute.value(), attackSpeedAttribute.operation());
+		}
 	}
 
 	@Override
@@ -72,15 +87,15 @@ public record ItemAttributeComponent(EnumMap<ItemAttribute, ItemAttributeValue> 
 
 	@SuppressWarnings("unchecked")
 	public static @NotNull ItemAttributeComponent deserialize(Map<String, Object> map) {
-		ItemAttributes itemAttributes = new ItemAttributes();
+		AttributeContainer attributeContainer = new AttributeContainer();
 
 		map.forEach((name, attributeValue) -> {
-			ItemAttribute itemAttribute = ItemAttribute.valueOf(name);
+			MercuryAttribute attribute = MercuryAttribute.valueOf(name);
 
 			Map<String, Object> valueMap = (Map<String, Object>) attributeValue;
-			itemAttributes.set(itemAttribute, (double) valueMap.get("value"), AttributeOperation.valueOf((String) valueMap.get("operation")));
+			attributeContainer.set(attribute, (double) valueMap.get("value"), AttributeOperation.valueOf((String) valueMap.get("operation")));
 		});
 
-		return itemAttributes.toComponent();
+		return new ItemAttributeComponent(attributeContainer.getAttributeMap());
 	}
 }

@@ -1,9 +1,8 @@
 package me.adamix.mercury.server.player.profile;
 
 import lombok.Getter;
-import lombok.Setter;
 import me.adamix.mercury.server.defaults.PlayerDefaults;
-import me.adamix.mercury.server.player.attribute.PlayerAttributes;
+import me.adamix.mercury.server.player.attribute.PlayerAttributeContainer;
 import me.adamix.mercury.server.player.inventory.MercuryPlayerInventory;
 import me.adamix.mercury.server.player.quest.PlayerQuests;
 import me.adamix.mercury.server.player.stats.Statistics;
@@ -23,25 +22,35 @@ import java.util.UUID;
 public class ProfileData {
 	private final @NotNull UUID playerUniqueId;
 	private final @NotNull UUID profileUniqueId;
-	private final @NotNull PlayerAttributes attributes;
+	private final @NotNull PlayerAttributeContainer attributes;
 	private final @NotNull MercuryPlayerInventory playerInventory;
 	private final @NotNull Statistics statistics;
 	private final @NotNull PlayerQuests playerQuests;
+	private final long health;
+	private final int level;
+	private final long experience;
 
 	/**
 	 * Constructs a new ProfileData instance all the required fields
 	 *
-	 * @param profileUniqueId the unique ID of the player profile
-	 * @param health          the current health of the player
-	 * @param maxHeath       the maximum health of the player
+	 * @param playerUniqueId uuid of player
+	 * @param profileUniqueId uuid of profile
+	 * @param attributes player attribute object
+	 * @param playerInventory player inventory object
+	 * @param statistics player statistics
+	 * @param playerQuests player quests
+	 * @param level current player level
+	 * @param experience current player experience
 	 */
 	public ProfileData(
 			@NotNull UUID playerUniqueId,
 			@NotNull UUID profileUniqueId,
-			@NotNull PlayerAttributes attributes,
+			@NotNull PlayerAttributeContainer attributes,
 			@NotNull MercuryPlayerInventory playerInventory,
 			@NotNull Statistics statistics,
-			@NotNull PlayerQuests playerQuests
+			@NotNull PlayerQuests playerQuests, long health,
+			int level,
+			long experience
 	) {
 		this.playerUniqueId = playerUniqueId;
 		this.profileUniqueId = profileUniqueId;
@@ -49,6 +58,9 @@ public class ProfileData {
 		this.playerInventory = playerInventory;
 		this.statistics = statistics;
 		this.playerQuests = playerQuests;
+		this.health = health;
+		this.level = level;
+		this.experience = experience;
 	}
 
 	public @NotNull Map<String, Object> serialize() {
@@ -60,6 +72,9 @@ public class ProfileData {
 		map.put("inventory", this.playerInventory.serialize());
 		map.put("statistics", this.statistics.serialize());
 		map.put("quests", this.playerQuests.serialize());
+		map.put("level", this.level);
+		map.put("experience", this.experience);
+		map.put("health", this.health);
 
 		return map;
 	}
@@ -79,11 +94,11 @@ public class ProfileData {
 		UUID profileUniqueId = UUID.fromString(profileStringUniqueId);
 
 		Object attributesObject = document.get("attributes");
-		PlayerAttributes attributes;
+		PlayerAttributeContainer attributes;
 		if (attributesObject != null) {
-			attributes = PlayerAttributes.deserialize(((Map<String, Object>) attributesObject));
+			attributes = PlayerAttributeContainer.deserialize(((Map<String, Object>) attributesObject));
 		} else {
-			attributes = new PlayerAttributes();
+			attributes = new PlayerAttributeContainer();
 		}
 		Object inventoryObject = document.get("inventory");
 		MercuryPlayerInventory inventory;
@@ -107,13 +122,25 @@ public class ProfileData {
 			quests = new PlayerQuests(new HashSet<>(), new HashSet<>());
 		}
 
+		Integer levelInteger = document.getInteger("level");
+		int level = levelInteger != null ? levelInteger : 0;
+
+		Long experienceLong = document.getLong("experience");
+		long experience = experienceLong != null ? experienceLong : 0;
+
+		Long healthLong = document.getLong("health");
+		long health = healthLong != null ? experience : PlayerDefaults.getHealth();
+
 		return new ProfileData(
 				playerUniqueId,
 				profileUniqueId,
 				attributes,
 				inventory,
 				profileStatistics,
-				quests
+				quests,
+				health,
+				level,
+				experience
 		);
 	}
 }

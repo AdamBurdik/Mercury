@@ -1,6 +1,7 @@
 id = "mercury:example_mob"
 type = "zombie"
 name = "Example Mob"
+health = 100
 
 [attributes] # Base Value
 damage = 10.0

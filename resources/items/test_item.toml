@@ -8,6 +8,6 @@ rarity = "unique"
 
 [attributes]
 damage = 10
+attack_speed = 1
 movement_speed = {value = 0.2, operation="MULTIPLY_BASE"}
 max_health = {value = -0.2, operation="MULTIPLY_BASE"}
-attack_speed = {value = 0.2, operation="MULTIPLY_BASE"}

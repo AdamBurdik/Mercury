@@ -1,6 +1,7 @@
 package me.adamix.mercury.core;
 
 import me.adamix.mercury.core.player.PlayerManager;
+import me.adamix.mercury.core.signal.SignalManager;
 import me.adamix.mercury.core.utils.LogUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -49,5 +50,9 @@ public class MercuryCore {
 
 	public static @NotNull PlayerManager playerManager() {
 		return getImplementation().getPlayerManager();
+	}
+
+	public static @NotNull SignalManager signalManager() {
+		return getImplementation().getSignalManager();
 	}
 }

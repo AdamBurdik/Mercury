@@ -16,7 +16,8 @@ public class PlayerManager {
 	}
 
 	public @NotNull MercuryPlayer getOrCreate(@NotNull Player player) {
-		return mercuryPlayerMap.computeIfAbsent(player.getUniqueId(), uuid -> new MercuryPlayer(player));
+		// ToDO Get default translation code from config
+		return mercuryPlayerMap.computeIfAbsent(player.getUniqueId(), uuid -> new MercuryPlayer(player, "en-US"));
 	}
 
 	public @Nullable MercuryPlayer get(@NotNull UUID uuid) {

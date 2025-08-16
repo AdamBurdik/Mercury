@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     paperweight.paperDevBundle("1.21.8-R0.1-SNAPSHOT")
+    implementation("org.tomlj:tomlj:1.1.1")
 }
 
 tasks.processResources {

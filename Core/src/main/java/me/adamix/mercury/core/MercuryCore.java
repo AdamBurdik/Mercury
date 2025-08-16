@@ -70,4 +70,8 @@ public class MercuryCore {
 	public static @NotNull TranslationManager translationManager() {
 		return getImplementation().getTranslationManager();
 	}
+
+	public static @NotNull PlaceholderManager placeholderManager() {
+		return getImplementation().getPlaceholderManager();
+	}
 }

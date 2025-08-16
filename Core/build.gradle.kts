@@ -28,6 +28,17 @@ tasks.processResources {
     }
 }
 
+tasks.jar {
+    archiveBaseName = "MercuryCore"
+    archiveVersion = ""
+}
+
+tasks.shadowJar {
+    archiveBaseName = "MercuryCore"
+    archiveClassifier = ""
+    archiveVersion.set("")
+}
+
 tasks.build {
     dependsOn(tasks.shadowJar)
 }

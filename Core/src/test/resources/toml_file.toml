@@ -1,0 +1,12 @@
+number_value = 10
+string_value = "Hello, World!"
+complex_array = [[[[[[[[{name = "Really Complex Array"}]]]]]]]]
+
+[TABLE]
+name = "Table Name"
+
+[[ARRAY]]
+index = "first"
+
+[[ARRAY]]
+index = "second"

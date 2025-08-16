@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 public class MercuryCore {
 	private static final Logger LOGGER = LogUtils.getLogger();
 	private static MercuryCoreImpl implementation = null;
+	private static MercuryCorePlugin plugin;
 
 	/**
 	 * Sends a message to the specified channel.
@@ -44,8 +45,10 @@ public class MercuryCore {
 	}
 
 	@ApiStatus.Internal
-	public static void load() {
+	public static void load(@NotNull MercuryCorePlugin plugin) {
 		LOGGER.info("Loading MercuryCore");
+
+		MercuryCore.plugin = plugin;
 
 		implementation = new MercuryCoreImpl();
 

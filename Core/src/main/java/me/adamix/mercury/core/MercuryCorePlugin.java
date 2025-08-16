@@ -28,7 +28,7 @@ public class MercuryCorePlugin extends JavaPlugin {
 		}
 
 		// Enabling logic
-		MercuryCore.load();
+		MercuryCore.load(this);
 
 		componentLogger.info("MercuryCore Plugin {} has been enabled", version);
 	}

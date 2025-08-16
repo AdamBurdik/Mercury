@@ -2,6 +2,7 @@ package me.adamix.mercury.core;
 
 import me.adamix.mercury.core.placeholder.PlaceholderManager;
 import me.adamix.mercury.core.placeholder.impl.PlayerPlaceholder;
+import me.adamix.mercury.core.placeholder.impl.TranslationPlaceholder;
 import me.adamix.mercury.core.player.PlayerManager;
 import me.adamix.mercury.core.signal.SignalManager;
 import me.adamix.mercury.core.translation.TranslationManager;
@@ -56,7 +57,7 @@ public class MercuryCore {
 			LOGGER.info("Registering default placeholders");
 			PlaceholderManager placeholderManager = getImplementation().getPlaceholderManager();
 			placeholderManager.registerPlaceholder(new PlayerPlaceholder());
-			placeholderManager.registerPlaceholder(new PlayerPlaceholder());
+			placeholderManager.registerPlaceholder(new TranslationPlaceholder());
 		}
 
 		LOGGER.info("Successfully loaded MercuryCore");

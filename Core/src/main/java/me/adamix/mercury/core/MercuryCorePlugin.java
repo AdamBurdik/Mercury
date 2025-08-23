@@ -1,6 +1,7 @@
 package me.adamix.mercury.core;
 
 import lombok.extern.slf4j.Slf4j;
+import me.adamix.mercury.core.command.TranslationCommand;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,9 +29,13 @@ public class MercuryCorePlugin extends JavaPlugin {
 		}
 
 		// Enabling logic
-		MercuryCore.load(this);
+		if (!MercuryCore.load(this)) {
+			Bukkit.getPluginManager().disablePlugin(this);
+		} else {
+			componentLogger.info("MercuryCore Plugin {} has been enabled", version);
+		}
 
-		componentLogger.info("MercuryCore Plugin {} has been enabled", version);
+		getCommand("translation").setExecutor(new TranslationCommand());
 	}
 
 	@Override

@@ -1,2 +1,5 @@
 code = "en-US"
 name = "English"
+
+[EXAMPLE]
+test = "Hello, World"

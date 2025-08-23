@@ -1,14 +1,17 @@
 package me.adamix.mercury.core.player;
 
+import lombok.Setter;
 import me.adamix.mercury.core.MercuryCore;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class MercuryPlayer {
 	private final @NotNull Player bukkitPlayer;
-	private final @NotNull String translationCode;
+	@Setter
+	private @NotNull String translationCode;
 
 	public MercuryPlayer(@NotNull Player bukkitPlayer, @NotNull String translationCode) {
 		this.bukkitPlayer = bukkitPlayer;
@@ -40,6 +43,10 @@ public class MercuryPlayer {
 	}
 
 
+	@ApiStatus.Internal
+	public @NotNull Player getBukkitPlayer() {
+		return bukkitPlayer;
+	}
 
 	public static @NotNull MercuryPlayer of(@NotNull Player player) {
 		return MercuryCore.playerManager().getOrCreate(player);

@@ -10,6 +10,7 @@ import me.adamix.mercury.configuration.api.exception.MissingPropertyException;
 import me.adamix.mercury.configuration.api.exception.ParsingException;
 import me.adamix.mercury.core.defaults.PlayerDefaults;
 import me.adamix.mercury.core.entity.EntityManager;
+import me.adamix.mercury.core.menu.MenuManager;
 import me.adamix.mercury.core.placeholder.PlaceholderManager;
 import me.adamix.mercury.core.player.PlayerManager;
 import me.adamix.mercury.core.signal.SignalManager;
@@ -32,6 +33,7 @@ public class MercuryCoreImpl {
 	private final @NotNull TranslationManager translationManager;
 	private final @NotNull PlaceholderManager placeholderManager;
 	private final @NotNull EntityManager entityManager;
+	private final @NotNull MenuManager menuManager;
 
 	private final ProtocolManager protocolManager;
 
@@ -43,6 +45,7 @@ public class MercuryCoreImpl {
 		this.translationManager = new TranslationManager();
 		this.placeholderManager = new PlaceholderManager();
 		this.entityManager = new EntityManager();
+		this.menuManager = new MenuManager();
 		this.mainConfigPath = mainConfigPath;
 
 		this.protocolManager = ProtocolLibrary.getProtocolManager();

@@ -15,6 +15,7 @@ public class EntityBuilder {
 	private final @NotNull EntityManager entityManager;
 	private @NotNull EntityType entityType = EntityType.ZOMBIE;
 	private @Nullable String name;
+	private boolean visibleByDefault = true;
 
 	private boolean hasAi = true;
 
@@ -37,6 +38,11 @@ public class EntityBuilder {
 		return this;
 	}
 
+	public @NotNull EntityBuilder visibleByDefault(boolean value) {
+		this.visibleByDefault = value;
+		return this;
+	}
+
 	public @NotNull MercuryEntity spawn(@NotNull World world, @NotNull Location location) {
 		Entity bukkitEntity = world.spawn(location, entityType.getEntityClass(), CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
 			if (entity instanceof LivingEntity livingEntity) {
@@ -46,7 +52,7 @@ public class EntityBuilder {
 		});
 
 
-		MercuryEntity entity = new MercuryEntity(bukkitEntity, name == null ? "" : name);
+		MercuryEntity entity = new MercuryEntity(bukkitEntity, name == null ? "" : name, visibleByDefault);
 		entityManager.register(entity);
 
 		return entity;

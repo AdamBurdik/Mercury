@@ -1,5 +1,6 @@
 package me.adamix.mercury.core.entity;
 
+import lombok.Data;
 import me.adamix.mercury.core.MercuryCore;
 import me.adamix.mercury.core.player.MercuryPlayer;
 import me.adamix.mercury.core.protocol.MercuryProtocol;
@@ -12,15 +13,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 public class MercuryEntity {
 	private final @NotNull Entity bukkitEntity;
 	private final @NotNull String name;
+	private final boolean visibleDefault;
 
 	private final Set<MercuryPlayer> viewers = new HashSet<>();
 
-	public MercuryEntity(@NotNull Entity bukkitEntity, @NotNull String name) {
+	public MercuryEntity(@NotNull Entity bukkitEntity, @NotNull String name, boolean visibleDefault) {
 		this.bukkitEntity = bukkitEntity;
 		this.name = name;
+		this.visibleDefault = visibleDefault;
 	}
 
 	public void updateName(@NotNull MercuryPlayer player) {
@@ -40,6 +44,10 @@ public class MercuryEntity {
 	public void removeViewer(@NotNull MercuryPlayer player) {
 		viewers.remove(player);
 		player.getBukkitPlayer().hideEntity(MercuryCore.plugin(), bukkitEntity);
+	}
+
+	public boolean isViewer(@NotNull MercuryPlayer player) {
+		return viewers.contains(player);
 	}
 
 	@ApiStatus.Internal

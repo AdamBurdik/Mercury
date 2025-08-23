@@ -1,15 +1,12 @@
 package me.adamix.mercury.core;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
 import lombok.extern.slf4j.Slf4j;
+import me.adamix.mercury.core.command.MenuCommand;
 import me.adamix.mercury.core.command.ReloadCommand;
 import me.adamix.mercury.core.command.TestCommand;
 import me.adamix.mercury.core.command.TranslationCommand;
+import me.adamix.mercury.core.listener.MenuListener;
 import me.adamix.mercury.core.listener.PlayerListener;
-import me.adamix.mercury.core.listener.TestListener;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,7 +15,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.nio.file.Paths;
 
 @Slf4j
 public class MercuryCorePlugin extends JavaPlugin {
@@ -47,8 +43,9 @@ public class MercuryCorePlugin extends JavaPlugin {
 		getCommand("test").setExecutor(new TestCommand());
 		getCommand("mercury_reload").setExecutor(new ReloadCommand());
 		getCommand("translation").setExecutor(new TranslationCommand());
-		Bukkit.getPluginManager().registerEvents(new TestListener(), this);
+		getCommand("menu").setExecutor(new MenuCommand());
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 
 //		MercuryCore.protocolManager().addPacketListener(new PacketAdapter(
 //				this,

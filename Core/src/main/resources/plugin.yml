@@ -8,3 +8,4 @@ commands:
     test: {}
     mercury_reload: {}
     translation: {}
+    menu: {}

@@ -1,15 +1,28 @@
 package me.adamix.mercury.core;
 
+import com.comphenix.protocol.ProtocolManager;
+import me.adamix.mercury.configuration.TomlConfiguration;
+import me.adamix.mercury.configuration.api.MercuryConfiguration;
+import me.adamix.mercury.configuration.api.exception.MissingPropertyException;
+import me.adamix.mercury.configuration.api.exception.ParsingException;
+import me.adamix.mercury.core.defaults.PlayerDefaults;
+import me.adamix.mercury.core.entity.EntityManager;
 import me.adamix.mercury.core.placeholder.PlaceholderManager;
 import me.adamix.mercury.core.placeholder.impl.PlayerPlaceholder;
 import me.adamix.mercury.core.placeholder.impl.TranslationPlaceholder;
 import me.adamix.mercury.core.player.PlayerManager;
 import me.adamix.mercury.core.signal.SignalManager;
 import me.adamix.mercury.core.translation.TranslationManager;
+import me.adamix.mercury.core.utils.FileUtils;
 import me.adamix.mercury.core.utils.LogUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Basically helper class with lots of static methods.
@@ -46,12 +59,33 @@ public class MercuryCore {
 	}
 
 	@ApiStatus.Internal
-	public static void load(@NotNull MercuryCorePlugin plugin) {
+	public static boolean load(@NotNull MercuryCorePlugin plugin) {
 		LOGGER.info("Loading MercuryCore");
 
 		MercuryCore.plugin = plugin;
 
-		implementation = new MercuryCoreImpl();
+		try {
+			Path configPath = Paths.get("").resolve("config/mercury.toml");
+			implementation = new MercuryCoreImpl(configPath);
+
+		} catch (Exception e) {
+			LOGGER.error("Unexpected exception while loading main configuration file", e);
+			return false;
+		}
+
+		try {
+			reload();
+		} catch (Exception e) {
+			LOGGER.error("Unexpected exception while reloading MercuryCore", e);
+			return false;
+		}
+
+		LOGGER.info("Successfully loaded MercuryCore");
+		return true;
+	}
+
+	public static void reload() throws ParsingException, MissingPropertyException, IOException {
+		getImplementation().reload();
 
 		if (CoreFlags.REGISTER_DEFAULT_PLACEHOLDERS) {
 			LOGGER.info("Registering default placeholders");
@@ -60,7 +94,7 @@ public class MercuryCore {
 			placeholderManager.registerPlaceholder(new TranslationPlaceholder());
 		}
 
-		LOGGER.info("Successfully loaded MercuryCore");
+		PlayerDefaults.load();
 	}
 
 	public static @NotNull PlayerManager playerManager() {
@@ -77,5 +111,21 @@ public class MercuryCore {
 
 	public static @NotNull PlaceholderManager placeholderManager() {
 		return getImplementation().getPlaceholderManager();
+	}
+
+	public static @NotNull ProtocolManager protocolManager() {
+		return getImplementation().getProtocolManager();
+	}
+
+	public static @NotNull EntityManager entityManager() {
+		return getImplementation().getEntityManager();
+	}
+
+	public static @NotNull MercuryCorePlugin plugin() {
+		return plugin;
+	}
+
+	public static @NotNull MercuryConfiguration config() {
+		return getImplementation().getMainConfig();
 	}
 }

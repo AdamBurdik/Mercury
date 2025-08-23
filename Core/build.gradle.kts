@@ -17,6 +17,8 @@ dependencies {
     implementation("org.tomlj:tomlj:1.1.1")
     implementation("com.github.AdamBurdik.MercuryConfiguration:api:02dc08376f")
     implementation("com.github.AdamBurdik.MercuryConfiguration:toml:02dc08376f")
+
+    compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
 }
 
 tasks.processResources {

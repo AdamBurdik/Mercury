@@ -4,4 +4,7 @@ main: me.adamix.mercury.core.MercuryCorePlugin
 description: Mercury plugin for core functionality
 authors: ["AdamIx"]
 api-version: 1.21
-commands: {}
+commands:
+    test: {}
+    mercury_reload: {}
+    translation: {}

@@ -1,7 +1,15 @@
 package me.adamix.mercury.core;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
 import lombok.extern.slf4j.Slf4j;
+import me.adamix.mercury.core.command.ReloadCommand;
+import me.adamix.mercury.core.command.TestCommand;
 import me.adamix.mercury.core.command.TranslationCommand;
+import me.adamix.mercury.core.listener.PlayerListener;
+import me.adamix.mercury.core.listener.TestListener;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -10,6 +18,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.file.Paths;
 
 @Slf4j
 public class MercuryCorePlugin extends JavaPlugin {
@@ -35,7 +44,25 @@ public class MercuryCorePlugin extends JavaPlugin {
 			componentLogger.info("MercuryCore Plugin {} has been enabled", version);
 		}
 
+		getCommand("test").setExecutor(new TestCommand());
+		getCommand("mercury_reload").setExecutor(new ReloadCommand());
 		getCommand("translation").setExecutor(new TranslationCommand());
+		Bukkit.getPluginManager().registerEvents(new TestListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+
+//		MercuryCore.protocolManager().addPacketListener(new PacketAdapter(
+//				this,
+//				ListenerPriority.NORMAL,
+//				PacketType.Play.Server.NAMED_SOUND_EFFECT
+//		) {
+//			@Override
+//			public void onPacketSending(PacketEvent event) {
+//				event.getPacket().getType();
+//
+//				PacketType.Play.Server.ENTITY_METADATA;
+//				event.setCancelled(true);
+//			}
+//		});
 	}
 
 	@Override
